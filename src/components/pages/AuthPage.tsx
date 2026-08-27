@@ -298,7 +298,7 @@ export const AuthPage: React.FC = () => {
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="e.g. imanaidil5@gmail.com"
+                      placeholder="e.g. aswathi.surveyor@gmail.com"
                       className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-slate-900 text-sm outline-none transition bg-white"
                     />
                   </div>
@@ -306,7 +306,7 @@ export const AuthPage: React.FC = () => {
 
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                    Kata Sandi / Password
+                    Password
                   </label>
                   <div className="relative">
                     <input
@@ -336,7 +336,7 @@ export const AuthPage: React.FC = () => {
                       onChange={(e) => setRememberMe(e.target.checked)}
                       className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500 border-slate-300"
                     />
-                    <span>Ingat saya / Remember me</span>
+                    <span>Remember me</span>
                   </label>
 
                   <button
@@ -344,7 +344,7 @@ export const AuthPage: React.FC = () => {
                     onClick={handleForgotPassword}
                     className="text-emerald-600 hover:text-emerald-700 font-semibold"
                   >
-                    Lupa Kata Sandi ?
+                    Forgot Password?
                   </button>
                 </div>
 
@@ -583,24 +583,24 @@ export const AuthPage: React.FC = () => {
           <div className="pt-6 border-t border-slate-100 space-y-2.5 text-center">
             {mode === 'login' ? (
               <p className="text-xs text-slate-600">
-                Belum punya akun?{' '}
+                Don't have an account?{' '}
                 <button
                   type="button"
                   onClick={() => { setMode('signup'); setAuthError(null); }}
                   className="font-bold text-emerald-600 hover:text-emerald-700 underline"
                 >
-                  Register disini / Sign Up
+                  Sign Up here
                 </button>
               </p>
             ) : mode === 'signup' ? (
               <p className="text-xs text-slate-600">
-                Sudah punya akun?{' '}
+                Already have an account?{' '}
                 <button
                   type="button"
                   onClick={() => { setMode('login'); setAuthError(null); }}
                   className="font-bold text-emerald-600 hover:text-emerald-700 underline"
                 >
-                  Login disini / Sign In
+                  Sign In here
                 </button>
               </p>
             ) : null}
