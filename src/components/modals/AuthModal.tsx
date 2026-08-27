@@ -27,7 +27,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   onClose,
   defaultRole = 'student'
 }) => {
-  const { setCurrentUser, setActiveTab, showToast, setIsEnrollmentModalOpen } = useApp();
+  const { setCurrentUser, setActiveTab, showToast, setIsEnrollmentModalOpen, loginWithCredentials } = useApp();
 
   const [authRole, setAuthRole] = useState<'student' | 'instructor'>(defaultRole);
 
@@ -60,22 +60,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     }
   };
 
-  const handleStudentLogin = (e: React.FormEvent) => {
+  const handleStudentLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!studentEmail.trim()) return;
 
-    setCurrentUser({
-      ...DEMO_STUDENT,
-      id: 'u-std-' + Date.now(),
-      email: studentEmail,
-      name: studentEmail.split('@')[0].replace('.', ' ').toUpperCase() || 'Student',
-      role: 'student',
-      subscriptionPlan: 'free',
-      enrolledAt: new Date().toISOString().split('T')[0]
-    });
-
-    showToast(`Logged in successfully as Free Student (${studentEmail})`, 'success');
-    setActiveTab('notes');
+    await loginWithCredentials(studentEmail, studentPassword);
     onClose();
   };
 

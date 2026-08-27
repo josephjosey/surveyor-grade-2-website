@@ -78,12 +78,24 @@ export async function fetchAllProfiles(): Promise<User[] | null> {
 
 export async function updateUserProfile(userId: string, updates: Partial<User>): Promise<boolean> {
   try {
+    // 1. Resolve real authenticated Supabase UUID if userId is a temporary local ID
+    let targetId = userId;
+    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(userId);
+    const { data: authData } = await supabase.auth.getUser();
+    const sessionUser = authData?.user;
+
+    if (!isUUID && sessionUser?.id) {
+      targetId = sessionUser.id;
+    }
+
     const payload: any = {
       updated_at: new Date().toISOString()
     };
 
     if (updates.name !== undefined) payload.name = updates.name;
+    if (updates.email !== undefined) payload.email = updates.email;
     if (updates.phone !== undefined) payload.phone = updates.phone;
+    if (updates.role !== undefined) payload.role = updates.role;
     if (updates.avatar !== undefined) payload.avatar = updates.avatar;
     if (updates.district !== undefined) payload.district = updates.district;
     if (updates.targetExam !== undefined) payload.target_exam = updates.targetExam;
@@ -93,13 +105,45 @@ export async function updateUserProfile(userId: string, updates: Partial<User>):
     if (updates.savedPYQIds !== undefined) payload.saved_pyq_ids = updates.savedPYQIds;
     if (updates.streakDays !== undefined) payload.streak_days = updates.streakDays;
 
-    const { error } = await supabase
-      .from('profiles')
-      .upsert({ id: userId, ...payload });
+    // If targetId is still not a UUID (e.g. offline guest without Supabase session), avoid SQL crash
+    const isValidUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(targetId);
+    if (!isValidUUID) {
+      return true;
+    }
 
-    return !error;
+    // 2. First attempt direct UPDATE on existing profile row
+    const { data: updatedRows, error: updateError } = await supabase
+      .from('profiles')
+      .update(payload)
+      .eq('id', targetId)
+      .select();
+
+    if (!updateError && updatedRows && updatedRows.length > 0) {
+      return true;
+    }
+
+    // 3. If update did not affect rows (profile does not exist yet), perform UPSERT with all required fields
+    const { error: upsertError } = await supabase
+      .from('profiles')
+      .upsert({
+        id: targetId,
+        email: updates.email || sessionUser?.email || '',
+        name: updates.name || sessionUser?.user_metadata?.full_name || 'Candidate',
+        district: updates.district || 'Palakkad',
+        target_exam: updates.targetExam || 'Kerala PSC Surveyor Gr. II',
+        role: updates.role || 'student',
+        subscription_plan: updates.subscriptionPlan || 'free',
+        ...payload
+      });
+
+    if (upsertError) {
+      console.error('Supabase profile upsert notice:', upsertError);
+      return false;
+    }
+
+    return true;
   } catch (err) {
-    console.warn('Supabase: error updating profile:', err);
+    console.error('Supabase: error updating profile:', err);
     return false;
   }
 }

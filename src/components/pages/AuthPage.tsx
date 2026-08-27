@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { supabase } from '../../supabaseClient';
+import * as SupabaseDb from '../../services/supabaseService';
 import {
   Eye,
   EyeOff,
@@ -81,8 +82,8 @@ export const AuthPage: React.FC = () => {
 
       // Only redirect when a real session exists after login
       if (data?.session) {
-        loginWithCredentials(data.user?.email || email, password);
-        setActiveTab('home');
+        await loginWithCredentials(data.user?.email || email, password);
+        setActiveTab('dashboard');
         window.history.pushState({}, '', '/');
         showToast('Login successful! Welcome back.', 'success');
       } else {
@@ -115,12 +116,33 @@ export const AuthPage: React.FC = () => {
     try {
       const { data, error } = await supabase.auth.signUp({
         email: email.trim(),
-        password: password.trim()
+        password: password.trim(),
+        options: {
+          data: {
+            full_name: name.trim(),
+            phone: phone.trim(),
+            district: district || 'Palakkad',
+            target_exam: targetExam || 'Kerala PSC Surveyor Gr. II'
+          }
+        }
       });
 
       if (error) {
         setAuthError(error.message);
         return;
+      }
+
+      // Save initial profile row to Supabase profiles table
+      if (data.user?.id) {
+        await SupabaseDb.updateUserProfile(data.user.id, {
+          name: name.trim() || 'Candidate',
+          email: email.trim(),
+          phone: phone.trim(),
+          district: district || 'Palakkad',
+          targetExam: targetExam || 'Kerala PSC Surveyor Gr. II',
+          role: 'student',
+          subscriptionPlan: 'free'
+        });
       }
 
       // After signUp(), if data.session is null, don’t redirect to the dashboard.
@@ -132,8 +154,8 @@ export const AuthPage: React.FC = () => {
       }
 
       // Only redirect when a real session exists
-      registerWithCredentials(name, data.user?.email || email, phone, district, targetExam);
-      setActiveTab('home');
+      await registerWithCredentials(name, data.user?.email || email, phone, district, targetExam);
+      setActiveTab('dashboard');
       window.history.pushState({}, '', '/');
       showToast('Account created successfully! Welcome to the academy.', 'success');
     } catch (err: any) {

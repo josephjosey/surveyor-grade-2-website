@@ -42,6 +42,7 @@ export const DashboardPage: React.FC = () => {
     setIsEnrollmentModalOpen,
     getUserRankInfo,
     setCurrentUser,
+    updateUserProfile,
     showToast
   } = useApp();
 
@@ -85,7 +86,7 @@ export const DashboardPage: React.FC = () => {
     e.preventDefault();
     if (!currentUser?.id) return;
 
-    showToast('Saving profile to Supabase...', 'info');
+    showToast('Saving profile updates...', 'info');
     const updates = {
       name: editName,
       targetExam: editTargetExam,
@@ -93,10 +94,9 @@ export const DashboardPage: React.FC = () => {
       phone: editPhone
     };
 
-    setCurrentUser((prev) => ({ ...prev, ...updates }));
-    await SupabaseDb.updateUserProfile(currentUser.id, updates);
     setIsEditModalOpen(false);
-    showToast('Candidate profile updated in Supabase!', 'success');
+    await updateUserProfile(updates);
+    showToast(`Candidate profile saved! District set to ${editDistrict}.`, 'success');
   };
 
   const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -105,8 +105,7 @@ export const DashboardPage: React.FC = () => {
       showToast('Uploading profile photo to Supabase Storage...', 'info');
       const res = await uploadUserFile(file, 'avatars', currentUser.id);
       if (res) {
-        setCurrentUser((prev) => ({ ...prev, avatar: res.signedUrl }));
-        SupabaseDb.updateUserProfile(currentUser.id, { avatar: res.signedUrl });
+        await updateUserProfile({ avatar: res.signedUrl });
         showToast('Profile photo updated in Supabase Storage!', 'success');
       }
     }

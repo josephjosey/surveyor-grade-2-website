@@ -95,6 +95,7 @@ interface AppContextType {
   upvoteDoubt: (doubtId: string) => void;
   addDoubtAnswer: (doubtId: string, content: string) => void;
   deleteDoubt: (doubtId: string) => void;
+  updateUserProfile: (updates: Partial<User>) => Promise<boolean>;
   logoutUser: () => void;
   resetToDefaults: () => void;
 
@@ -273,7 +274,24 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         if (attempts && attempts.length > 0) setTestAttempts(attempts);
         if (pyqs && pyqs.length > 0) setPyqPapers(pyqs);
         if (doubtsList && doubtsList.length > 0) setDoubts(doubtsList);
-        if (allProfiles && allProfiles.length > 0) setStudents(allProfiles);
+        if (allProfiles && allProfiles.length > 0) {
+          setStudents(allProfiles);
+          setCurrentUser((prev) => {
+            const matched = allProfiles.find(
+              (p) => p.id === prev.id || (p.email && prev.email && p.email.toLowerCase() === prev.email.toLowerCase())
+            );
+            if (matched) {
+              const merged = {
+                ...prev,
+                ...matched,
+                district: matched.district || prev.district || 'Palakkad'
+              };
+              safeSetItem('survey_academy_user', merged);
+              return merged;
+            }
+            return prev;
+          });
+        }
       } catch (err) {
         console.warn('Supabase cloud fetch notice:', err);
       }
@@ -333,30 +351,37 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         profile = newProfile;
       }
 
+      // Read any previously cached local user to avoid resetting to default if cloud is slower
+      const savedUserStr = localStorage.getItem('survey_academy_user');
+      const savedUser: Partial<User> = savedUserStr ? JSON.parse(savedUserStr) : {};
+
       // 3. Set the active currentUser to the real authenticated candidate/instructor
       const activeUser: User = {
         id: supabaseUser.id,
-        name: profile.name || (isInstructorEmail ? 'Joseph Josey' : displayName),
-        email: supabaseUser.email || profile.email || '',
-        phone: profile.phone || '',
-        role: (profile.role as any) || (isInstructorEmail ? 'instructor' : 'student'),
-        avatar: profile.avatar || avatarUrl,
-        enrolledAt: profile.enrolledAt || new Date().toISOString().split('T')[0],
-        district: profile.district || 'Palakkad',
+        name: profile?.name || savedUser.name || (isInstructorEmail ? 'Joseph Josey' : displayName),
+        email: supabaseUser.email || profile?.email || savedUser.email || '',
+        phone: profile?.phone || savedUser.phone || '',
+        role: (profile?.role as any) || savedUser.role || (isInstructorEmail ? 'instructor' : 'student'),
+        avatar: profile?.avatar || savedUser.avatar || avatarUrl,
+        enrolledAt: profile?.enrolledAt || savedUser.enrolledAt || new Date().toISOString().split('T')[0],
+        district: profile?.district || savedUser.district || (isInstructorEmail ? 'Idukki' : 'Palakkad'),
         targetExam:
-          profile.targetExam ||
+          profile?.targetExam ||
+          savedUser.targetExam ||
           (isInstructorEmail
             ? 'Instructor & Course Director (Kerala PSC Survey & KWA)'
             : 'Kerala PSC Surveyor Gr. II & KWA Overseer'),
-        completedClassIds: profile.completedClassIds || [],
-        bookmarkedClassIds: profile.bookmarkedClassIds || [],
-        savedPYQIds: profile.savedPYQIds || [],
-        streakDays: profile.streakDays || 1,
-        subscriptionPlan: (profile.subscriptionPlan as any) || (isInstructorEmail ? 'master' : 'free')
+        completedClassIds: profile?.completedClassIds || savedUser.completedClassIds || [],
+        bookmarkedClassIds: profile?.bookmarkedClassIds || savedUser.bookmarkedClassIds || [],
+        savedPYQIds: profile?.savedPYQIds || savedUser.savedPYQIds || [],
+        streakDays: profile?.streakDays || savedUser.streakDays || 1,
+        subscriptionPlan: (profile?.subscriptionPlan as any) || savedUser.subscriptionPlan || (isInstructorEmail ? 'master' : 'free')
       };
 
       setCurrentUser(activeUser);
+      safeSetItem('survey_academy_user', activeUser);
       setStudents((prev) => [activeUser, ...prev.filter((s) => s.id !== activeUser.id)]);
+      safeSetItem('survey_academy_students', [activeUser, ...students.filter((s) => s.id !== activeUser.id)]);
     };
 
     // Get current session on initial render
@@ -507,22 +532,67 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   };
 
-  const loginWithCredentials = (email: string, password?: string) => {
+  const updateUserProfile = async (updates: Partial<User>): Promise<boolean> => {
+    let updatedUser: User = currentUser;
+    setCurrentUser((prev) => {
+      updatedUser = { ...prev, ...updates };
+      safeSetItem('survey_academy_user', updatedUser);
+      return updatedUser;
+    });
+
+    setStudents((prev) => {
+      const updatedList = prev.map((s) => (s.id === currentUser.id ? { ...s, ...updates } : s));
+      safeSetItem('survey_academy_students', updatedList);
+      return updatedList;
+    });
+
+    try {
+      const { data: authData } = await supabase.auth.getUser();
+      const targetId = authData?.user?.id || currentUser.id;
+      const success = await SupabaseDb.updateUserProfile(targetId, updates);
+      return success;
+    } catch (err) {
+      console.warn('Error saving profile updates to Supabase:', err);
+      return false;
+    }
+  };
+
+  const loginWithCredentials = async (email: string, password?: string) => {
     const cleanEmail = email.trim() || 'student@surveyrank.com';
     const cleanName = cleanEmail.split('@')[0].replace(/[._]/g, ' ') || 'Student';
+
+    const { data: authData } = await supabase.auth.getUser();
+    const sessionUser = authData?.user;
+    const userId = sessionUser?.id || currentUser.id || 'u-user-' + Date.now();
+
+    let cloudProfile: Partial<User> | null = null;
+    if (sessionUser?.id) {
+      cloudProfile = await SupabaseDb.fetchUserProfile(sessionUser.id);
+    }
+
+    const existingStudent = students.find((s) => s.email?.toLowerCase() === cleanEmail.toLowerCase() || s.id === userId);
+
     const loggedInUser: User = {
       ...DEMO_STUDENT,
-      id: 'u-user-' + Date.now(),
-      name: cleanName.charAt(0).toUpperCase() + cleanName.slice(1),
+      ...currentUser,
+      ...(existingStudent || {}),
+      ...(cloudProfile || {}),
+      id: userId,
+      name: cloudProfile?.name || existingStudent?.name || currentUser.name || (cleanName.charAt(0).toUpperCase() + cleanName.slice(1)),
       email: cleanEmail,
-      role: 'student',
-      subscriptionPlan: 'free',
-      enrolledAt: new Date().toISOString().split('T')[0]
+      district: cloudProfile?.district || existingStudent?.district || currentUser.district || 'Palakkad',
+      targetExam: cloudProfile?.targetExam || existingStudent?.targetExam || currentUser.targetExam || 'Kerala PSC Surveyor Gr. II & Land Records',
+      role: (cloudProfile?.role as any) || existingStudent?.role || currentUser.role || 'student',
+      subscriptionPlan: (cloudProfile?.subscriptionPlan as any) || existingStudent?.subscriptionPlan || currentUser.subscriptionPlan || 'free',
+      enrolledAt: cloudProfile?.enrolledAt || existingStudent?.enrolledAt || currentUser.enrolledAt || new Date().toISOString().split('T')[0]
     };
+
     setCurrentUser(loggedInUser);
+    safeSetItem('survey_academy_user', loggedInUser);
+    setStudents((prev) => [loggedInUser, ...prev.filter((s) => s.id !== loggedInUser.id)]);
     setIsAuthenticated(true);
-    setActiveTab('notes');
-    showToast(`Welcome back, ${loggedInUser.name}! Free documents active.`, 'success');
+    setActiveTab('dashboard');
+    showToast(`Welcome back, ${loggedInUser.name}!`, 'success');
   };
 
   const loginWithGoogle = async () => {
@@ -542,15 +612,19 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   };
 
-  const registerWithCredentials = (
+  const registerWithCredentials = async (
     name: string,
     email: string,
     phone: string,
     district: string,
     targetExam: string
   ) => {
+    const { data: authData } = await supabase.auth.getUser();
+    const sessionUser = authData?.user;
+    const userId = sessionUser?.id || 'u-reg-' + Date.now();
+
     const newUser: User = {
-      id: 'u-reg-' + Date.now(),
+      id: userId,
       name: name || 'New Student',
       email: email || 'student@surveyrank.com',
       phone: phone || '+91 98470 12345',
@@ -565,10 +639,20 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       streakDays: 1,
       subscriptionPlan: 'free'
     };
+
     setCurrentUser(newUser);
-    setStudents((prev) => [newUser, ...prev]);
+    safeSetItem('survey_academy_user', newUser);
+    setStudents((prev) => {
+      const updated = [newUser, ...prev.filter((s) => s.id !== newUser.id)];
+      safeSetItem('survey_academy_students', updated);
+      return updated;
+    });
     setIsAuthenticated(true);
-    setActiveTab('notes');
+    setActiveTab('dashboard');
+
+    if (sessionUser?.id) {
+      await SupabaseDb.updateUserProfile(sessionUser.id, newUser);
+    }
     showToast(`Account created successfully for ${newUser.name}! Free access enabled.`, 'success');
   };
 
@@ -601,7 +685,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     showToast('You have been logged out. Please sign in to access the academy.', 'info');
   };
 
-  const enrollStudent = (
+  const enrollStudent = async (
     name: string,
     email: string,
     phone: string,
@@ -609,28 +693,18 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     targetExam: string,
     plan: 'free' | 'master' | 'mock_only' | 'crash' = 'master'
   ) => {
-    const updatedStudent: User = {
-      id: currentUser.id && currentUser.id !== 'u-demo-student' ? currentUser.id : 'u-' + Date.now(),
+    const profileUpdates: Partial<User> = {
       name: name || currentUser.name,
       email: email || currentUser.email,
       phone: phone || currentUser.phone,
-      role: 'student',
-      avatar: currentUser.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80',
-      enrolledAt: currentUser.enrolledAt || new Date().toISOString().split('T')[0],
       district: district || currentUser.district || 'Palakkad',
       targetExam: targetExam || currentUser.targetExam || 'Surveyor Gr. II',
-      completedClassIds: currentUser.completedClassIds || [],
-      bookmarkedClassIds: currentUser.bookmarkedClassIds || [],
-      savedPYQIds: currentUser.savedPYQIds || [],
-      streakDays: currentUser.streakDays || 1,
       subscriptionPlan: plan
     };
 
-    setCurrentUser(updatedStudent);
-    setStudents((prev) => [updatedStudent, ...prev.filter((s) => s.id !== updatedStudent.id)]);
+    await updateUserProfile(profileUpdates);
     setIsEnrollmentModalOpen(false);
     setActiveTab('dashboard');
-    SupabaseDb.updateUserProfile(updatedStudent.id, updatedStudent);
     showToast(
       `🎉 Upgraded to ${
         plan === 'master'
@@ -1109,6 +1183,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         upvoteDoubt,
         addDoubtAnswer,
         deleteDoubt,
+        updateUserProfile,
         logoutUser,
         resetToDefaults,
         isDiskLoaded,
