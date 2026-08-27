@@ -529,7 +529,7 @@ export const AuthPage: React.FC = () => {
                   <img
                     src="/instructor_joseph_josey.png"
                     alt="Joseph Josey"
-                    className="w-12 h-12 rounded-full object-cover ring-2 ring-purple-400 flex-shrink-0 shadow"
+                    className="w-12 h-12 rounded-full object-cover object-[center_20%] ring-2 ring-purple-400 flex-shrink-0 shadow"
                   />
                   <div>
                     <div className="font-extrabold text-purple-950 text-sm">

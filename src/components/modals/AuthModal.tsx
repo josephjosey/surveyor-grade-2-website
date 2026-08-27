@@ -246,7 +246,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               <img
                 src="/instructor_joseph_josey.png"
                 alt="Joseph Josey"
-                className="w-10 h-10 rounded-full object-cover ring-2 ring-purple-400 flex-shrink-0"
+                className="w-10 h-10 rounded-full object-cover object-[center_20%] ring-2 ring-purple-400 flex-shrink-0"
               />
               <div className="space-y-0.5">
                 <div className="font-bold text-purple-900">Joseph Josey (Course Director)</div>

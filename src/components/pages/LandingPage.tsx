@@ -377,7 +377,7 @@ export const LandingPage: React.FC = () => {
               <img
                 src="/instructor_joseph_josey.png"
                 alt="Joseph Josey - Course Director & Faculty"
-                className="w-36 h-36 rounded-2xl object-cover ring-4 ring-brand-500 mx-auto lg:mx-0 shadow-lg"
+                className="w-36 h-36 rounded-2xl object-cover object-[center_20%] ring-4 ring-brand-500 mx-auto lg:mx-0 shadow-lg"
               />
               <div className="absolute -bottom-2 -right-2 bg-amber-500 text-slate-950 text-[11px] font-extrabold px-2.5 py-1 rounded-full shadow-md flex items-center gap-1">
                 <Award className="w-3.5 h-3.5" /> Course Director
