@@ -19,8 +19,11 @@ import {
   Eye,
   Trophy,
   Crown,
-  Medal
+  Medal,
+  Camera
 } from 'lucide-react';
+import { uploadUserFile } from '../../services/storageService';
+import * as SupabaseDb from '../../services/supabaseService';
 
 export const DashboardPage: React.FC = () => {
   const {
@@ -35,7 +38,9 @@ export const DashboardPage: React.FC = () => {
     setSelectedMockTestId,
     toggleCompleteNote,
     setIsEnrollmentModalOpen,
-    getUserRankInfo
+    getUserRankInfo,
+    setCurrentUser,
+    showToast
   } = useApp();
 
   const primaryRankedTest = mockTests.find((t) => t.isRankedExam || t.id === 'mock-state-rank-1') || mockTests[0];
@@ -61,16 +66,40 @@ export const DashboardPage: React.FC = () => {
   // Bookmarked notes
   const bookmarkedNotes = studyNotes.filter((n) => currentUser.bookmarkedClassIds.includes(n.id));
 
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file && currentUser?.id) {
+      showToast('Uploading profile photo to Supabase Storage...', 'info');
+      const res = await uploadUserFile(file, 'avatars', currentUser.id);
+      if (res) {
+        setCurrentUser((prev) => ({ ...prev, avatar: res.signedUrl }));
+        SupabaseDb.updateUserProfile(currentUser.id, { avatar: res.signedUrl });
+        showToast('Profile photo updated in Supabase Storage!', 'success');
+      }
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-fadeIn">
       {/* Welcome Header */}
       <div className="bg-gradient-to-r from-brand-900 via-slate-900 to-navy-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div className="flex items-center gap-4">
-          <img
-            src={currentUser.avatar}
-            alt={currentUser.name}
-            className="w-16 h-16 rounded-2xl object-cover ring-4 ring-brand-500/50 shadow-lg"
-          />
+          <label className="relative group cursor-pointer block" title="Change Profile Avatar">
+            <img
+              src={currentUser.avatar}
+              alt={currentUser.name}
+              className="w-16 h-16 rounded-2xl object-cover ring-4 ring-brand-500/50 shadow-lg group-hover:opacity-80 transition"
+            />
+            <div className="absolute inset-0 bg-black/40 rounded-2xl opacity-0 group-hover:opacity-100 flex items-center justify-center transition">
+              <Camera className="w-5 h-5 text-white" />
+            </div>
+            <input
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleAvatarChange}
+            />
+          </label>
           <div className="space-y-1">
             <div className="flex items-center gap-2">
               <h1 className="text-xl sm:text-2xl font-extrabold text-white">

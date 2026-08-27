@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { AskDoubtModal } from '../modals/AskDoubtModal';
 import { PdfViewer } from '../PdfViewer';
+import { uploadUserFile } from '../../services/storageService';
 
 export const ClassesPage: React.FC = () => {
   const {
@@ -71,18 +72,33 @@ export const ClassesPage: React.FC = () => {
   const relatedDoubts = doubts.filter((d) => d.relatedClassId === activeNote?.id);
   const handleInPagePdfUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const base64Url = event.target?.result as string;
-        if (base64Url && activeNote) {
-          activeNote.pdfNotesUrl = base64Url;
-          activeNote.pdfNotesTitle = file.name;
-          activeNote.pdfSize = `${(file.size / (1024 * 1024)).toFixed(2)} MB PDF`;
-          showToast(`Attached & Loaded PDF: ${file.name}`, 'success');
-        }
-      };
-      reader.readAsDataURL(file);
+    if (file && activeNote) {
+      showToast(`Uploading PDF to Supabase Storage: ${file.name}...`, 'info');
+      uploadUserFile(file, 'study-notes', activeNote.id)
+        .then((result) => {
+          if (result) {
+            activeNote.pdfNotesUrl = result.signedUrl;
+            activeNote.pdfNotesTitle = file.name;
+            activeNote.pdfSize = result.sizeFormatted;
+            showToast(`PDF saved to Supabase Storage: ${file.name}`, 'success');
+          } else {
+            throw new Error('Upload returned null');
+          }
+        })
+        .catch((err) => {
+          console.warn('Fallback to local DataURL:', err);
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            const base64Url = event.target?.result as string;
+            if (base64Url && activeNote) {
+              activeNote.pdfNotesUrl = base64Url;
+              activeNote.pdfNotesTitle = file.name;
+              activeNote.pdfSize = `${(file.size / (1024 * 1024)).toFixed(2)} MB PDF`;
+              showToast(`Attached & Loaded PDF: ${file.name}`, 'success');
+            }
+          };
+          reader.readAsDataURL(file);
+        });
     }
   };
 

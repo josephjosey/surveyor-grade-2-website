@@ -27,7 +27,7 @@ import { PYQPaper, PYQQuestion } from '../../types';
 import { CreateClassModal } from '../modals/CreateClassModal';
 import { CreateMockTestModal } from '../modals/CreateMockTestModal';
 import { ManagePYQQuestionsModal } from '../modals/ManagePYQQuestionsModal';
-import { uploadPdfDocument } from '../../services/api';
+import { uploadUserFile, deleteUserFile } from '../../services/storageService';
 
 export const AdminPortalPage: React.FC = () => {
   const {
@@ -96,11 +96,15 @@ export const AdminPortalPage: React.FC = () => {
         setPyqTitle(cleanName);
       }
 
-      showToast(`Uploading PDF to persistent storage: ${file.name}...`, 'info');
-      uploadPdfDocument(file)
-        .then((url) => {
-          setPyqPdfUrl(url);
-          showToast(`PDF saved to disk: ${file.name}`, 'success');
+      showToast(`Uploading PDF to Supabase Storage: ${file.name}...`, 'info');
+      uploadUserFile(file, 'pyq-papers', 'paper-pdf')
+        .then((result) => {
+          if (result) {
+            setPyqPdfUrl(result.signedUrl);
+            showToast(`PDF saved to Supabase Storage: ${file.name}`, 'success');
+          } else {
+            throw new Error('Upload returned null');
+          }
         })
         .catch((err) => {
           console.warn('Fallback to local DataURL:', err);
@@ -117,11 +121,15 @@ export const AdminPortalPage: React.FC = () => {
     const file = e.target.files?.[0];
     if (file) {
       setUploadedKeyFile(file);
-      showToast(`Uploading Answer Key to disk: ${file.name}...`, 'info');
-      uploadPdfDocument(file)
-        .then((url) => {
-          setPyqKeyUrl(url);
-          showToast(`Answer Key saved to disk: ${file.name}`, 'success');
+      showToast(`Uploading Answer Key to Supabase Storage: ${file.name}...`, 'info');
+      uploadUserFile(file, 'pyq-papers', 'answer-key')
+        .then((result) => {
+          if (result) {
+            setPyqKeyUrl(result.signedUrl);
+            showToast(`Answer Key saved to Supabase Storage: ${file.name}`, 'success');
+          } else {
+            throw new Error('Upload returned null');
+          }
         })
         .catch((err) => {
           console.warn('Fallback to local DataURL:', err);

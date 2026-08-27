@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
-import { X, HelpCircle, Send, BookOpen } from 'lucide-react';
+import { X, HelpCircle, Send, BookOpen, Paperclip, CheckCircle2, Loader2 } from 'lucide-react';
+import { uploadUserFile } from '../../services/storageService';
 
 interface AskDoubtModalProps {
   isOpen: boolean;
@@ -9,12 +10,15 @@ interface AskDoubtModalProps {
 }
 
 export const AskDoubtModal: React.FC<AskDoubtModalProps> = ({ isOpen, onClose, defaultClassId }) => {
-  const { studyNotes, addDoubt } = useApp();
+  const { studyNotes, addDoubt, showToast } = useApp();
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [topic, setTopic] = useState('General Survey');
   const [relatedClassId, setRelatedClassId] = useState(defaultClassId || '');
+  const [attachmentFile, setAttachmentFile] = useState<File | null>(null);
+  const [attachmentUrl, setAttachmentUrl] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
 
   if (!isOpen) return null;
 
@@ -22,9 +26,11 @@ export const AskDoubtModal: React.FC<AskDoubtModalProps> = ({ isOpen, onClose, d
     e.preventDefault();
     if (!title.trim() || !content.trim()) return;
 
-    addDoubt(title, content, topic, relatedClassId || undefined);
+    addDoubt(title, content, topic, relatedClassId || undefined, attachmentUrl || undefined);
     setTitle('');
     setContent('');
+    setAttachmentFile(null);
+    setAttachmentUrl(null);
     onClose();
   };
 
@@ -118,6 +124,51 @@ export const AskDoubtModal: React.FC<AskDoubtModalProps> = ({ isOpen, onClose, d
               placeholder="Describe your doubt clearly with any numerical values or specific step where you are getting stuck..."
               className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 outline-none"
             />
+          </div>
+
+          {/* Optional Attachment Upload */}
+          <div>
+            <label className="block text-xs font-semibold uppercase text-slate-700 mb-1">
+              Attach Diagram / Problem Screenshot (Optional)
+            </label>
+            <label className="border border-dashed border-slate-300 hover:border-brand-500 rounded-xl p-3 flex items-center justify-between cursor-pointer bg-slate-50 transition">
+              <input
+                type="file"
+                accept="image/*,application/pdf"
+                className="hidden"
+                onChange={async (e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    setAttachmentFile(file);
+                    setIsUploading(true);
+                    showToast(`Uploading attachment to Supabase Storage: ${file.name}...`, 'info');
+                    const res = await uploadUserFile(file, 'doubts', 'doubt-attachment');
+                    if (res) {
+                      setAttachmentUrl(res.signedUrl);
+                      showToast(`Attachment saved to Supabase Storage: ${file.name}`, 'success');
+                    }
+                    setIsUploading(false);
+                  }
+                }}
+              />
+              <div className="flex items-center gap-2 text-xs text-slate-600">
+                {isUploading ? (
+                  <Loader2 className="w-4 h-4 animate-spin text-brand-600" />
+                ) : attachmentUrl ? (
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                ) : (
+                  <Paperclip className="w-4 h-4 text-slate-400" />
+                )}
+                <span>
+                  {isUploading
+                    ? 'Uploading attachment to Supabase Storage...'
+                    : attachmentFile
+                    ? `${attachmentFile.name}`
+                    : 'Choose image or PDF from device'}
+                </span>
+              </div>
+              <span className="text-[11px] text-brand-600 font-semibold">Browse</span>
+            </label>
           </div>
 
           <div className="bg-amber-50 border border-amber-200/80 rounded-xl p-3 text-xs text-amber-900 flex items-start gap-2">

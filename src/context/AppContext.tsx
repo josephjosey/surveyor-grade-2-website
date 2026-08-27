@@ -26,6 +26,7 @@ import {
 import { fetchDatabase, saveDatabase } from '../services/api';
 import { supabase } from '../supabaseClient';
 import * as SupabaseDb from '../services/supabaseService';
+import { deleteUserFile } from '../services/storageService';
 
 export type NavigationTab = 'home' | 'dashboard' | 'notes' | 'pyq' | 'mocktests' | 'doubts' | 'admin';
 
@@ -90,9 +91,10 @@ interface AppContextType {
   updatePYQQuestions: (paperId: string, questions: PYQQuestion[]) => void;
   addQuestionToPYQ: (paperId: string, question: Omit<PYQQuestion, 'id' | 'questionNumber'>) => void;
   deleteQuestionFromPYQ: (paperId: string, questionId: string) => void;
-  addDoubt: (title: string, content: string, topic: string, relatedClassId?: string) => void;
+  addDoubt: (title: string, content: string, topic: string, relatedClassId?: string, imageAttachment?: string) => void;
   upvoteDoubt: (doubtId: string) => void;
   addDoubtAnswer: (doubtId: string, content: string) => void;
+  deleteDoubt: (doubtId: string) => void;
   logoutUser: () => void;
   resetToDefaults: () => void;
 
@@ -822,6 +824,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const deleteStudyNote = (noteId: string) => {
+    const targetNote = studyNotes.find((n) => n.id === noteId);
+    if (targetNote?.pdfNotesUrl) {
+      deleteUserFile(targetNote.pdfNotesUrl);
+    }
     setStudyNotes((prev) => prev.filter((n) => n.id !== noteId));
     SupabaseDb.deleteStudyNote(noteId);
     setCurrentUser((prev) => ({
@@ -872,6 +878,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const deletePYQPaper = (paperId: string) => {
+    const targetPaper = pyqPapers.find((p) => p.id === paperId);
+    if (targetPaper?.pdfUrl) {
+      deleteUserFile(targetPaper.pdfUrl);
+    }
+    if (targetPaper?.answerKeyUrl) {
+      deleteUserFile(targetPaper.answerKeyUrl);
+    }
     setPyqPapers((prev) => prev.filter((p) => p.id !== paperId));
     SupabaseDb.deletePYQPaper(paperId);
     showToast('PYQ Paper deleted', 'info');
@@ -938,7 +951,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     showToast('Question removed', 'info');
   };
 
-  const addDoubt = (title: string, content: string, topic: string, relatedClassId?: string) => {
+  const addDoubt = (title: string, content: string, topic: string, relatedClassId?: string, imageAttachment?: string) => {
     const newDoubt: Doubt = {
       id: 'd-' + Date.now(),
       userId: currentUser.id,
@@ -949,6 +962,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       content,
       topic,
       relatedClassId,
+      imageAttachment,
       createdAt: new Date().toISOString(),
       upvotes: 1,
       answers: [],
@@ -1010,6 +1024,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         : 'Your response has been posted.',
       'success'
     );
+  };
+
+  const deleteDoubt = (doubtId: string) => {
+    const targetDoubt = doubts.find((d) => d.id === doubtId);
+    if (targetDoubt?.imageAttachment) {
+      deleteUserFile(targetDoubt.imageAttachment);
+    }
+    setDoubts((prev) => prev.filter((d) => d.id !== doubtId));
+    SupabaseDb.deleteDoubt(doubtId);
+    showToast('Doubt removed', 'info');
   };
 
   const resetToDefaults = () => {
@@ -1082,6 +1106,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         addDoubt,
         upvoteDoubt,
         addDoubtAnswer,
+        deleteDoubt,
         logoutUser,
         resetToDefaults,
         isDiskLoaded,

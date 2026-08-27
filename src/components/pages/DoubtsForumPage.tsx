@@ -12,7 +12,8 @@ import {
   Send,
   UserCheck,
   Sparkles,
-  Filter
+  Filter,
+  Paperclip
 } from 'lucide-react';
 import { AskDoubtModal } from '../modals/AskDoubtModal';
 
@@ -162,6 +163,19 @@ export const DoubtsForumPage: React.FC = () => {
                 <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                   {doubt.content}
                 </p>
+                {doubt.imageAttachment && (
+                  <div className="pt-1.5">
+                    <a
+                      href={doubt.imageAttachment}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-purple-50 hover:bg-purple-100 text-purple-700 rounded-lg text-xs font-semibold border border-purple-200 transition shadow-xs"
+                    >
+                      <Paperclip className="w-3.5 h-3.5" />
+                      <span>View Attached Diagram / Problem Sheet</span>
+                    </a>
+                  </div>
+                )}
               </div>
 
               {/* Verified Answers Section */}

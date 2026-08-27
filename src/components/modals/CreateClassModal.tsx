@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { X, Upload, BookOpen, FileText, Plus, Trash2, CheckCircle2 } from 'lucide-react';
-import { uploadPdfDocument } from '../../services/api';
+import { uploadUserFile } from '../../services/storageService';
 
 interface CreateClassModalProps {
   isOpen: boolean;
@@ -218,11 +218,15 @@ export const CreateClassModal: React.FC<CreateClassModalProps> = ({ isOpen, onCl
                         setTitle(file.name.replace(/\.[^/.]+$/, '').replace(/_/g, ' '));
                       }
 
-                      showToast(`Uploading PDF to persistent storage: ${file.name}...`, 'info');
-                      uploadPdfDocument(file)
-                        .then((url) => {
-                          setPdfNotesUrl(url);
-                          showToast(`PDF saved to disk: ${file.name}`, 'success');
+                      showToast(`Uploading PDF to Supabase Storage: ${file.name}...`, 'info');
+                      uploadUserFile(file, 'study-notes', moduleId)
+                        .then((result) => {
+                          if (result) {
+                            setPdfNotesUrl(result.signedUrl);
+                            showToast(`PDF saved to Supabase Storage: ${file.name}`, 'success');
+                          } else {
+                            throw new Error('Storage returned null');
+                          }
                         })
                         .catch((err) => {
                           console.warn('Fallback to local DataURL:', err);
