@@ -14,6 +14,7 @@ import {
   Phone
 } from 'lucide-react';
 import { DEMO_INSTRUCTOR, DEMO_STUDENT } from '../../data/initialData';
+import { supabase } from '../../supabaseClient';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -41,21 +42,22 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
   if (!isOpen) return null;
 
-  const handleGoogleLogin = () => {
-    setCurrentUser({
-      ...DEMO_STUDENT,
-      id: 'u-google-' + Date.now(),
-      name: 'Joseph Josey',
-      email: 'josephjosey19@gmail.com',
-      avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=120&q=80',
-      role: 'student',
-      subscriptionPlan: 'free',
-      enrolledAt: new Date().toISOString().split('T')[0]
-    });
+  const handleGoogleLogin = async () => {
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/`
+        }
+      });
 
-    showToast('Signed in with Google (josephjosey19@gmail.com). Free Tier Active!', 'success');
-    setActiveTab('notes');
-    onClose();
+      if (error) {
+        showToast(error.message, 'error');
+        return;
+      }
+    } catch (err: any) {
+      showToast(err.message || 'Error initiating Google Sign-in', 'error');
+    }
   };
 
   const handleStudentLogin = (e: React.FormEvent) => {

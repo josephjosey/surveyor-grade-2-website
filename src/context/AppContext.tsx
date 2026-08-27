@@ -24,6 +24,7 @@ import {
 } from '../data/initialData';
 
 import { fetchDatabase, saveDatabase } from '../services/api';
+import { supabase } from '../supabaseClient';
 
 export type NavigationTab = 'home' | 'dashboard' | 'notes' | 'pyq' | 'mocktests' | 'doubts' | 'admin';
 
@@ -394,21 +395,21 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     showToast(`Welcome back, ${loggedInUser.name}! Free documents active.`, 'success');
   };
 
-  const loginWithGoogle = () => {
-    const googleUser: User = {
-      ...DEMO_STUDENT,
-      id: 'u-google-' + Date.now(),
-      name: 'Joseph Josey',
-      email: 'josephjosey19@gmail.com',
-      avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=120&q=80',
-      role: 'student',
-      subscriptionPlan: 'free',
-      enrolledAt: new Date().toISOString().split('T')[0]
-    };
-    setCurrentUser(googleUser);
-    setIsAuthenticated(true);
-    setActiveTab('notes');
-    showToast('Signed in with Google (josephjosey19@gmail.com). Free Tier Active!', 'success');
+  const loginWithGoogle = async () => {
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/`
+        }
+      });
+
+      if (error) {
+        showToast(error.message, 'error');
+      }
+    } catch (err: any) {
+      showToast(err.message || 'Error initiating Google Sign-in', 'error');
+    }
   };
 
   const registerWithCredentials = (
@@ -454,10 +455,18 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   };
 
-  const logoutUser = () => {
+  const logoutUser = async () => {
+    try {
+      await supabase.auth.signOut();
+    } catch (e) {
+      // ignore
+    }
     setIsAuthenticated(false);
     setCurrentUser(DEMO_STUDENT);
     setActiveTab('home');
+    if (window.location.pathname !== '/login') {
+      window.history.pushState({}, '', '/login');
+    }
     showToast('You have been logged out. Please sign in to access the academy.', 'info');
   };
 
