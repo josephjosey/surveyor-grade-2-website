@@ -938,7 +938,8 @@ export const DEMO_STUDENT: User = {
   completedClassIds: ['note-1', 'note-2', 'note-6'],
   bookmarkedClassIds: ['note-3', 'note-5'],
   savedPYQIds: ['pyq-1'],
-  streakDays: 14
+  streakDays: 14,
+  subscriptionPlan: 'free'
 };
 
 export const DEMO_INSTRUCTOR: User = {

@@ -27,6 +27,7 @@ import confetti from 'canvas-confetti';
 interface CoursePlan {
   id: string;
   name: string;
+  subtitle: string;
   badge?: string;
   originalPrice: number;
   price: number;
@@ -37,6 +38,7 @@ const COURSE_PLANS: CoursePlan[] = [
   {
     id: 'plan-master',
     name: 'Kerala PSC Survey Complete Master Course',
+    subtitle: 'All 8 syllabus modules, concise handwritten PDF notes, PYQ bank & mock tests',
     badge: 'Most Popular • Recommended',
     originalPrice: 4999,
     price: 1999,
@@ -52,17 +54,20 @@ const COURSE_PLANS: CoursePlan[] = [
   {
     id: 'plan-mock',
     name: 'Kerala PSC Mock Test Series Only',
+    subtitle: '87 MCQ Master Series & Statewide Ranked Exams with -0.33 Negative Marking',
     originalPrice: 1499,
     price: 499,
     features: [
       'Full-Length & Module-wise Kerala PSC Mock Tests',
-      'Real -0.33 negative marking calculation & timer',
-      'Step-by-step Ranker Tips & solutions review'
+      '87 MCQ Surveyor Grade II Master Series',
+      'Real -0.33 negative marking calculation & live rank',
+      'Step-by-step verified explanations and faculty tips'
     ]
   },
   {
     id: 'plan-crash',
     name: 'Fast-Track Survey Crash Course',
+    subtitle: 'High-yield numerical formula revision, Total Station/GPS & Survey Act',
     originalPrice: 2499,
     price: 999,
     features: [
@@ -74,18 +79,28 @@ const COURSE_PLANS: CoursePlan[] = [
 ];
 
 export const EnrollmentModal: React.FC = () => {
-  const { isEnrollmentModalOpen, setIsEnrollmentModalOpen, enrollStudent, showToast } = useApp();
+  const { isEnrollmentModalOpen, setIsEnrollmentModalOpen, enrollStudent, showToast, currentUser } = useApp();
 
   // Multi-step: 1 = Details, 2 = Plan & Payment, 3 = Payment Success
   const [step, setStep] = useState<1 | 2 | 3>(1);
 
-  // Form State
-  const [name, setName] = useState('Aswathi Nair');
-  const [email, setEmail] = useState('aswathi.surveyor@gmail.com');
-  const [phone, setPhone] = useState('+91 98471 23456');
-  const [district, setDistrict] = useState('Palakkad');
-  const [targetExam, setTargetExam] = useState('Kerala PSC Surveyor Gr. II & Land Records');
+  // Form State initialized from logged-in user
+  const [name, setName] = useState(currentUser?.name || 'Aswathi Nair');
+  const [email, setEmail] = useState(currentUser?.email || 'aswathi.surveyor@gmail.com');
+  const [phone, setPhone] = useState(currentUser?.phone || '+91 98471 23456');
+  const [district, setDistrict] = useState(currentUser?.district || 'Palakkad');
+  const [targetExam, setTargetExam] = useState(currentUser?.targetExam || 'Kerala PSC Surveyor Gr. II & Land Records');
   const [selectedPlanId, setSelectedPlanId] = useState<string>('plan-master');
+
+  React.useEffect(() => {
+    if (currentUser) {
+      if (currentUser.name) setName(currentUser.name);
+      if (currentUser.email) setEmail(currentUser.email);
+      if (currentUser.phone) setPhone(currentUser.phone);
+      if (currentUser.district) setDistrict(currentUser.district);
+      if (currentUser.targetExam) setTargetExam(currentUser.targetExam);
+    }
+  }, [currentUser, isEnrollmentModalOpen]);
 
   // Payment Method State
   const [paymentMethod, setPaymentMethod] = useState<'upi_qr' | 'upi_id' | 'card' | 'netbanking' | 'whatsapp'>('upi_qr');
@@ -138,7 +153,8 @@ export const EnrollmentModal: React.FC = () => {
   };
 
   const handleFinishEnrollment = () => {
-    enrollStudent(name, email, phone, district, targetExam);
+    const planKey = selectedPlanId === 'plan-master' ? 'master' : selectedPlanId === 'plan-mock' ? 'mock_only' : 'crash';
+    enrollStudent(name, email, phone, district, targetExam, planKey);
     setStep(1);
   };
 
@@ -312,7 +328,7 @@ export const EnrollmentModal: React.FC = () => {
                             )}
                           </div>
                           <div className="text-[11px] text-slate-500">
-                            Includes video classes, PDF notes & Kerala PSC negative marking tests
+                            {plan.subtitle}
                           </div>
                         </div>
 
@@ -337,16 +353,13 @@ export const EnrollmentModal: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => {
-                    setName('Aswathi Nair');
-                    setEmail('aswathi.surveyor@gmail.com');
-                    setPhone('+91 98471 23456');
-                    setDistrict('Palakkad');
-                    enrollStudent('Aswathi Nair', 'aswathi.surveyor@gmail.com', '+91 98471 23456', 'Palakkad', 'Surveyor Gr. II');
+                    const planKey = selectedPlanId === 'plan-master' ? 'master' : selectedPlanId === 'plan-mock' ? 'mock_only' : 'crash';
+                    enrollStudent(name, email, phone, district, targetExam, planKey);
                   }}
                   className="inline-flex items-center justify-center gap-1.5 px-4 py-3 border border-slate-300 text-slate-700 hover:bg-slate-100 rounded-xl text-xs font-semibold transition"
                 >
                   <BookOpen className="w-3.5 h-3.5 text-slate-500" />
-                  Instant Demo Bypass
+                  Instant Demo Activation
                 </button>
               </div>
             </form>

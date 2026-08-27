@@ -76,8 +76,18 @@ export const DashboardPage: React.FC = () => {
               <h1 className="text-xl sm:text-2xl font-extrabold text-white">
                 Namaskaram, {currentUser.name}! 👋
               </h1>
-              <span className="bg-brand-500/20 text-brand-300 text-xs px-2.5 py-0.5 rounded-full font-bold border border-brand-500/30">
-                Enrolled Aspirant
+              <span className={`text-xs px-2.5 py-0.5 rounded-full font-bold border ${
+                currentUser.subscriptionPlan === 'master'
+                  ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
+                  : currentUser.subscriptionPlan === 'mock_only'
+                  ? 'bg-purple-500/20 text-purple-300 border-purple-500/30'
+                  : 'bg-amber-500/20 text-amber-300 border-amber-500/30'
+              }`}>
+                {currentUser.subscriptionPlan === 'master'
+                  ? 'Master Course Enrolled'
+                  : currentUser.subscriptionPlan === 'mock_only'
+                  ? 'Mock Series Member'
+                  : 'Free Student Plan'}
               </span>
             </div>
             <p className="text-slate-300 text-xs sm:text-sm">
@@ -99,6 +109,38 @@ export const DashboardPage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Free Plan Upgrade Card */}
+      {currentUser.subscriptionPlan === 'free' && (
+        <div className="bg-gradient-to-r from-amber-500/10 via-brand-500/10 to-emerald-500/10 border-2 border-amber-300 rounded-3xl p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 shadow-sm animate-fadeIn">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-amber-100 border border-amber-300 flex items-center justify-center flex-shrink-0 text-amber-700">
+              <Sparkles className="w-6 h-6" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h3 className="font-extrabold text-slate-900 text-base">
+                  Unlock Full Kerala PSC Syllabus & Official Mock Test Series
+                </h3>
+                <span className="bg-amber-100 text-amber-900 text-[10px] font-black px-2 py-0.5 rounded-full">
+                  Special Offer
+                </span>
+              </div>
+              <p className="text-slate-600 text-xs sm:text-sm mt-1">
+                You are currently on the Free Tier with access to free preview documents. Upgrade anytime to unlock all 8 syllabus modules, handwritten formula books, and statewide rank tracking.
+              </p>
+            </div>
+          </div>
+
+          <button
+            onClick={() => setIsEnrollmentModalOpen(true)}
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 bg-gradient-to-r from-brand-600 to-brand-700 hover:from-brand-700 hover:to-brand-800 text-white font-black text-xs sm:text-sm rounded-2xl shadow transition flex-shrink-0"
+          >
+            <span>Upgrade / Purchase Plan</span>
+            <ArrowRight className="w-4 h-4" />
+          </button>
+        </div>
+      )}
 
       {/* 4 Summary Metric Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

@@ -14,7 +14,8 @@ import {
   LayoutDashboard,
   GraduationCap,
   LogOut,
-  KeyRound
+  KeyRound,
+  CheckCircle
 } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
@@ -181,7 +182,7 @@ export const Navbar: React.FC = () => {
           </nav>
 
           {/* Right Action Profile / Enrollment */}
-          <div className="hidden sm:flex items-center gap-3">
+          <div className="hidden sm:flex items-center gap-2.5">
             {role === 'instructor' ? (
               <button
                 onClick={() => handleNavClick('admin')}
@@ -190,14 +191,30 @@ export const Navbar: React.FC = () => {
                 <ShieldAlert className="w-3.5 h-3.5 text-amber-400" />
                 Instructor Portal
               </button>
-            ) : (
+            ) : currentUser.subscriptionPlan && currentUser.subscriptionPlan !== 'free' ? (
               <button
                 onClick={() => setIsEnrollmentModalOpen(true)}
-                className="inline-flex items-center gap-1.5 bg-gradient-to-r from-brand-600 to-brand-700 hover:from-brand-700 hover:to-brand-800 text-white text-xs font-semibold px-4 py-2 rounded-xl shadow-sm hover:shadow transition-all"
+                className="inline-flex items-center gap-1.5 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold px-3.5 py-1.5 rounded-xl shadow-xs transition"
               >
-                <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-                Enroll / Student Login
+                <CheckCircle className="w-3.5 h-3.5 text-emerald-300" />
+                <span>Enrolled Member</span>
               </button>
+            ) : (
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setIsEnrollmentModalOpen(true)}
+                  className="inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 text-xs font-extrabold px-3.5 py-1.5 rounded-xl shadow-xs transition active:scale-95"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-slate-950" />
+                  <span>Purchase Plan</span>
+                </button>
+                <button
+                  onClick={() => openAuthModal('student')}
+                  className="inline-flex items-center gap-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-2.5 py-1.5 rounded-xl border border-slate-200 transition"
+                >
+                  <span>Login / Switch</span>
+                </button>
+              </div>
             )}
 
             {/* User Avatar & Name */}
@@ -215,8 +232,16 @@ export const Navbar: React.FC = () => {
                 <div className="text-xs font-bold text-slate-800 group-hover:text-brand-600 leading-tight">
                   {currentUser.name}
                 </div>
-                <div className="text-[10px] text-slate-500 capitalize">
-                  {role === 'instructor' ? 'Course Instructor' : 'Enrolled Student'}
+                <div className="text-[10px] text-slate-500">
+                  {role === 'instructor'
+                    ? 'Course Instructor'
+                    : currentUser.subscriptionPlan === 'master'
+                    ? 'Master Enrolled'
+                    : currentUser.subscriptionPlan === 'mock_only'
+                    ? 'Mock Series Plan'
+                    : currentUser.subscriptionPlan === 'crash'
+                    ? 'Crash Course Plan'
+                    : 'Free Tier (Free Docs)'}
                 </div>
               </div>
             </div>

@@ -15,6 +15,8 @@ import {
   Upload,
   BookOpen,
   Shield,
+  Lock,
+  Sparkles,
 } from 'lucide-react';
 import { AskDoubtModal } from '../modals/AskDoubtModal';
 import { PdfViewer } from '../PdfViewer';
@@ -29,30 +31,42 @@ export const ClassesPage: React.FC = () => {
     toggleCompleteNote,
     toggleBookmarkNote,
     doubts,
-    showToast
+    showToast,
+    setIsEnrollmentModalOpen
   } = useApp();
+
+  const isMasterEnrolled =
+    currentUser.role === 'instructor' ||
+    currentUser.subscriptionPlan === 'master' ||
+    currentUser.subscriptionPlan === 'crash';
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedModuleFilter, setSelectedModuleFilter] = useState<string>('all');
+  const [filterMode, setFilterMode] = useState<'free' | 'all'>('free');
   const [activeTab, setActiveTab] = useState<'document' | 'formulas' | 'doubts'>('document');
   const [isDoubtModalOpen, setIsDoubtModalOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Active note
-  const activeNote = studyNotes.find((n) => n.id === selectedNoteId) || studyNotes[0];
-  const isCompleted = activeNote ? currentUser.completedClassIds.includes(activeNote.id) : false;
-  const isBookmarked = activeNote ? currentUser.bookmarkedClassIds.includes(activeNote.id) : false;
-
-  // Filtered notes
+  // Filtered notes - in free view, only free preview documents & notes are shown
   const filteredNotes = studyNotes.filter((n) => {
+    const matchesFree = isMasterEnrolled || filterMode === 'all' || n.isFreePreview;
     const matchesModule = selectedModuleFilter === 'all' || n.moduleId === selectedModuleFilter;
     const matchesSearch =
       n.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       (n.titleMalayalam && n.titleMalayalam.toLowerCase().includes(searchQuery.toLowerCase())) ||
       n.description.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesModule && matchesSearch;
+    return matchesFree && matchesModule && matchesSearch;
   });
+
+  // Active note
+  const activeNote =
+    filteredNotes.find((n) => n.id === selectedNoteId) ||
+    studyNotes.find((n) => n.id === selectedNoteId) ||
+    filteredNotes[0] ||
+    studyNotes[0];
+  const isCompleted = activeNote ? currentUser.completedClassIds.includes(activeNote.id) : false;
+  const isBookmarked = activeNote ? currentUser.bookmarkedClassIds.includes(activeNote.id) : false;
 
   const relatedDoubts = doubts.filter((d) => d.relatedClassId === activeNote?.id);
   const handleInPagePdfUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -85,6 +99,40 @@ export const ClassesPage: React.FC = () => {
         className="hidden"
       />
 
+      {/* Free Tier Student Alert Banner & Upgrade Action */}
+      {!isFullscreen && !isMasterEnrolled && (
+        <div className="bg-gradient-to-r from-amber-500/10 via-emerald-500/10 to-brand-500/10 border-2 border-amber-300/80 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm animate-fadeIn">
+          <div className="flex items-center gap-3.5">
+            <div className="w-11 h-11 rounded-2xl bg-amber-100 border border-amber-300 flex items-center justify-center flex-shrink-0 text-amber-700">
+              <Sparkles className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="font-extrabold text-slate-900 text-sm">
+                  Free Student Plan Active
+                </span>
+                <span className="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-emerald-300">
+                  Showing Free Documents & PDFs
+                </span>
+              </div>
+              <p className="text-slate-600 text-xs mt-0.5">
+                You have free access to introductory chapters and PDF formula sheets. Purchase a course plan to unlock all 8 complete syllabus modules & full solved PYQ bank.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 w-full sm:w-auto flex-shrink-0">
+            <button
+              onClick={() => setIsEnrollmentModalOpen(true)}
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-brand-600 to-brand-700 hover:from-brand-700 hover:to-brand-800 text-white font-bold text-xs rounded-xl shadow transition"
+            >
+              <Zap className="w-4 h-4 text-amber-300" />
+              <span>Purchase Course Plan</span>
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Header with Title & Filter */}
       {!isFullscreen && (
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
@@ -102,8 +150,36 @@ export const ClassesPage: React.FC = () => {
             </p>
           </div>
 
-          {/* Search & Module filter bar */}
-          <div className="flex flex-wrap items-center gap-3">
+          {/* Search, Filter Mode & Module filter bar */}
+          <div className="flex flex-wrap items-center gap-2.5">
+            {!isMasterEnrolled && (
+              <div className="inline-flex rounded-xl bg-slate-100 p-1 text-xs font-bold border border-slate-200">
+                <button
+                  type="button"
+                  onClick={() => setFilterMode('free')}
+                  className={`px-3 py-1.5 rounded-lg transition ${
+                    filterMode === 'free'
+                      ? 'bg-white text-emerald-700 shadow-sm font-extrabold'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  🎁 Free Documents ({studyNotes.filter((n) => n.isFreePreview).length})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFilterMode('all')}
+                  className={`px-3 py-1.5 rounded-lg transition flex items-center gap-1 ${
+                    filterMode === 'all'
+                      ? 'bg-white text-brand-700 shadow-sm font-extrabold'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  <span>All ({studyNotes.length})</span>
+                  <Lock className="w-3 h-3 text-amber-500" />
+                </button>
+              </div>
+            )}
+
             <div className="relative">
               <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
@@ -111,7 +187,7 @@ export const ClassesPage: React.FC = () => {
                 placeholder="Search notes or formulas..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9 pr-3 py-2 border border-slate-300 rounded-xl text-xs sm:text-sm outline-none focus:ring-2 focus:ring-brand-500 w-48 sm:w-60 bg-slate-50"
+                className="pl-9 pr-3 py-2 border border-slate-300 rounded-xl text-xs sm:text-sm outline-none focus:ring-2 focus:ring-brand-500 w-44 sm:w-56 bg-slate-50"
               />
             </div>
 
@@ -245,15 +321,70 @@ export const ClassesPage: React.FC = () => {
                 </button>
               </div>
 
-              {/* TAB 1: PDF DOCUMENT VIEWER */}
+              {/* TAB 1: PDF DOCUMENT VIEWER OR LOCKED MASTER PREVIEW */}
               {activeTab === 'document' && (
                 <div className="animate-fadeIn">
-                  <PdfViewer
-                    fileUrl={activeNote.pdfNotesUrl}
-                    title={activeNote.pdfNotesTitle || `${activeNote.title.replace(/\s+/g, '_')}.pdf`}
-                    fullscreen={isFullscreen}
-                    onToggleFullscreen={() => setIsFullscreen(!isFullscreen)}
-                  />
+                  {activeNote.isFreePreview || isMasterEnrolled ? (
+                    <PdfViewer
+                      fileUrl={activeNote.pdfNotesUrl}
+                      title={activeNote.pdfNotesTitle || `${activeNote.title.replace(/\s+/g, '_')}.pdf`}
+                      fullscreen={isFullscreen}
+                      onToggleFullscreen={() => setIsFullscreen(!isFullscreen)}
+                    />
+                  ) : (
+                    <div className="bg-gradient-to-br from-slate-900 via-slate-950 to-brand-950 rounded-2xl p-8 sm:p-12 text-white text-center space-y-6 border border-brand-500/30 shadow-2xl my-2">
+                      <div className="w-16 h-16 mx-auto rounded-2xl bg-amber-500/20 border border-amber-400/30 flex items-center justify-center text-amber-300 shadow-inner">
+                        <Lock className="w-8 h-8 text-amber-400" />
+                      </div>
+
+                      <div className="space-y-2 max-w-lg mx-auto">
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-400/20 text-amber-300 border border-amber-400/30">
+                          <Sparkles className="w-3.5 h-3.5" />
+                          Complete Master Course Plan Required
+                        </span>
+                        <h3 className="text-xl sm:text-2xl font-black text-white">
+                          {activeNote.title}
+                        </h3>
+                        <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
+                          This complete study document and handwritten PDF formula book is reserved for enrolled members. Free accounts can view free preview chapters and free formula sheets.
+                        </p>
+                      </div>
+
+                      {/* Summary points preview */}
+                      <div className="max-w-md mx-auto bg-white/5 border border-white/10 rounded-xl p-4 text-left space-y-2 text-xs">
+                        <div className="font-bold text-amber-300 text-[11px] uppercase tracking-wider">
+                          Topics covered in this chapter:
+                        </div>
+                        <ul className="space-y-1.5 text-slate-300">
+                          {activeNote.chapterOverview.slice(0, 3).map((item, i) => (
+                            <li key={i} className="flex items-start gap-2">
+                              <span className="text-amber-400 font-bold">•</span>
+                              <span>{item}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
+                        <button
+                          onClick={() => setIsEnrollmentModalOpen(true)}
+                          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black text-xs sm:text-sm rounded-xl shadow-lg hover:shadow-xl transition-all"
+                        >
+                          <Zap className="w-4 h-4 text-slate-950" />
+                          <span>Purchase Course Plan (Unlock All 8 Modules)</span>
+                        </button>
+                        <button
+                          onClick={() => {
+                            const freeNote = studyNotes.find((n) => n.isFreePreview);
+                            if (freeNote) setSelectedNoteId(freeNote.id);
+                          }}
+                          className="w-full sm:w-auto px-5 py-3.5 bg-white/10 hover:bg-white/15 text-white font-semibold text-xs rounded-xl border border-white/20 transition"
+                        >
+                          View Free Document (Chain Surveying)
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -374,8 +505,19 @@ export const ClassesPage: React.FC = () => {
                     </div>
 
                     <div className="space-y-1.5 flex-1 min-w-0">
-                      <div className="font-bold text-slate-900 truncate">
-                        {note.title}
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="font-bold text-slate-900 truncate">
+                          {note.title}
+                        </span>
+                        {note.isFreePreview ? (
+                          <span className="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-1.5 py-0.2 rounded shrink-0">
+                            Free PDF
+                          </span>
+                        ) : !isMasterEnrolled ? (
+                          <span className="bg-amber-100 text-amber-900 text-[10px] font-bold px-1.5 py-0.2 rounded shrink-0 flex items-center gap-0.5">
+                            <Lock className="w-2.5 h-2.5" /> Plan
+                          </span>
+                        ) : null}
                       </div>
                       {note.titleMalayalam && (
                         <div className="text-[11px] text-slate-500 truncate ml-text">

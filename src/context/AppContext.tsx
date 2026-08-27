@@ -65,7 +65,7 @@ interface AppContextType {
   removeToast: (id: string) => void;
   
   // Action Handlers
-  enrollStudent: (name: string, email: string, phone: string, district: string, targetExam: string) => void;
+  enrollStudent: (name: string, email: string, phone: string, district: string, targetExam: string, plan?: 'free' | 'master' | 'mock_only' | 'crash') => void;
   toggleCompleteNote: (noteId: string) => void;
   toggleBookmarkNote: (noteId: string) => void;
   toggleSavePYQ: (pyqId: string) => void;
@@ -367,28 +367,45 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     showToast('Logged out. Switched to Guest / Student view.', 'info');
   };
 
-  const enrollStudent = (name: string, email: string, phone: string, district: string, targetExam: string) => {
-    const newStudent: User = {
-      id: 'u-' + Date.now(),
-      name,
-      email,
-      phone,
+  const enrollStudent = (
+    name: string,
+    email: string,
+    phone: string,
+    district: string,
+    targetExam: string,
+    plan: 'free' | 'master' | 'mock_only' | 'crash' = 'master'
+  ) => {
+    const updatedStudent: User = {
+      id: currentUser.id && currentUser.id !== 'u-demo-student' ? currentUser.id : 'u-' + Date.now(),
+      name: name || currentUser.name,
+      email: email || currentUser.email,
+      phone: phone || currentUser.phone,
       role: 'student',
-      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80',
-      enrolledAt: new Date().toISOString().split('T')[0],
-      district,
-      targetExam,
-      completedClassIds: [],
-      bookmarkedClassIds: [],
-      savedPYQIds: [],
-      streakDays: 1
+      avatar: currentUser.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80',
+      enrolledAt: currentUser.enrolledAt || new Date().toISOString().split('T')[0],
+      district: district || currentUser.district || 'Palakkad',
+      targetExam: targetExam || currentUser.targetExam || 'Surveyor Gr. II',
+      completedClassIds: currentUser.completedClassIds || [],
+      bookmarkedClassIds: currentUser.bookmarkedClassIds || [],
+      savedPYQIds: currentUser.savedPYQIds || [],
+      streakDays: currentUser.streakDays || 1,
+      subscriptionPlan: plan
     };
 
-    setCurrentUser(newStudent);
-    setStudents((prev) => [newStudent, ...prev]);
+    setCurrentUser(updatedStudent);
+    setStudents((prev) => [updatedStudent, ...prev.filter((s) => s.id !== updatedStudent.id)]);
     setIsEnrollmentModalOpen(false);
     setActiveTab('dashboard');
-    showToast(`Welcome ${name}! You are now enrolled in the Kerala PSC Survey Course.`, 'success');
+    showToast(
+      `🎉 Upgraded to ${
+        plan === 'master'
+          ? 'Complete Master Course'
+          : plan === 'mock_only'
+          ? 'Mock Test Series'
+          : 'Crash Course'
+      }! All features unlocked.`,
+      'success'
+    );
   };
 
   const toggleCompleteNote = (noteId: string) => {

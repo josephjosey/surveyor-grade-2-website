@@ -14,6 +14,7 @@ export interface User {
   bookmarkedClassIds: string[]; // represents saved note ids
   savedPYQIds: string[];
   streakDays: number;
+  subscriptionPlan?: 'free' | 'master' | 'mock_only' | 'crash';
 }
 
 export interface ClassModule {
