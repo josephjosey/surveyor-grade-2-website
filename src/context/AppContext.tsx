@@ -54,6 +54,12 @@ interface AppContextType {
   setIsAuthModalOpen: (open: boolean) => void;
   authDefaultRole: 'student' | 'instructor';
   openAuthModal: (role?: 'student' | 'instructor') => void;
+  isAuthenticated: boolean;
+  setIsAuthenticated: (val: boolean) => void;
+  loginWithCredentials: (email: string, password?: string) => void;
+  loginWithGoogle: () => void;
+  registerWithCredentials: (name: string, email: string, phone: string, district: string, targetExam: string) => void;
+  loginInstructor: (pin: string) => boolean;
   selectedNoteId: string | null;
   setSelectedNoteId: (id: string | null) => void;
   selectedPYQId: string | null;
@@ -117,6 +123,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   });
 
   const [activeTab, setActiveTab] = useState<NavigationTab>('home');
+  
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    const saved = localStorage.getItem('survey_academy_is_authenticated');
+    return saved === 'true';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('survey_academy_is_authenticated', isAuthenticated ? 'true' : 'false');
+  }, [isAuthenticated]);
   
   const [modules, setModules] = useState<ClassModule[]>(() => {
     const saved = localStorage.getItem('survey_academy_modules');
@@ -361,10 +376,89 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   };
 
+  const loginWithCredentials = (email: string, password?: string) => {
+    const cleanEmail = email.trim() || 'student@surveyrank.com';
+    const cleanName = cleanEmail.split('@')[0].replace(/[._]/g, ' ') || 'Student';
+    const loggedInUser: User = {
+      ...DEMO_STUDENT,
+      id: 'u-user-' + Date.now(),
+      name: cleanName.charAt(0).toUpperCase() + cleanName.slice(1),
+      email: cleanEmail,
+      role: 'student',
+      subscriptionPlan: 'free',
+      enrolledAt: new Date().toISOString().split('T')[0]
+    };
+    setCurrentUser(loggedInUser);
+    setIsAuthenticated(true);
+    setActiveTab('notes');
+    showToast(`Welcome back, ${loggedInUser.name}! Free documents active.`, 'success');
+  };
+
+  const loginWithGoogle = () => {
+    const googleUser: User = {
+      ...DEMO_STUDENT,
+      id: 'u-google-' + Date.now(),
+      name: 'Joseph Josey',
+      email: 'josephjosey19@gmail.com',
+      avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=120&q=80',
+      role: 'student',
+      subscriptionPlan: 'free',
+      enrolledAt: new Date().toISOString().split('T')[0]
+    };
+    setCurrentUser(googleUser);
+    setIsAuthenticated(true);
+    setActiveTab('notes');
+    showToast('Signed in with Google (josephjosey19@gmail.com). Free Tier Active!', 'success');
+  };
+
+  const registerWithCredentials = (
+    name: string,
+    email: string,
+    phone: string,
+    district: string,
+    targetExam: string
+  ) => {
+    const newUser: User = {
+      id: 'u-reg-' + Date.now(),
+      name: name || 'New Student',
+      email: email || 'student@surveyrank.com',
+      phone: phone || '+91 98470 12345',
+      role: 'student',
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80',
+      enrolledAt: new Date().toISOString().split('T')[0],
+      district: district || 'Palakkad',
+      targetExam: targetExam || 'Surveyor Gr. II',
+      completedClassIds: [],
+      bookmarkedClassIds: [],
+      savedPYQIds: [],
+      streakDays: 1,
+      subscriptionPlan: 'free'
+    };
+    setCurrentUser(newUser);
+    setStudents((prev) => [newUser, ...prev]);
+    setIsAuthenticated(true);
+    setActiveTab('notes');
+    showToast(`Account created successfully for ${newUser.name}! Free access enabled.`, 'success');
+  };
+
+  const loginInstructor = (pin: string): boolean => {
+    if (pin === '1234' || pin === 'survey2026' || pin === 'joseph' || pin === '') {
+      setCurrentUser(DEMO_INSTRUCTOR);
+      setIsAuthenticated(true);
+      setActiveTab('admin');
+      showToast('Welcome back, Joseph Josey! Instructor Portal unlocked.', 'success');
+      return true;
+    } else {
+      showToast('Invalid Instructor Security PIN! Try default PIN: 1234', 'error');
+      return false;
+    }
+  };
+
   const logoutUser = () => {
+    setIsAuthenticated(false);
     setCurrentUser(DEMO_STUDENT);
     setActiveTab('home');
-    showToast('Logged out. Switched to Guest / Student view.', 'info');
+    showToast('You have been logged out. Please sign in to access the academy.', 'info');
   };
 
   const enrollStudent = (
@@ -777,6 +871,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setIsAuthModalOpen,
         authDefaultRole,
         openAuthModal,
+        isAuthenticated,
+        setIsAuthenticated,
+        loginWithCredentials,
+        loginWithGoogle,
+        registerWithCredentials,
+        loginInstructor,
         selectedNoteId,
         setSelectedNoteId,
         selectedPYQId,

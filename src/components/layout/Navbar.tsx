@@ -200,21 +200,13 @@ export const Navbar: React.FC = () => {
                 <span>Enrolled Member</span>
               </button>
             ) : (
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => setIsEnrollmentModalOpen(true)}
-                  className="inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 text-xs font-extrabold px-3.5 py-1.5 rounded-xl shadow-xs transition active:scale-95"
-                >
-                  <Sparkles className="w-3.5 h-3.5 text-slate-950" />
-                  <span>Purchase Plan</span>
-                </button>
-                <button
-                  onClick={() => openAuthModal('student')}
-                  className="inline-flex items-center gap-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-2.5 py-1.5 rounded-xl border border-slate-200 transition"
-                >
-                  <span>Login / Switch</span>
-                </button>
-              </div>
+              <button
+                onClick={() => setIsEnrollmentModalOpen(true)}
+                className="inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 text-xs font-extrabold px-3.5 py-1.5 rounded-xl shadow-xs transition active:scale-95"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-slate-950" />
+                <span>Purchase Plan</span>
+              </button>
             )}
 
             {/* User Avatar & Name */}
@@ -241,10 +233,19 @@ export const Navbar: React.FC = () => {
                     ? 'Mock Series Plan'
                     : currentUser.subscriptionPlan === 'crash'
                     ? 'Crash Course Plan'
-                    : 'Free Tier (Free Docs)'}
+                    : 'Free Member (Free Docs)'}
                 </div>
               </div>
             </div>
+
+            {/* Logout Button */}
+            <button
+              onClick={logoutUser}
+              title="Log out and return to Login Screen"
+              className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition flex items-center gap-1"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
           </div>
 
           {/* Mobile Menu Button */}
