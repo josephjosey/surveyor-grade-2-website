@@ -278,18 +278,105 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     loadSupabaseCloudData();
   }, []);
 
-  // 1.6. Supabase Profile Sync: Load authenticated user profile from Supabase profiles table
+  // 1.6. Supabase Live Session & Profile Sync: Automatically sync Google & email accounts to currentUser
   useEffect(() => {
-    if (!currentUser?.id) return;
-    SupabaseDb.fetchUserProfile(currentUser.id).then((profile) => {
-      if (profile) {
-        setCurrentUser((prev) => ({
-          ...prev,
-          ...profile
-        }));
+    const syncUserSession = async (supabaseUser: any) => {
+      if (!supabaseUser) {
+        setIsAuthenticated(false);
+        return;
+      }
+
+      setIsAuthenticated(true);
+
+      const isInstructorEmail =
+        supabaseUser.email === 'josephjosey19@gmail.com' ||
+        supabaseUser.email === 'josephjosey@gmail.com';
+
+      const displayName =
+        supabaseUser.user_metadata?.full_name ||
+        supabaseUser.user_metadata?.name ||
+        supabaseUser.user_metadata?.user_name ||
+        (supabaseUser.email ? supabaseUser.email.split('@')[0] : 'Candidate');
+
+      const avatarUrl =
+        supabaseUser.user_metadata?.avatar_url ||
+        supabaseUser.user_metadata?.picture ||
+        'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=120&q=80';
+
+      // 1. Fetch user's profile from Supabase profiles table
+      let profile = await SupabaseDb.fetchUserProfile(supabaseUser.id);
+
+      // 2. If profile does not exist yet (e.g. first Google login), create it in Supabase
+      if (!profile) {
+        const newProfile: Partial<User> = {
+          name: isInstructorEmail ? 'Joseph Josey' : displayName,
+          email: supabaseUser.email || '',
+          phone: supabaseUser.phone || '',
+          role: isInstructorEmail ? 'instructor' : 'student',
+          avatar: avatarUrl,
+          enrolledAt: new Date().toISOString().split('T')[0],
+          district: 'Palakkad',
+          targetExam: isInstructorEmail
+            ? 'Instructor & Course Director (Kerala PSC Survey & KWA)'
+            : 'Kerala PSC Surveyor Gr. II & KWA Overseer',
+          completedClassIds: [],
+          bookmarkedClassIds: [],
+          savedPYQIds: [],
+          streakDays: 1,
+          subscriptionPlan: isInstructorEmail ? 'master' : 'free'
+        };
+        await SupabaseDb.updateUserProfile(supabaseUser.id, newProfile);
+        profile = newProfile;
+      }
+
+      // 3. Set the active currentUser to the real authenticated candidate/instructor
+      const activeUser: User = {
+        id: supabaseUser.id,
+        name: profile.name || (isInstructorEmail ? 'Joseph Josey' : displayName),
+        email: supabaseUser.email || profile.email || '',
+        phone: profile.phone || '',
+        role: (profile.role as any) || (isInstructorEmail ? 'instructor' : 'student'),
+        avatar: profile.avatar || avatarUrl,
+        enrolledAt: profile.enrolledAt || new Date().toISOString().split('T')[0],
+        district: profile.district || 'Palakkad',
+        targetExam:
+          profile.targetExam ||
+          (isInstructorEmail
+            ? 'Instructor & Course Director (Kerala PSC Survey & KWA)'
+            : 'Kerala PSC Surveyor Gr. II & KWA Overseer'),
+        completedClassIds: profile.completedClassIds || [],
+        bookmarkedClassIds: profile.bookmarkedClassIds || [],
+        savedPYQIds: profile.savedPYQIds || [],
+        streakDays: profile.streakDays || 1,
+        subscriptionPlan: (profile.subscriptionPlan as any) || (isInstructorEmail ? 'master' : 'free')
+      };
+
+      setCurrentUser(activeUser);
+      setStudents((prev) => [activeUser, ...prev.filter((s) => s.id !== activeUser.id)]);
+    };
+
+    // Get current session on initial render
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        syncUserSession(session.user);
+      } else {
+        setIsAuthenticated(false);
       }
     });
-  }, [currentUser?.id]);
+
+    // Listen to real-time auth changes (Google OAuth redirect, login, logout)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        syncUserSession(session.user);
+      } else {
+        setIsAuthenticated(false);
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
 
   // 2. Persistent Disk Sync: Auto-save all changes to data/database.json on disk
   useEffect(() => {
@@ -500,8 +587,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     } catch (e) {
       // ignore
     }
+    localStorage.removeItem('survey_academy_user');
+    localStorage.removeItem('survey_academy_is_authenticated');
     setIsAuthenticated(false);
-    setCurrentUser(DEMO_STUDENT);
     setActiveTab('home');
     if (window.location.pathname !== '/login') {
       window.history.pushState({}, '', '/login');
