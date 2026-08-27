@@ -259,12 +259,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   useEffect(() => {
     async function loadSupabaseCloudData() {
       try {
-        const [notes, tests, attempts, pyqs, doubtsList] = await Promise.all([
+        const [notes, tests, attempts, pyqs, doubtsList, allProfiles] = await Promise.all([
           SupabaseDb.fetchStudyNotes(),
           SupabaseDb.fetchMockTests(),
           SupabaseDb.fetchTestAttempts(),
           SupabaseDb.fetchPYQPapers(),
-          SupabaseDb.fetchDoubts()
+          SupabaseDb.fetchDoubts(),
+          SupabaseDb.fetchAllProfiles()
         ]);
 
         if (notes && notes.length > 0) setStudyNotes(notes);
@@ -272,6 +273,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         if (attempts && attempts.length > 0) setTestAttempts(attempts);
         if (pyqs && pyqs.length > 0) setPyqPapers(pyqs);
         if (doubtsList && doubtsList.length > 0) setDoubts(doubtsList);
+        if (allProfiles && allProfiles.length > 0) setStudents(allProfiles);
       } catch (err) {
         console.warn('Supabase cloud fetch notice:', err);
       }

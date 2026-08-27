@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
 import {
   BookOpen,
@@ -20,7 +20,9 @@ import {
   Trophy,
   Crown,
   Medal,
-  Camera
+  Camera,
+  Edit3,
+  X
 } from 'lucide-react';
 import { uploadUserFile } from '../../services/storageService';
 import * as SupabaseDb from '../../services/supabaseService';
@@ -65,6 +67,37 @@ export const DashboardPage: React.FC = () => {
 
   // Bookmarked notes
   const bookmarkedNotes = studyNotes.filter((n) => currentUser.bookmarkedClassIds.includes(n.id));
+
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editName, setEditName] = useState(currentUser.name);
+  const [editTargetExam, setEditTargetExam] = useState(currentUser.targetExam || 'Kerala PSC Surveyor Gr. II');
+  const [editDistrict, setEditDistrict] = useState(currentUser.district || 'Palakkad');
+  const [editPhone, setEditPhone] = useState(currentUser.phone || '');
+
+  useEffect(() => {
+    setEditName(currentUser.name);
+    setEditTargetExam(currentUser.targetExam || 'Kerala PSC Surveyor Gr. II');
+    setEditDistrict(currentUser.district || 'Palakkad');
+    setEditPhone(currentUser.phone || '');
+  }, [currentUser]);
+
+  const handleSaveProfile = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!currentUser?.id) return;
+
+    showToast('Saving profile to Supabase...', 'info');
+    const updates = {
+      name: editName,
+      targetExam: editTargetExam,
+      district: editDistrict,
+      phone: editPhone
+    };
+
+    setCurrentUser((prev) => ({ ...prev, ...updates }));
+    await SupabaseDb.updateUserProfile(currentUser.id, updates);
+    setIsEditModalOpen(false);
+    showToast('Candidate profile updated in Supabase!', 'success');
+  };
 
   const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -119,10 +152,20 @@ export const DashboardPage: React.FC = () => {
                   : 'Free Student Plan'}
               </span>
             </div>
-            <p className="text-slate-300 text-xs sm:text-sm">
-              Target: <span className="text-amber-300 font-semibold">{currentUser.targetExam || 'Kerala PSC Surveyor Gr. II & Land Records'}</span>
-              {currentUser.district && ` • ${currentUser.district} District`}
-            </p>
+            <div className="flex items-center gap-2 pt-0.5 flex-wrap">
+              <p className="text-slate-300 text-xs sm:text-sm">
+                Target: <span className="text-amber-300 font-semibold">{currentUser.targetExam || 'Kerala PSC Surveyor Gr. II & Land Records'}</span>
+                {currentUser.district && ` • ${currentUser.district} District`}
+              </p>
+              <button
+                onClick={() => setIsEditModalOpen(true)}
+                className="text-[11px] font-bold text-brand-300 hover:text-white bg-white/10 hover:bg-white/20 px-2 py-0.5 rounded-lg transition inline-flex items-center gap-1"
+                title="Edit Target Exam & District"
+              >
+                <Edit3 className="w-3 h-3" />
+                <span>Edit Profile</span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -478,6 +521,107 @@ export const DashboardPage: React.FC = () => {
         </div>
 
       </div>
+
+      {/* Edit Profile Modal */}
+      {isEditModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/75 backdrop-blur-sm animate-fadeIn">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-200 text-slate-900">
+            <div className="bg-slate-900 px-6 py-4 text-white flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Target className="w-5 h-5 text-amber-400" />
+                <h3 className="text-base font-bold">Edit Candidate Profile</h3>
+              </div>
+              <button
+                onClick={() => setIsEditModalOpen(false)}
+                className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveProfile} className="p-6 space-y-4">
+              <div>
+                <label className="block text-xs font-semibold uppercase text-slate-700 mb-1">
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={editName}
+                  onChange={(e) => setEditName(e.target.value)}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-brand-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold uppercase text-slate-700 mb-1">
+                  Target Exam
+                </label>
+                <select
+                  value={editTargetExam}
+                  onChange={(e) => setEditTargetExam(e.target.value)}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-brand-500 bg-white"
+                >
+                  <option value="Kerala PSC Surveyor Gr. II">Kerala PSC Surveyor Gr. II</option>
+                  <option value="Kerala Water Authority 3rd Grade Overseer">Kerala Water Authority 3rd Grade Overseer</option>
+                  <option value="Survey & Land Records Department">Survey & Land Records Department</option>
+                  <option value="Draftsman Gr. II (Civil)">Draftsman Gr. II (Civil)</option>
+                  <option value="PWD / Irrigation Overseer Gr. II">PWD / Irrigation Overseer Gr. II</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold uppercase text-slate-700 mb-1">
+                  Home District
+                </label>
+                <select
+                  value={editDistrict}
+                  onChange={(e) => setEditDistrict(e.target.value)}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-brand-500 bg-white"
+                >
+                  {[
+                    'Thiruvananthapuram', 'Kollam', 'Pathanamthitta', 'Alappuzha',
+                    'Kottayam', 'Idukki', 'Ernakulam', 'Thrissur',
+                    'Palakkad', 'Malappuram', 'Kozhikode', 'Wayanad',
+                    'Kannur', 'Kasaragod'
+                  ].map((d) => (
+                    <option key={d} value={d}>{d}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold uppercase text-slate-700 mb-1">
+                  WhatsApp Contact Number
+                </label>
+                <input
+                  type="text"
+                  value={editPhone}
+                  onChange={(e) => setEditPhone(e.target.value)}
+                  placeholder="+91 98471 23456"
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-brand-500"
+                />
+              </div>
+
+              <div className="pt-2 flex justify-end gap-2 border-t border-slate-200">
+                <button
+                  type="button"
+                  onClick={() => setIsEditModalOpen(false)}
+                  className="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-lg"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 text-xs font-bold bg-brand-600 hover:bg-brand-700 text-white rounded-lg shadow transition"
+                >
+                  Save to Supabase
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
     </div>
   );

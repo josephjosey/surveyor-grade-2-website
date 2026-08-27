@@ -45,6 +45,37 @@ export async function fetchUserProfile(userId: string): Promise<Partial<User> | 
   }
 }
 
+export async function fetchAllProfiles(): Promise<User[] | null> {
+  try {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error || !data || data.length === 0) return null;
+
+    return data.map((d: any) => ({
+      id: d.id,
+      email: d.email,
+      name: d.name,
+      phone: d.phone || '',
+      role: d.role || 'student',
+      avatar: d.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80',
+      district: d.district || 'Palakkad',
+      targetExam: d.target_exam || 'Kerala PSC Surveyor Gr. II',
+      streakDays: d.streak_days || 1,
+      subscriptionPlan: d.subscription_plan || 'free',
+      completedClassIds: Array.isArray(d.completed_class_ids) ? d.completed_class_ids : [],
+      bookmarkedClassIds: Array.isArray(d.bookmarked_class_ids) ? d.bookmarked_class_ids : [],
+      savedPYQIds: Array.isArray(d.saved_pyq_ids) ? d.saved_pyq_ids : [],
+      enrolledAt: d.created_at ? d.created_at.split('T')[0] : '2026-08-01'
+    }));
+  } catch (err) {
+    console.warn('Supabase: error fetching all profiles:', err);
+    return null;
+  }
+}
+
 export async function updateUserProfile(userId: string, updates: Partial<User>): Promise<boolean> {
   try {
     const payload: any = {
