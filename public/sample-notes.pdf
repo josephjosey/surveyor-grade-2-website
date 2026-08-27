@@ -1,0 +1,131 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+
+2 0 obj
+<< /Type /Pages /Kids [3 0 R 6 0 R 9 0 R] /Count 3 >>
+endobj
+
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>
+endobj
+
+4 0 obj
+<< /Length 1189 >>
+stream
+BT
+/F1 26 Tf 50 720 Td (Kerala PSC Survey Academy) Tj
+/F1 16 Tf 0 -32 Td (Chain Surveying - Complete Master Notes) Tj
+/F1 10 Tf 0 -22 Td (Author: Joseph Josey | Rank 5 PSC Survey | Rank 2 KWA) Tj
+/F1 14 Tf 0 -34 Td (Chapter Overview:) Tj
+/F1 11 Tf 0 -22 Td (1. Classification: Plane vs Geodetic Surveying) Tj
+0 -18 Td (2. Metric Chains: 20m = 100 links, 30m = 150 links) Tj
+0 -18 Td (3. Each link = 20 cm = 0.2 metres) Tj
+0 -18 Td (4. Gunter Chain: 66 ft, 100 links) Tj
+0 -18 Td (5. Revenue Chain: 33 ft, 16 links) Tj
+0 -18 Td (6. Engineer Chain: 100 ft, 100 links) Tj
+/F1 14 Tf 0 -30 Td (Key Principle:) Tj
+/F1 11 Tf 0 -20 Td (Working from whole to part to prevent error accumulation.) Tj
+0 -18 Td (Primary division first, then secondary, then tertiary.) Tj
+/F1 14 Tf 0 -30 Td (Corrections in Chain Surveying:) Tj
+/F1 11 Tf 0 -20 Td (Temperature Correction: Ct = alpha x L x \(Tm - To\)) Tj
+0 -18 Td (Pull Correction: Cp = \(P - Po\) x L / \(A x E\)) Tj
+0 -18 Td (Sag Correction: Cs = W2 x L / \(24 x P2\) -- Always NEGATIVE) Tj
+0 -18 Td (Slope Correction: Ch = h2 / 2L -- Always SUBTRACTIVE) Tj
+/F1 8 Tf 0 -60 Td (SurveyRank Kerala PSC Academy -- Protected Material -- Page 1 of 3) Tj
+ET
+endstream
+endobj
+
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 7 0 R /Resources << /Font << /F1 8 0 R >> >> >>
+endobj
+
+7 0 obj
+<< /Length 1180 >>
+stream
+BT
+/F1 22 Tf 50 720 Td (Rank 5 Master Formula Sheet) Tj
+/F1 10 Tf 0 -24 Td (Memorize all standard equations with exact sign conventions) Tj
+/F1 13 Tf 0 -34 Td (Formula 1: Temperature Correction) Tj
+/F1 11 Tf 0 -20 Td (Ct = alpha x L x \(Tm - To\)) Tj
+0 -16 Td (Where alpha = 11.5 x 10^-6 per degree C for steel) Tj
+/F1 13 Tf 0 -30 Td (Formula 2: Pull Correction) Tj
+/F1 11 Tf 0 -20 Td (Cp = \(P - Po\) x L / \(A x E\)) Tj
+0 -16 Td (P = Applied pull, Po = Standard pull) Tj
+/F1 13 Tf 0 -30 Td (Formula 3: Sag Correction) Tj
+/F1 11 Tf 0 -20 Td (Cs = W2 x L / \(24 x P2\)) Tj
+0 -16 Td (ALWAYS NEGATIVE -- subtract from measured length) Tj
+/F1 13 Tf 0 -30 Td (Formula 4: Slope Correction) Tj
+/F1 11 Tf 0 -20 Td (Ch = h2 / \(2 x L\)) Tj
+0 -16 Td (Always subtractive from measured horizontal distance) Tj
+/F1 13 Tf 0 -30 Td (Formula 5: True Distance when chain is too long) Tj
+/F1 11 Tf 0 -20 Td (True Distance = \(L-prime / L\) x Measured Distance) Tj
+0 -16 Td (If chain is TOO LONG: True distance > Measured distance) Tj
+0 -16 Td (If chain is TOO SHORT: True distance < Measured distance) Tj
+/F1 8 Tf 0 -80 Td (SurveyRank Kerala PSC Academy -- Protected Material -- Page 2 of 3) Tj
+ET
+endstream
+endobj
+
+8 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+
+9 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 10 0 R /Resources << /Font << /F1 11 0 R >> >> >>
+endobj
+
+10 0 obj
+<< /Length 1156 >>
+stream
+BT
+/F1 22 Tf 50 720 Td (Solved PSC Numerical Example) Tj
+/F1 10 Tf 0 -24 Td (Real exam pattern problem with step-by-step solution) Tj
+/F1 12 Tf 0 -34 Td (Problem:) Tj
+/F1 11 Tf 0 -20 Td (A 20m metric chain was found to be 10 cm too long after) Tj
+0 -16 Td (measuring a distance of 1500m. If the chain was accurate) Tj
+0 -16 Td (before starting work, calculate the true distance.) Tj
+/F1 13 Tf 0 -30 Td (Rank 5 Step-by-Step Solution:) Tj
+/F1 11 Tf 0 -22 Td (Step 1: Average error = \(0 + 0.10\) / 2 = +0.05 m) Tj
+0 -18 Td (Step 2: Average chain length L-prime = 20 + 0.05 = 20.05 m) Tj
+0 -18 Td (Step 3: True Distance = \(L-prime / L\) x Measured Distance) Tj
+0 -18 Td (Step 4: True Distance = \(20.05 / 20\) x 1500) Tj
+/F1 14 Tf 0 -24 Td (Answer: True Distance = 1503.75 metres) Tj
+/F1 12 Tf 0 -34 Td (PSC Exam Trap Warning:) Tj
+/F1 11 Tf 0 -20 Td (Kerala PSC sets trap options on sign of correction vs error.) Tj
+0 -16 Td (Correction = -Error. Chain too long = positive error = negative correction.) Tj
+0 -16 Td (Always check: Is chain too long or too short?) Tj
+/F1 8 Tf 0 -80 Td (SurveyRank Kerala PSC Academy -- Protected Material -- Page 3 of 3) Tj
+ET
+endstream
+endobj
+
+11 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+
+xref
+0 12
+0000000000 65535 f 
+0000000009 00000 n 
+0000000059 00000 n 
+0000000129 00000 n 
+0000000256 00000 n 
+0000001498 00000 n 
+0000001569 00000 n 
+0000001696 00000 n 
+0000002929 00000 n 
+0000003000 00000 n 
+0000003129 00000 n 
+0000004339 00000 n 
+trailer
+<< /Size 12 /Root 1 0 R >>
+startxref
+4411
+%%EOF
