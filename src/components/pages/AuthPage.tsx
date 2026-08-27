@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
+import { supabase } from '../../supabaseClient';
 import {
   Eye,
   EyeOff,
@@ -17,7 +18,9 @@ import {
   Compass,
   GraduationCap,
   KeyRound,
-  BookOpen
+  BookOpen,
+  AlertCircle,
+  Loader2
 } from 'lucide-react';
 
 export const AuthPage: React.FC = () => {
@@ -26,12 +29,15 @@ export const AuthPage: React.FC = () => {
     loginWithGoogle,
     registerWithCredentials,
     loginInstructor,
-    showToast
+    showToast,
+    setActiveTab
   } = useApp();
 
   const [mode, setMode] = useState<'login' | 'signup' | 'instructor'>('login');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
+  const [authError, setAuthError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Form Fields
   const [email, setEmail] = useState('aswathi.surveyor@gmail.com');
@@ -49,22 +55,77 @@ export const AuthPage: React.FC = () => {
     'Kannur', 'Kasaragod'
   ];
 
-  const handleLoginSubmit = (e: React.FormEvent) => {
+  // 1) Sign In using Supabase Auth
+  const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.trim()) {
-      showToast('Please enter your email address', 'warning');
+    setAuthError(null);
+
+    if (!email.trim() || !password.trim()) {
+      setAuthError('Please enter your email and password');
       return;
     }
-    loginWithCredentials(email, password);
+
+    setIsLoading(true);
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password: password.trim()
+      });
+
+      if (error) {
+        setAuthError(error.message);
+        return;
+      }
+
+      // Successful login -> Redirect user to Home page ("/")
+      loginWithCredentials(data.user?.email || email, password);
+      setActiveTab('home');
+      window.history.pushState({}, '', '/');
+      showToast('Login successful! Welcome back.', 'success');
+    } catch (err: any) {
+      setAuthError(err.message || 'An error occurred while logging in. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleSignupSubmit = (e: React.FormEvent) => {
+  // 2) Sign Up using Supabase Auth
+  const handleSignupSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !email.trim()) {
-      showToast('Please fill in your name and email', 'warning');
+    setAuthError(null);
+
+    if (!email.trim() || !password.trim()) {
+      setAuthError('Please enter your email and password');
       return;
     }
-    registerWithCredentials(name, email, phone, district, targetExam);
+
+    if (password.length < 6) {
+      setAuthError('Password should be at least 6 characters long');
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email: email.trim(),
+        password: password.trim()
+      });
+
+      if (error) {
+        setAuthError(error.message);
+        return;
+      }
+
+      // Successful signup -> Redirect user to Home page ("/")
+      registerWithCredentials(name, data.user?.email || email, phone, district, targetExam);
+      setActiveTab('home');
+      window.history.pushState({}, '', '/');
+      showToast('Account created successfully! Welcome to the academy.', 'success');
+    } catch (err: any) {
+      setAuthError(err.message || 'An error occurred during registration.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleInstructorSubmit = (e: React.FormEvent) => {
@@ -111,7 +172,7 @@ export const AuthPage: React.FC = () => {
               <div className="inline-flex bg-slate-100 p-1 rounded-xl text-xs font-bold">
                 <button
                   type="button"
-                  onClick={() => setMode('login')}
+                  onClick={() => { setMode('login'); setAuthError(null); }}
                   className={`px-3 py-1 rounded-lg transition ${
                     mode === 'login' ? 'bg-white text-emerald-700 shadow-xs' : 'text-slate-500 hover:text-slate-800'
                   }`}
@@ -120,7 +181,7 @@ export const AuthPage: React.FC = () => {
                 </button>
                 <button
                   type="button"
-                  onClick={() => setMode('signup')}
+                  onClick={() => { setMode('signup'); setAuthError(null); }}
                   className={`px-3 py-1 rounded-lg transition ${
                     mode === 'signup' ? 'bg-white text-emerald-700 shadow-xs' : 'text-slate-500 hover:text-slate-800'
                   }`}
@@ -246,13 +307,31 @@ export const AuthPage: React.FC = () => {
                   </button>
                 </div>
 
+                {/* Error message under login form */}
+                {authError && mode === 'login' && (
+                  <div className="p-2.5 rounded-xl bg-red-50 border border-red-200 text-red-600 text-xs flex items-center gap-2 animate-fadeIn">
+                    <AlertCircle className="w-4 h-4 shrink-0 text-red-500" />
+                    <span>{authError}</span>
+                  </div>
+                )}
+
                 {/* Submit Button (Vibrant Emerald matching mockup) */}
                 <button
                   type="submit"
-                  className="w-full py-3 bg-[#059669] hover:bg-[#047857] active:scale-[0.99] text-white font-bold rounded-xl shadow-md shadow-emerald-700/20 text-sm transition-all flex items-center justify-center gap-2"
+                  disabled={isLoading}
+                  className="w-full py-3 bg-[#059669] hover:bg-[#047857] disabled:opacity-75 active:scale-[0.99] text-white font-bold rounded-xl shadow-md shadow-emerald-700/20 text-sm transition-all flex items-center justify-center gap-2"
                 >
-                  <span>Login</span>
-                  <ArrowRight className="w-4 h-4" />
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>Logging in...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Login</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </>
+                  )}
                 </button>
               </form>
             )}
@@ -358,12 +437,30 @@ export const AuthPage: React.FC = () => {
                   </div>
                 </div>
 
+                {/* Error message under signup form */}
+                {authError && mode === 'signup' && (
+                  <div className="p-2.5 rounded-xl bg-red-50 border border-red-200 text-red-600 text-xs flex items-center gap-2 animate-fadeIn">
+                    <AlertCircle className="w-4 h-4 shrink-0 text-red-500" />
+                    <span>{authError}</span>
+                  </div>
+                )}
+
                 <button
                   type="submit"
-                  className="w-full py-3 bg-[#059669] hover:bg-[#047857] active:scale-[0.99] text-white font-bold rounded-xl shadow-md shadow-emerald-700/20 text-sm transition-all flex items-center justify-center gap-2"
+                  disabled={isLoading}
+                  className="w-full py-3 bg-[#059669] hover:bg-[#047857] disabled:opacity-75 active:scale-[0.99] text-white font-bold rounded-xl shadow-md shadow-emerald-700/20 text-sm transition-all flex items-center justify-center gap-2"
                 >
-                  <span>Register & Start Free Learning</span>
-                  <ArrowRight className="w-4 h-4" />
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>Creating Account...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Register & Start Free Learning</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </>
+                  )}
                 </button>
               </form>
             )}
@@ -432,7 +529,7 @@ export const AuthPage: React.FC = () => {
                 Belum punya akun?{' '}
                 <button
                   type="button"
-                  onClick={() => setMode('signup')}
+                  onClick={() => { setMode('signup'); setAuthError(null); }}
                   className="font-bold text-emerald-600 hover:text-emerald-700 underline"
                 >
                   Register disini / Sign Up
@@ -443,7 +540,7 @@ export const AuthPage: React.FC = () => {
                 Sudah punya akun?{' '}
                 <button
                   type="button"
-                  onClick={() => setMode('login')}
+                  onClick={() => { setMode('login'); setAuthError(null); }}
                   className="font-bold text-emerald-600 hover:text-emerald-700 underline"
                 >
                   Login disini / Sign In
