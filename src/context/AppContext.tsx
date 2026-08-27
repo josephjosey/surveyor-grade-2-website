@@ -25,6 +25,7 @@ import {
 
 import { fetchDatabase, saveDatabase } from '../services/api';
 import { supabase } from '../supabaseClient';
+import * as SupabaseDb from '../services/supabaseService';
 
 export type NavigationTab = 'home' | 'dashboard' | 'notes' | 'pyq' | 'mocktests' | 'doubts' | 'admin';
 
@@ -251,6 +252,44 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setIsDiskLoaded(true);
     });
   }, []);
+
+  // 1.5. Live Supabase Cloud Sync: Fetch live records from Supabase tables
+  useEffect(() => {
+    async function loadSupabaseCloudData() {
+      try {
+        const [notes, tests, attempts, pyqs, doubtsList] = await Promise.all([
+          SupabaseDb.fetchStudyNotes(),
+          SupabaseDb.fetchMockTests(),
+          SupabaseDb.fetchTestAttempts(),
+          SupabaseDb.fetchPYQPapers(),
+          SupabaseDb.fetchDoubts()
+        ]);
+
+        if (notes && notes.length > 0) setStudyNotes(notes);
+        if (tests && tests.length > 0) setMockTests(tests);
+        if (attempts && attempts.length > 0) setTestAttempts(attempts);
+        if (pyqs && pyqs.length > 0) setPyqPapers(pyqs);
+        if (doubtsList && doubtsList.length > 0) setDoubts(doubtsList);
+      } catch (err) {
+        console.warn('Supabase cloud fetch notice:', err);
+      }
+    }
+
+    loadSupabaseCloudData();
+  }, []);
+
+  // 1.6. Supabase Profile Sync: Load authenticated user profile from Supabase profiles table
+  useEffect(() => {
+    if (!currentUser?.id) return;
+    SupabaseDb.fetchUserProfile(currentUser.id).then((profile) => {
+      if (profile) {
+        setCurrentUser((prev) => ({
+          ...prev,
+          ...profile
+        }));
+      }
+    });
+  }, [currentUser?.id]);
 
   // 2. Persistent Disk Sync: Auto-save all changes to data/database.json on disk
   useEffect(() => {
@@ -499,6 +538,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setStudents((prev) => [updatedStudent, ...prev.filter((s) => s.id !== updatedStudent.id)]);
     setIsEnrollmentModalOpen(false);
     setActiveTab('dashboard');
+    SupabaseDb.updateUserProfile(updatedStudent.id, updatedStudent);
     showToast(
       `🎉 Upgraded to ${
         plan === 'master'
@@ -512,17 +552,22 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const toggleCompleteNote = (noteId: string) => {
+    let newCompletedList: string[] = [];
     setCurrentUser((prev) => {
       const isCompleted = prev.completedClassIds.includes(noteId);
       const newCompleted = isCompleted
         ? prev.completedClassIds.filter((id) => id !== noteId)
         : [...prev.completedClassIds, noteId];
-      
+      newCompletedList = newCompleted;
       return {
         ...prev,
         completedClassIds: newCompleted
       };
     });
+
+    if (currentUser?.id) {
+      SupabaseDb.updateUserProfile(currentUser.id, { completedClassIds: newCompletedList });
+    }
 
     const targetNote = studyNotes.find((n) => n.id === noteId);
     const wasCompleted = currentUser.completedClassIds.includes(noteId);
@@ -535,17 +580,22 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const toggleBookmarkNote = (noteId: string) => {
+    let newBookmarksList: string[] = [];
     setCurrentUser((prev) => {
       const isBookmarked = prev.bookmarkedClassIds.includes(noteId);
       const newBookmarks = isBookmarked
         ? prev.bookmarkedClassIds.filter((id) => id !== noteId)
         : [...prev.bookmarkedClassIds, noteId];
-      
+      newBookmarksList = newBookmarks;
       return {
         ...prev,
         bookmarkedClassIds: newBookmarks
       };
     });
+
+    if (currentUser?.id) {
+      SupabaseDb.updateUserProfile(currentUser.id, { bookmarkedClassIds: newBookmarksList });
+    }
 
     showToast(
       currentUser.bookmarkedClassIds.includes(noteId)
@@ -556,17 +606,22 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const toggleSavePYQ = (pyqId: string) => {
+    let newSavedList: string[] = [];
     setCurrentUser((prev) => {
       const isSaved = prev.savedPYQIds.includes(pyqId);
       const newSaved = isSaved
         ? prev.savedPYQIds.filter((id) => id !== pyqId)
         : [...prev.savedPYQIds, pyqId];
-      
+      newSavedList = newSaved;
       return {
         ...prev,
         savedPYQIds: newSaved
       };
     });
+
+    if (currentUser?.id) {
+      SupabaseDb.updateUserProfile(currentUser.id, { savedPYQIds: newSavedList });
+    }
 
     showToast(
       currentUser.savedPYQIds.includes(pyqId)
@@ -592,6 +647,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setMockTests((prev) =>
       prev.map((t) => (t.id === attemptData.testId ? { ...t, attemptsCount: t.attemptsCount + 1 } : t))
     );
+
+    // Save to Supabase cloud table
+    SupabaseDb.saveTestAttempt(newAttempt, currentUser.id);
 
     showToast(`Exam submitted! Score: ${newAttempt.score.toFixed(2)} marks`, 'success');
     return newAttempt;
@@ -671,11 +729,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     };
 
     setStudyNotes((prev) => [newNote, ...prev]);
+    SupabaseDb.createStudyNote(newNote, currentUser.id);
     showToast(`Study Notes "${newNote.title.slice(0, 30)}..." published successfully!`, 'success');
   };
 
   const deleteStudyNote = (noteId: string) => {
     setStudyNotes((prev) => prev.filter((n) => n.id !== noteId));
+    SupabaseDb.deleteStudyNote(noteId);
     setCurrentUser((prev) => ({
       ...prev,
       completedClassIds: prev.completedClassIds.filter((id) => id !== noteId),
@@ -702,11 +762,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     };
 
     setMockTests((prev) => [newTest, ...prev]);
+    SupabaseDb.createMockTest(newTest, currentUser.id);
     showToast(`Mock test "${newTest.title}" created successfully!`, 'success');
   };
 
   const deleteMockTest = (testId: string) => {
     setMockTests((prev) => prev.filter((t) => t.id !== testId));
+    SupabaseDb.deleteMockTest(testId);
     showToast('Mock test deleted', 'info');
   };
 
@@ -717,27 +779,31 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     };
 
     setPyqPapers((prev) => [newPaper, ...prev]);
+    SupabaseDb.createPYQPaper(newPaper, currentUser.id);
     showToast(`PYQ Paper "${newPaper.title}" uploaded!`, 'success');
   };
 
   const deletePYQPaper = (paperId: string) => {
     setPyqPapers((prev) => prev.filter((p) => p.id !== paperId));
+    SupabaseDb.deletePYQPaper(paperId);
     showToast('PYQ Paper deleted', 'info');
   };
 
   const updatePYQQuestions = (paperId: string, questions: PYQQuestion[]) => {
+    const updated = questions.map((q, idx) => ({ ...q, questionNumber: idx + 1 }));
     setPyqPapers((prev) =>
       prev.map((p) => {
         if (p.id === paperId) {
           return {
             ...p,
-            questions: questions.map((q, idx) => ({ ...q, questionNumber: idx + 1 })),
-            totalQuestions: questions.length
+            questions: updated,
+            totalQuestions: updated.length
           };
         }
         return p;
       })
     );
+    SupabaseDb.updatePYQQuestions(paperId, updated);
     showToast('PYQ questions updated successfully!', 'success');
   };
 
@@ -751,6 +817,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             questionNumber: (p.questions?.length || 0) + 1
           };
           const updatedQs = [...(p.questions || []), newQ];
+          SupabaseDb.updatePYQQuestions(paperId, updatedQs);
           return {
             ...p,
             questions: updatedQs,
@@ -770,6 +837,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           const updatedQs = (p.questions || [])
             .filter((q) => q.id !== questionId)
             .map((q, idx) => ({ ...q, questionNumber: idx + 1 }));
+          SupabaseDb.updatePYQQuestions(paperId, updatedQs);
           return {
             ...p,
             questions: updatedQs,
@@ -800,12 +868,20 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     };
 
     setDoubts((prev) => [newDoubt, ...prev]);
+    SupabaseDb.createDoubt(newDoubt, currentUser.id);
     showToast('Your doubt has been posted! Joseph Josey will review and answer shortly.', 'success');
   };
 
   const upvoteDoubt = (doubtId: string) => {
     setDoubts((prev) =>
-      prev.map((d) => (d.id === doubtId ? { ...d, upvotes: d.upvotes + 1 } : d))
+      prev.map((d) => {
+        if (d.id === doubtId) {
+          const newUpvotes = d.upvotes + 1;
+          SupabaseDb.updateDoubt(doubtId, { upvotes: newUpvotes });
+          return { ...d, upvotes: newUpvotes };
+        }
+        return d;
+      })
     );
     showToast('Upvoted doubt question', 'info');
   };
@@ -827,10 +903,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setDoubts((prev) =>
       prev.map((d) => {
         if (d.id === doubtId) {
+          const newAnswers = [...d.answers, newAnswer];
+          const newResolved = isInstructor ? true : d.isResolved;
+          SupabaseDb.updateDoubt(doubtId, { answers: newAnswers, isResolved: newResolved });
           return {
             ...d,
-            isResolved: isInstructor ? true : d.isResolved,
-            answers: [...d.answers, newAnswer]
+            isResolved: newResolved,
+            answers: newAnswers
           };
         }
         return d;
