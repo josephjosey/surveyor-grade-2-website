@@ -37,6 +37,7 @@ export const AuthPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
   const [authError, setAuthError] = useState<string | null>(null);
+  const [authSuccessMessage, setAuthSuccessMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   // Form Fields
@@ -55,10 +56,11 @@ export const AuthPage: React.FC = () => {
     'Kannur', 'Kasaragod'
   ];
 
-  // 1) Sign In using Supabase Auth
+  // 1) Sign In using Supabase Auth (Only redirects when a real session exists)
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setAuthError(null);
+    setAuthSuccessMessage(null);
 
     if (!email.trim() || !password.trim()) {
       setAuthError('Please enter your email and password');
@@ -77,11 +79,15 @@ export const AuthPage: React.FC = () => {
         return;
       }
 
-      // Successful login -> Redirect user to Home page ("/")
-      loginWithCredentials(data.user?.email || email, password);
-      setActiveTab('home');
-      window.history.pushState({}, '', '/');
-      showToast('Login successful! Welcome back.', 'success');
+      // Only redirect when a real session exists after login
+      if (data?.session) {
+        loginWithCredentials(data.user?.email || email, password);
+        setActiveTab('home');
+        window.history.pushState({}, '', '/');
+        showToast('Login successful! Welcome back.', 'success');
+      } else {
+        setAuthError('No active session found. Please check your credentials or confirm your email.');
+      }
     } catch (err: any) {
       setAuthError(err.message || 'An error occurred while logging in. Please try again.');
     } finally {
@@ -89,10 +95,11 @@ export const AuthPage: React.FC = () => {
     }
   };
 
-  // 2) Sign Up using Supabase Auth
+  // 2) Sign Up using Supabase Auth (If data.session is null, don't redirect; show confirmation message)
   const handleSignupSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setAuthError(null);
+    setAuthSuccessMessage(null);
 
     if (!email.trim() || !password.trim()) {
       setAuthError('Please enter your email and password');
@@ -116,7 +123,15 @@ export const AuthPage: React.FC = () => {
         return;
       }
 
-      // Successful signup -> Redirect user to Home page ("/")
+      // After signUp(), if data.session is null, don’t redirect to the dashboard.
+      // Just show: "Check your email and confirm your account before logging in."
+      if (!data?.session) {
+        setAuthSuccessMessage('Check your email and confirm your account before logging in.');
+        showToast('Check your email and confirm your account before logging in.', 'info');
+        return;
+      }
+
+      // Only redirect when a real session exists
       registerWithCredentials(name, data.user?.email || email, phone, district, targetExam);
       setActiveTab('home');
       window.history.pushState({}, '', '/');
@@ -307,6 +322,14 @@ export const AuthPage: React.FC = () => {
                   </button>
                 </div>
 
+                {/* Email confirmation required / Success message */}
+                {authSuccessMessage && (
+                  <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-300 text-emerald-800 text-xs flex items-start gap-2.5 animate-fadeIn">
+                    <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600 mt-0.5" />
+                    <span className="font-semibold">{authSuccessMessage}</span>
+                  </div>
+                )}
+
                 {/* Error message under login form */}
                 {authError && mode === 'login' && (
                   <div className="p-2.5 rounded-xl bg-red-50 border border-red-200 text-red-600 text-xs flex items-center gap-2 animate-fadeIn">
@@ -436,6 +459,14 @@ export const AuthPage: React.FC = () => {
                     </button>
                   </div>
                 </div>
+
+                {/* Email confirmation required / Success message */}
+                {authSuccessMessage && (
+                  <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-300 text-emerald-800 text-xs flex items-start gap-2.5 animate-fadeIn">
+                    <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600 mt-0.5" />
+                    <span className="font-semibold">{authSuccessMessage}</span>
+                  </div>
+                )}
 
                 {/* Error message under signup form */}
                 {authError && mode === 'signup' && (

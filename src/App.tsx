@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { AppProvider, useApp } from './context/AppContext';
+import { supabase } from './supabaseClient';
 import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
 import { LandingPage } from './components/pages/LandingPage';
@@ -22,8 +23,48 @@ const MainLayout: React.FC = () => {
     isAuthModalOpen,
     setIsAuthModalOpen,
     authDefaultRole,
-    isAuthenticated
+    isAuthenticated,
+    setIsAuthenticated
   } = useApp();
+
+  // Protect private pages with supabase.auth.getSession() — if no session, redirect to /login
+  useEffect(() => {
+    const protectPrivatePages = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) {
+          setIsAuthenticated(false);
+          if (window.location.pathname !== '/login') {
+            window.history.pushState({}, '', '/login');
+          }
+        } else {
+          setIsAuthenticated(true);
+        }
+      } catch (err) {
+        setIsAuthenticated(false);
+        if (window.location.pathname !== '/login') {
+          window.history.pushState({}, '', '/login');
+        }
+      }
+    };
+
+    protectPrivatePages();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!session) {
+        setIsAuthenticated(false);
+        if (window.location.pathname !== '/login') {
+          window.history.pushState({}, '', '/login');
+        }
+      } else {
+        setIsAuthenticated(true);
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [setIsAuthenticated]);
 
   // Toast Container Component
   const toastContainer = (
