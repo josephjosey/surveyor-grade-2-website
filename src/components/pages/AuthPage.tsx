@@ -143,6 +143,31 @@ export const AuthPage: React.FC = () => {
     }
   };
 
+  // 3) Continue with Google using Supabase OAuth
+  const handleGoogleLogin = async () => {
+    setAuthError(null);
+    setAuthSuccessMessage(null);
+    setIsLoading(true);
+
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/`
+        }
+      });
+
+      if (error) {
+        setAuthError(error.message);
+        setIsLoading(false);
+        return;
+      }
+    } catch (err: any) {
+      setAuthError(err.message || 'An error occurred during Google sign-in.');
+      setIsLoading(false);
+    }
+  };
+
   const handleInstructorSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     loginInstructor(instructorPin);
@@ -225,7 +250,8 @@ export const AuthPage: React.FC = () => {
               <div className="mb-5">
                 <button
                   type="button"
-                  onClick={loginWithGoogle}
+                  onClick={handleGoogleLogin}
+                  disabled={isLoading}
                   className="w-full py-2.5 px-4 bg-white hover:bg-slate-50 border border-slate-300 rounded-xl font-bold text-slate-700 text-xs sm:text-sm transition flex items-center justify-center gap-3 shadow-xs active:scale-[0.99]"
                 >
                   <svg className="w-4 h-4" viewBox="0 0 24 24">
