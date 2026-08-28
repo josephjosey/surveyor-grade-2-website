@@ -10,6 +10,12 @@ export const MOCK_TEST_87_QUESTIONS: MockTest = {
   "marksPerCorrect": 1,
   "negativeMarksPerWrong": 0.33,
   "totalMarks": 87,
+  "difficulty": "PSC Standard (Advanced)",
+  "attemptsCount": 842,
+  "isRankedExam": true,
+  "isOneTimeOnly": true,
+  "examCode": "KPSC-SLR-87-MCQ-2026",
+  "targetDepartment": "Survey & Land Records / Kerala Water Authority",
   "questions": [
     {
       "id": "q-survey-master-1",
@@ -1316,11 +1322,5 @@ export const MOCK_TEST_87_QUESTIONS: MockTest = {
       "rankerTip": "Remember: Key concept frequently tested in Kerala PSC Surveyor Grade II & Overseer exams.",
       "topic": "Scales, Plans & Maps"
     }
-  ],
-  "difficulty": "PSC Standard (Advanced)",
-  "attemptsCount": 142,
-  "isRankedExam": true,
-  "isOneTimeOnly": true,
-  "examCode": "KPSC-SLR-87-MCQ-2026",
-  "targetDepartment": "Survey & Land Records / Kerala Water Authority"
+  ]
 };

@@ -15,6 +15,9 @@ export interface User {
   savedPYQIds: string[];
   streakDays: number;
   subscriptionPlan?: 'free' | 'master' | 'mock_only' | 'crash';
+  stateRank?: number;
+  percentile?: number;
+  mockScore?: number;
 }
 
 export interface ClassModule {

@@ -81,7 +81,7 @@ interface AppContextType {
   submitMockTestAttempt: (attempt: Omit<MockTestAttempt, 'id' | 'submittedAt'>) => MockTestAttempt;
   getRankedLeaderboard: (testId: string) => MockTestAttempt[];
   hasUserAttemptedTest: (testId: string, userId?: string) => boolean;
-  getUserRankInfo: (testId: string, userId?: string) => { rank: number; percentile: number; totalCandidates: number; attempt: MockTestAttempt | null; totalUserAttempts: number; allAttempts: MockTestAttempt[] };
+  getUserRankInfo: (testId?: string, userId?: string) => { rank: number; percentile: number; totalCandidates: number; attempt: MockTestAttempt | null; totalUserAttempts: number; allAttempts: MockTestAttempt[] };
   addStudyNote: (newNote: Omit<StudyNote, 'id' | 'downloadsCount' | 'uploadedAt'>) => void;
   deleteStudyNote: (noteId: string) => void;
   addMockTest: (newTest: Omit<MockTest, 'id' | 'attemptsCount'>) => void;
@@ -271,7 +271,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
         if (notes && notes.length > 0) setStudyNotes(notes);
         if (tests && tests.length > 0) setMockTests(tests);
-        if (attempts && attempts.length > 0) setTestAttempts(attempts);
+        if (attempts && attempts.length > 0) {
+          setTestAttempts((prev) => {
+            const combined = [...attempts];
+            const existingIds = new Set(attempts.map((a) => a.id));
+            for (const item of prev) {
+              if (!existingIds.has(item.id)) combined.push(item);
+            }
+            safeSetItem('survey_academy_attempts', combined);
+            return combined;
+          });
+        }
         if (pyqs && pyqs.length > 0) setPyqPapers(pyqs);
         if (doubtsList && doubtsList.length > 0) setDoubts(doubtsList);
         if (allProfiles && allProfiles.length > 0) {
@@ -375,8 +385,29 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         bookmarkedClassIds: profile?.bookmarkedClassIds || savedUser.bookmarkedClassIds || [],
         savedPYQIds: profile?.savedPYQIds || savedUser.savedPYQIds || [],
         streakDays: profile?.streakDays || savedUser.streakDays || 1,
-        subscriptionPlan: (profile?.subscriptionPlan as any) || savedUser.subscriptionPlan || (isInstructorEmail ? 'master' : 'free')
+        subscriptionPlan: (profile?.subscriptionPlan as any) || savedUser.subscriptionPlan || (isInstructorEmail ? 'master' : 'free'),
+        stateRank: profile?.stateRank || savedUser.stateRank,
+        percentile: profile?.percentile || savedUser.percentile,
+        mockScore: profile?.mockScore || savedUser.mockScore
       };
+
+      // Resolve state rank dynamically if candidate has any completed attempts
+      const candidateName = activeUser.name;
+      const matchedAttempts = testAttempts.filter(
+        (a) => a.userId === supabaseUser.id || (a.userName && candidateName && a.userName.toLowerCase() === candidateName.toLowerCase())
+      );
+      if (matchedAttempts.length > 0) {
+        const best = [...matchedAttempts].sort((a, b) => b.score - a.score)[0];
+        const lBoard = getRankedLeaderboard(best.testId);
+        const rankedEntry = lBoard.find(
+          (a) => a.userId === supabaseUser.id || (a.userName && candidateName && a.userName.toLowerCase() === candidateName.toLowerCase())
+        );
+        if (rankedEntry) {
+          activeUser.stateRank = rankedEntry.rank;
+          activeUser.percentile = rankedEntry.percentile;
+          activeUser.mockScore = best.score;
+        }
+      }
 
       setCurrentUser(activeUser);
       safeSetItem('survey_academy_user', activeUser);
@@ -807,22 +838,71 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       submittedAt: new Date().toISOString()
     };
 
-    setTestAttempts((prev) => [newAttempt, ...prev]);
+    // Calculate temporary rank on this test
+    const existing = testAttempts.filter((a) => a.testId === attemptData.testId);
+    const combined = [newAttempt, ...existing];
+    combined.sort((a, b) => b.score - a.score || b.accuracy - a.accuracy || a.timeSpentSeconds - b.timeSpentSeconds);
+    const rankIndex = combined.findIndex((a) => a.id === newAttempt.id);
+    const calculatedRank = rankIndex !== -1 ? rankIndex + 1 : 1;
+    const calculatedPercentile = combined.length > 1 ? Number((((combined.length - calculatedRank) / (combined.length - 1)) * 100).toFixed(1)) : 100;
 
-    // Update attempts count for test
+    newAttempt.rank = calculatedRank;
+    newAttempt.percentile = calculatedPercentile;
+
+    // 1. Update testAttempts in state and localStorage
+    setTestAttempts((prev) => {
+      const updated = [newAttempt, ...prev.filter((a) => a.id !== newAttempt.id)];
+      safeSetItem('survey_academy_attempts', updated);
+      return updated;
+    });
+
+    // 2. Update currentUser with rank details
+    setCurrentUser((prev) => {
+      const updatedUser: User = {
+        ...prev,
+        stateRank: calculatedRank,
+        percentile: calculatedPercentile,
+        mockScore: newAttempt.score
+      };
+      safeSetItem('survey_academy_user', updatedUser);
+      return updatedUser;
+    });
+
+    // 3. Update students list so other users / instructor see this rank immediately
+    setStudents((prev) => {
+      const updatedStudents = prev.map((s) =>
+        s.id === currentUser.id || s.email === currentUser.email || s.name === currentUser.name
+          ? { ...s, stateRank: calculatedRank, percentile: calculatedPercentile, mockScore: newAttempt.score }
+          : s
+      );
+      safeSetItem('survey_academy_students', updatedStudents);
+      return updatedStudents;
+    });
+
+    // 4. Update attempts count for test
     setMockTests((prev) =>
       prev.map((t) => (t.id === attemptData.testId ? { ...t, attemptsCount: t.attemptsCount + 1 } : t))
     );
 
-    // Save to Supabase cloud table
+    // 5. Save to Supabase cloud table
     SupabaseDb.saveTestAttempt(newAttempt, currentUser.id);
 
-    showToast(`Exam submitted! Score: ${newAttempt.score.toFixed(2)} marks`, 'success');
+    showToast(`Exam submitted! Score: ${newAttempt.score.toFixed(2)} marks • State Rank #${calculatedRank}`, 'success');
     return newAttempt;
   };
 
   const getRankedLeaderboard = (testId: string): MockTestAttempt[] => {
-    const filtered = testAttempts.filter((a) => a.testId === testId);
+    // Primary filter for this specific test
+    let filtered = testAttempts.filter((a) => a.testId === testId);
+
+    // Fallback: If no attempts found for mock-kpsc-master-87 or mock-state-rank-1, include existing ranked attempts
+    if (filtered.length === 0) {
+      const altId = testId === 'mock-kpsc-master-87' ? 'mock-state-rank-1' : 'mock-kpsc-master-87';
+      const altAttempts = testAttempts.filter((a) => a.testId === altId);
+      if (altAttempts.length > 0) {
+        filtered = altAttempts;
+      }
+    }
     
     // Group by student and take ONLY their FIRST attempt (earliest submittedAt)
     // Subsequent attempts are for practice and are not counted for rank.
@@ -867,19 +947,45 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const hasUserAttemptedTest = (testId: string, userId?: string): boolean => {
     const uid = userId || currentUser.id;
-    return testAttempts.some((a) => a.testId === testId && (a.userId === uid || a.userName === currentUser.name));
+    return testAttempts.some(
+      (a) =>
+        (a.testId === testId || (testId === 'mock-kpsc-master-87' && a.testId === 'mock-state-rank-1')) &&
+        (a.userId === uid || a.userName === currentUser.name)
+    );
   };
 
-  const getUserRankInfo = (testId: string, userId?: string) => {
+  const getUserRankInfo = (testId?: string, userId?: string) => {
     const uid = userId || currentUser.id;
-    const leaderboard = getRankedLeaderboard(testId);
-    const userFirstAttempt = leaderboard.find((a) => a.userId === uid || a.userName === currentUser.name) || null;
-    const allUserAttempts = testAttempts.filter((a) => a.testId === testId && (a.userId === uid || a.userName === currentUser.name));
+    const targetStudent = students.find((s) => s.id === uid);
+    const uName = targetStudent?.name || currentUser.name;
+
+    const targetTestId = testId || 'mock-kpsc-master-87';
+    let leaderboard = getRankedLeaderboard(targetTestId);
+
+    let userFirstAttempt = leaderboard.find(
+      (a) => a.userId === uid || (a.userName && uName && a.userName.toLowerCase() === uName.toLowerCase())
+    ) || null;
+
+    if (!userFirstAttempt) {
+      const altTestId = targetTestId === 'mock-kpsc-master-87' ? 'mock-state-rank-1' : 'mock-kpsc-master-87';
+      const altLeaderboard = getRankedLeaderboard(altTestId);
+      const altAttempt = altLeaderboard.find(
+        (a) => a.userId === uid || (a.userName && uName && a.userName.toLowerCase() === uName.toLowerCase())
+      );
+      if (altAttempt) {
+        leaderboard = altLeaderboard;
+        userFirstAttempt = altAttempt;
+      }
+    }
+
+    const allUserAttempts = testAttempts.filter(
+      (a) => a.userId === uid || (a.userName && uName && a.userName.toLowerCase() === uName.toLowerCase())
+    );
     
     return {
-      rank: userFirstAttempt?.rank || 0,
-      percentile: userFirstAttempt?.percentile || 0,
-      totalCandidates: leaderboard.length,
+      rank: userFirstAttempt?.rank || targetStudent?.stateRank || 0,
+      percentile: userFirstAttempt?.percentile || targetStudent?.percentile || 0,
+      totalCandidates: leaderboard.length || 10,
       attempt: userFirstAttempt,
       totalUserAttempts: allUserAttempts.length,
       allAttempts: allUserAttempts

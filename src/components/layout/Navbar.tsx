@@ -12,7 +12,8 @@ import {
   Sparkles,
   LayoutDashboard,
   LogOut,
-  CheckCircle
+  CheckCircle,
+  Crown
 } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
@@ -143,13 +144,19 @@ export const Navbar: React.FC = () => {
                   {currentUser.name}
                 </div>
                 <div className="text-[10px] text-slate-500 font-medium">
-                  {role === 'instructor'
-                    ? 'Faculty Admin'
-                    : currentUser.subscriptionPlan === 'master'
-                    ? 'Master Plan'
-                    : currentUser.subscriptionPlan === 'mock_only'
-                    ? 'Mock Plan'
-                    : 'Free Tier'}
+                  {role === 'instructor' ? (
+                    'Faculty Admin'
+                  ) : currentUser.stateRank ? (
+                    <span className="text-amber-700 font-extrabold inline-flex items-center gap-0.5">
+                      <Crown className="w-2.5 h-2.5 text-amber-500" /> Rank #{currentUser.stateRank}
+                    </span>
+                  ) : currentUser.subscriptionPlan === 'master' ? (
+                    'Master Plan'
+                  ) : currentUser.subscriptionPlan === 'mock_only' ? (
+                    'Mock Plan'
+                  ) : (
+                    'Free Tier'
+                  )}
                 </div>
               </div>
             </div>

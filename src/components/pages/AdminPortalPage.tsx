@@ -21,7 +21,9 @@ import {
   FileText,
   Download,
   Edit3,
-  ListOrdered
+  ListOrdered,
+  Crown,
+  Trophy
 } from 'lucide-react';
 import { PYQPaper, PYQQuestion } from '../../types';
 import { CreateClassModal } from '../modals/CreateClassModal';
@@ -41,6 +43,7 @@ export const AdminPortalPage: React.FC = () => {
     doubts,
     addDoubtAnswer,
     students,
+    getUserRankInfo,
     resetToDefaults,
     showToast,
     isDiskLoaded,
@@ -957,34 +960,60 @@ export const AdminPortalPage: React.FC = () => {
                   <th className="p-4">Student</th>
                   <th className="p-4">District</th>
                   <th className="p-4">Target Exam</th>
+                  <th className="p-4">State Rank & Mock Score</th>
                   <th className="p-4">Notes Completed</th>
                   <th className="p-4">Streak</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-slate-700">
-                {filteredStudents.map((std) => (
-                  <tr key={std.id} className="hover:bg-slate-50 transition">
-                    <td className="p-4 flex items-center gap-3">
-                      <img
-                        src={std.avatar}
-                        alt={std.name}
-                        className="w-8 h-8 rounded-full object-cover ring-1 ring-slate-200"
-                      />
-                      <div>
-                        <div className="font-bold text-slate-900">{std.name}</div>
-                        <div className="text-slate-400 text-[11px]">{std.email}</div>
-                      </div>
-                    </td>
-                    <td className="p-4 font-medium">{std.district || 'Kerala'}</td>
-                    <td className="p-4 font-semibold text-brand-800">{std.targetExam || 'Surveyor Gr. II'}</td>
-                    <td className="p-4">
-                      <span className="font-bold text-slate-900">{studyNotes.filter((n) => std.completedClassIds?.includes(n.id)).length}</span> / {studyNotes.length}
-                    </td>
-                    <td className="p-4 font-bold text-amber-600">
-                      🔥 {std.streakDays} Days
-                    </td>
-                  </tr>
-                ))}
+                {filteredStudents.map((std) => {
+                  const rankInfo = getUserRankInfo('mock-kpsc-master-87', std.id);
+                  return (
+                    <tr key={std.id} className="hover:bg-slate-50 transition">
+                      <td className="p-4 flex items-center gap-3">
+                        <img
+                          src={std.avatar}
+                          alt={std.name}
+                          className="w-8 h-8 rounded-full object-cover ring-1 ring-slate-200"
+                        />
+                        <div>
+                          <div className="font-bold text-slate-900">{std.name}</div>
+                          <div className="text-slate-400 text-[11px]">{std.email}</div>
+                        </div>
+                      </td>
+                      <td className="p-4 font-medium">{std.district || 'Kerala'}</td>
+                      <td className="p-4 font-semibold text-brand-800">{std.targetExam || 'Surveyor Gr. II'}</td>
+                      <td className="p-4">
+                        {rankInfo.rank > 0 && rankInfo.attempt ? (
+                          <div className="flex flex-col gap-0.5">
+                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full font-extrabold text-xs bg-amber-100 text-amber-900 border border-amber-300 w-max shadow-xs">
+                              <Crown className="w-3.5 h-3.5 text-amber-600" />
+                              <span>Rank #{rankInfo.rank}</span>
+                            </span>
+                            <span className="text-[11px] text-slate-500">
+                              {rankInfo.attempt.score.toFixed(2)} pts • {rankInfo.percentile}%ile
+                            </span>
+                          </div>
+                        ) : std.stateRank ? (
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full font-extrabold text-xs bg-amber-100 text-amber-900 border border-amber-300 w-max">
+                            <Crown className="w-3.5 h-3.5 text-amber-600" />
+                            <span>Rank #{std.stateRank}</span>
+                          </span>
+                        ) : (
+                          <span className="text-slate-400 text-xs italic">
+                            Unranked (Not taken)
+                          </span>
+                        )}
+                      </td>
+                      <td className="p-4">
+                        <span className="font-bold text-slate-900">{studyNotes.filter((n) => std.completedClassIds?.includes(n.id)).length}</span> / {studyNotes.length}
+                      </td>
+                      <td className="p-4 font-bold text-amber-600">
+                        🔥 {std.streakDays} Days
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

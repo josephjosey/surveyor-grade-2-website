@@ -341,9 +341,33 @@ export async function fetchTestAttempts(): Promise<MockTestAttempt[] | null> {
 
 export async function saveTestAttempt(attempt: MockTestAttempt, userId?: string): Promise<boolean> {
   try {
+    const { data: authData } = await supabase.auth.getUser();
+    const sessionUser = authData?.user;
+
+    const candidateUid = userId || attempt.userId;
+    const isUUID = candidateUid && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(candidateUid);
+    const finalUserId = isUUID ? candidateUid : (sessionUser?.id || null);
+
+    // Ensure mock_test record exists to satisfy foreign key constraint
+    try {
+      await supabase.from('mock_tests').upsert({
+        id: attempt.testId,
+        title: attempt.testId === 'mock-kpsc-master-87' 
+          ? 'Kerala PSC Surveyor Grade II & Overseer - 87 MCQ Master Test Series' 
+          : 'All-Kerala Survey & Land Records State-Level Ranked Grand Exam',
+        category: 'All-Kerala State Ranked Exam',
+        duration_minutes: attempt.testId === 'mock-kpsc-master-87' ? 75 : 45,
+        total_questions: attempt.testId === 'mock-kpsc-master-87' ? 87 : 10,
+        total_marks: attempt.testId === 'mock-kpsc-master-87' ? 87 : 10,
+        is_ranked_exam: true
+      });
+    } catch (e) {
+      // ignore
+    }
+
     const { error } = await supabase.from('test_attempts').insert({
       id: attempt.id,
-      user_id: userId || attempt.userId,
+      user_id: finalUserId,
       test_id: attempt.testId,
       user_name: attempt.userName,
       user_avatar: attempt.userAvatar,
@@ -362,7 +386,12 @@ export async function saveTestAttempt(attempt: MockTestAttempt, userId?: string)
       percentile: attempt.percentile
     });
 
-    return !error;
+    if (error) {
+      console.warn('Supabase: error saving test attempt:', error);
+      return false;
+    }
+
+    return true;
   } catch (err) {
     console.warn('Supabase: error saving test attempt:', err);
     return false;

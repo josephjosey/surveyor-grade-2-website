@@ -1030,7 +1030,7 @@ export const MockTestsPage: React.FC = () => {
                   </div>
                   <div className="bg-white p-2 rounded-xl border border-slate-200">
                     <div className="text-xs text-slate-500 font-semibold">Score</div>
-                    <div className="text-lg font-black text-slate-800">{fullLeaderboard[1].score.toFixed(2)} / 10</div>
+                    <div className="text-lg font-black text-slate-800">{fullLeaderboard[1].score.toFixed(2)} / {activeRankedExam.totalMarks || 87}</div>
                     <div className="text-[10px] text-emerald-600 font-bold">{fullLeaderboard[1].accuracy}% Accuracy</div>
                   </div>
                 </div>
@@ -1058,7 +1058,7 @@ export const MockTestsPage: React.FC = () => {
                   </div>
                   <div className="bg-white p-2.5 rounded-xl border border-amber-300 shadow-sm">
                     <div className="text-xs text-slate-500 font-semibold">Highest Score</div>
-                    <div className="text-2xl font-black text-amber-600">{fullLeaderboard[0].score.toFixed(2)} / 10</div>
+                    <div className="text-2xl font-black text-amber-600">{fullLeaderboard[0].score.toFixed(2)} / {activeRankedExam.totalMarks || 87}</div>
                     <div className="text-[11px] text-emerald-600 font-bold">{fullLeaderboard[0].accuracy}% Accuracy • 99.8%ile</div>
                   </div>
                 </div>
@@ -1083,7 +1083,7 @@ export const MockTestsPage: React.FC = () => {
                   </div>
                   <div className="bg-white p-2 rounded-xl border border-amber-200">
                     <div className="text-xs text-slate-500 font-semibold">Score</div>
-                    <div className="text-lg font-black text-slate-800">{fullLeaderboard[2].score.toFixed(2)} / 10</div>
+                    <div className="text-lg font-black text-slate-800">{fullLeaderboard[2].score.toFixed(2)} / {activeRankedExam.totalMarks || 87}</div>
                     <div className="text-[10px] text-emerald-600 font-bold">{fullLeaderboard[2].accuracy}% Accuracy</div>
                   </div>
                 </div>
