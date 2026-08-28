@@ -821,7 +821,7 @@ export const MockTestsPage: React.FC = () => {
                 {rankedExams.map((test) => {
                   const isSelected = test.id === activeRankedExam.id;
                   const rankInfo = getUserRankInfo(test.id);
-                  const isAttempted = rankInfo.rank > 0;
+                  const isAttempted = rankInfo.isAttempted && rankInfo.attempt;
 
                   return (
                     <button
@@ -843,19 +843,24 @@ export const MockTestsPage: React.FC = () => {
                           </h4>
                         </div>
 
-                        {isAttempted ? (
-                          <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold flex-shrink-0">
-                            Rank #{rankInfo.rank}
-                          </span>
+                        {isAttempted && rankInfo.attempt ? (
+                          <div className="flex flex-col items-end gap-1 flex-shrink-0">
+                            <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 text-[10px] font-extrabold border border-amber-300">
+                              Score: {rankInfo.attempt.score.toFixed(2)} / {test.totalMarks}
+                            </span>
+                            <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">
+                              Rank #{rankInfo.rank}
+                            </span>
+                          </div>
                         ) : (
-                          <span className="px-2 py-0.5 rounded-full bg-slate-200 text-slate-700 text-[10px] font-semibold flex-shrink-0">
-                            Ready
+                          <span className="px-2.5 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-[10px] font-bold flex-shrink-0">
+                            1st Try Available
                           </span>
                         )}
                       </div>
 
                       <div className="flex items-center justify-between text-[11px] text-slate-500 pt-2 border-t border-slate-200/60">
-                        <span>{test.totalQuestions} Questions • {test.durationMinutes} mins</span>
+                        <span>{test.totalQuestions} Questions • {test.durationMinutes} mins • {test.totalMarks} Marks</span>
                         <span className={`font-bold ${isSelected ? 'text-amber-700 font-black' : 'text-brand-600'}`}>
                           {isSelected ? '● Viewing Now' : 'Select Exam →'}
                         </span>
@@ -958,9 +963,9 @@ export const MockTestsPage: React.FC = () => {
                       <Trophy className="w-6 h-6" />
                     </div>
                     <div>
-                      <div className="text-xs font-bold text-slate-300">Ready to Compete?</div>
+                      <div className="text-xs font-bold text-emerald-400 uppercase tracking-wider">1st Try Available • Unranked</div>
                       <div className="text-sm font-bold text-white mt-0.5">
-                        Test your preparation against students from all 14 districts.
+                        Take your official 1st attempt to enter the Statewide Leaderboard!
                       </div>
                     </div>
                     <button
@@ -968,10 +973,10 @@ export const MockTestsPage: React.FC = () => {
                       className="w-full py-3 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black text-xs rounded-xl shadow-lg transition flex items-center justify-center gap-2"
                     >
                       <Zap className="w-4 h-4 text-slate-950" />
-                      <span>Start 1-Attempt State Exam</span>
+                      <span>Start Official 1st Attempt (Ranked)</span>
                     </button>
                     <div className="text-[10px] text-slate-400">
-                      Once started, the timer will begin automatically.
+                      Once started, the {activeRankedExam.durationMinutes}-minute countdown will begin.
                     </div>
                   </div>
                 )}
@@ -1146,96 +1151,110 @@ export const MockTestsPage: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 bg-white">
-                  {filteredLeaderboard.map((entry) => {
-                    const isCurrentUser =
-                      entry.userId === currentUser.id || entry.userName === currentUser.name;
+                  {filteredLeaderboard.length === 0 ? (
+                    <tr>
+                      <td colSpan={8} className="text-center py-12 text-slate-500">
+                        <div className="flex flex-col items-center justify-center space-y-2">
+                          <Trophy className="w-10 h-10 text-amber-400/80" />
+                          <div className="font-bold text-slate-800 text-sm">No candidate has completed this exam yet</div>
+                          <div className="text-xs text-slate-400">
+                            Be the first candidate across Kerala to complete this exam and claim State Rank #1!
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  ) : (
+                    filteredLeaderboard.map((entry) => {
+                      const isCurrentUser =
+                        entry.userId === currentUser.id || entry.userName === currentUser.name;
 
-                    let rankBadge = (
-                      <span className="w-6 h-6 rounded-full bg-slate-100 text-slate-700 font-bold flex items-center justify-center text-xs">
-                        {entry.rank}
-                      </span>
-                    );
-
-                    if (entry.rank === 1) {
-                      rankBadge = (
-                        <span className="w-7 h-7 rounded-full bg-amber-400 text-slate-950 font-black flex items-center justify-center text-xs shadow">
-                          🥇 1
+                      let rankBadge = (
+                        <span className="w-6 h-6 rounded-full bg-slate-100 text-slate-700 font-bold flex items-center justify-center text-xs">
+                          {entry.rank}
                         </span>
                       );
-                    } else if (entry.rank === 2) {
-                      rankBadge = (
-                        <span className="w-7 h-7 rounded-full bg-slate-300 text-slate-900 font-black flex items-center justify-center text-xs shadow">
-                          🥈 2
-                        </span>
-                      );
-                    } else if (entry.rank === 3) {
-                      rankBadge = (
-                        <span className="w-7 h-7 rounded-full bg-amber-600 text-white font-black flex items-center justify-center text-xs shadow">
-                          🥉 3
-                        </span>
-                      );
-                    }
 
-                    return (
-                      <tr
-                        key={entry.id}
-                        className={`transition ${
-                          isCurrentUser
-                            ? 'bg-amber-50/90 font-bold border-2 border-amber-400'
-                            : 'hover:bg-slate-50'
-                        }`}
-                      >
-                        <td className="px-4 py-3.5">{rankBadge}</td>
+                      if (entry.rank === 1) {
+                        rankBadge = (
+                          <span className="w-7 h-7 rounded-full bg-amber-400 text-slate-950 font-black flex items-center justify-center text-xs shadow">
+                            🥇 1
+                          </span>
+                        );
+                      } else if (entry.rank === 2) {
+                        rankBadge = (
+                          <span className="w-7 h-7 rounded-full bg-slate-300 text-slate-900 font-black flex items-center justify-center text-xs shadow">
+                            🥈 2
+                          </span>
+                        );
+                      } else if (entry.rank === 3) {
+                        rankBadge = (
+                          <span className="w-7 h-7 rounded-full bg-amber-600 text-white font-black flex items-center justify-center text-xs shadow">
+                            🥉 3
+                          </span>
+                        );
+                      }
 
-                        <td className="px-4 py-3.5">
-                          <div className="flex items-center gap-2.5">
-                            <img
-                              src={entry.userAvatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80'}
-                              alt={entry.userName}
-                              className="w-8 h-8 rounded-full object-cover border border-slate-200"
-                            />
-                            <div>
-                              <div className="font-bold text-slate-900 flex items-center gap-1.5">
-                                <span>{entry.userName}</span>
-                                {isCurrentUser && (
-                                  <span className="px-1.5 py-0.2 bg-amber-400 text-slate-950 text-[10px] font-black rounded">
-                                    YOU
-                                  </span>
-                                )}
+                      return (
+                        <tr
+                          key={entry.id}
+                          className={`transition ${
+                            isCurrentUser
+                              ? 'bg-amber-50/90 font-bold border-2 border-amber-400'
+                              : 'hover:bg-slate-50'
+                          }`}
+                        >
+                          <td className="px-4 py-3.5">{rankBadge}</td>
+
+                          <td className="px-4 py-3.5">
+                            <div className="flex items-center gap-2.5">
+                              <img
+                                src={entry.userAvatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80'}
+                                alt={entry.userName}
+                                className="w-8 h-8 rounded-full object-cover border border-slate-200"
+                              />
+                              <div>
+                                <div className="font-bold text-slate-900 flex items-center gap-1.5">
+                                  <span>{entry.userName}</span>
+                                  {isCurrentUser && (
+                                    <span className="px-1.5 py-0.2 bg-amber-400 text-slate-950 text-[10px] font-black rounded">
+                                      YOU
+                                    </span>
+                                  )}
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        </td>
+                          </td>
 
-                        <td className="px-4 py-3.5 text-slate-600 font-medium">
-                          {entry.district || 'Kerala'}
-                        </td>
+                          <td className="px-4 py-3.5 text-slate-600 font-medium">
+                            {entry.district || 'Kerala'}
+                          </td>
 
-                        <td className="px-4 py-3.5 font-mono font-black text-amber-700 text-sm">
-                          {entry.score.toFixed(2)}
-                        </td>
+                          <td className="px-4 py-3.5 font-mono font-black text-amber-700 text-sm">
+                            {entry.score.toFixed(2)}
+                          </td>
 
-                        <td className="px-4 py-3.5 text-slate-600">
-                          <span className="text-emerald-600 font-bold">+{entry.correctCount}</span> /{' '}
-                          <span className="text-red-600 font-bold">-{entry.wrongCount}</span>
-                        </td>
+                          <td className="px-4 py-3.5 text-slate-600">
+                            <span className="text-emerald-600 font-bold">+{entry.correctCount}</span> /{' '}
+                            <span className="text-red-600 font-bold">-{entry.wrongCount}</span>
+                          </td>
 
-                        <td className="px-4 py-3.5">
-                          <span className={`font-bold ${entry.accuracy >= 85 ? 'text-emerald-600' : 'text-slate-700'}`}>
-                            {entry.accuracy}%
-                          </span>
-                        </td>
+                          <td className="px-4 py-3.5">
+                            <span className={`font-bold ${entry.accuracy >= 85 ? 'text-emerald-600' : 'text-slate-700'}`}>
+                              {entry.accuracy}%
+                            </span>
+                          </td>
 
-                        <td className="px-4 py-3.5 font-mono text-slate-500">
-                          {Math.floor(entry.timeSpentSeconds / 60)}m {entry.timeSpentSeconds % 60}s
-                        </td>
+                          <td className="px-4 py-3.5 font-mono text-slate-500">
+                            {Math.floor(entry.timeSpentSeconds / 60)}m {entry.timeSpentSeconds % 60}s
+                          </td>
 
-                        <td className="px-4 py-3.5 font-bold text-brand-700">
-                          {entry.percentile}%ile
-                        </td>
-                      </tr>
-                    );
-                  })}
+                          <td className="px-4 py-3.5 font-bold text-brand-700">
+                            {entry.percentile}%ile
+                          </td>
+                        </tr>
+                      );
+                    })
+                  )}
                 </tbody>
               </table>
             </div>

@@ -81,7 +81,7 @@ interface AppContextType {
   submitMockTestAttempt: (attempt: Omit<MockTestAttempt, 'id' | 'submittedAt'>) => MockTestAttempt;
   getRankedLeaderboard: (testId: string) => MockTestAttempt[];
   hasUserAttemptedTest: (testId: string, userId?: string) => boolean;
-  getUserRankInfo: (testId?: string, userId?: string) => { rank: number; percentile: number; totalCandidates: number; attempt: MockTestAttempt | null; totalUserAttempts: number; allAttempts: MockTestAttempt[] };
+  getUserRankInfo: (testId?: string, userId?: string) => { rank: number; percentile: number; totalCandidates: number; attempt: MockTestAttempt | null; totalUserAttempts: number; allAttempts: MockTestAttempt[]; isAttempted?: boolean };
   addStudyNote: (newNote: Omit<StudyNote, 'id' | 'downloadsCount' | 'uploadedAt'>) => void;
   deleteStudyNote: (noteId: string) => void;
   addMockTest: (newTest: Omit<MockTest, 'id' | 'attemptsCount'>) => void;
@@ -930,17 +930,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const getRankedLeaderboard = (testId: string): MockTestAttempt[] => {
-    // Primary filter for this specific test
-    let filtered = testAttempts.filter((a) => a.testId === testId);
-
-    // Fallback: If no attempts found for mock-kpsc-master-87 or mock-state-rank-1, include existing ranked attempts
-    if (filtered.length === 0) {
-      const altId = testId === 'mock-kpsc-master-87' ? 'mock-state-rank-1' : 'mock-kpsc-master-87';
-      const altAttempts = testAttempts.filter((a) => a.testId === altId);
-      if (altAttempts.length > 0) {
-        filtered = altAttempts;
-      }
-    }
+    // Strictly filter attempts ONLY for this specific test
+    const filtered = testAttempts.filter((a) => a.testId === testId);
     
     // Group by student and take ONLY their FIRST attempt (earliest submittedAt)
     // Subsequent attempts are for practice and are not counted for rank.
@@ -951,8 +942,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     );
 
     for (const att of chronological) {
-      const key = att.userId || att.userName;
-      if (!firstAttemptsMap.has(key)) {
+      const key = (att.userId && att.userId.trim()) || att.userName?.toLowerCase().trim();
+      if (key && !firstAttemptsMap.has(key)) {
         firstAttemptsMap.set(key, att);
       }
     }
@@ -985,48 +976,68 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const hasUserAttemptedTest = (testId: string, userId?: string): boolean => {
     const uid = userId || currentUser.id;
+    const uName = (currentUser.name || '').toLowerCase().trim();
     return testAttempts.some(
       (a) =>
-        (a.testId === testId || (testId === 'mock-kpsc-master-87' && a.testId === 'mock-state-rank-1')) &&
-        (a.userId === uid || a.userName === currentUser.name)
+        a.testId === testId &&
+        ((uid && a.userId === uid) || (uName && a.userName?.toLowerCase().trim() === uName))
     );
   };
 
   const getUserRankInfo = (testId?: string, userId?: string) => {
     const uid = userId || currentUser.id;
     const targetStudent = students.find((s) => s.id === uid);
-    const uName = targetStudent?.name || currentUser.name;
+    const uName = (targetStudent?.name || currentUser.name || '').toLowerCase().trim();
 
-    const targetTestId = testId || 'mock-kpsc-master-87';
-    let leaderboard = getRankedLeaderboard(targetTestId);
+    if (testId) {
+      // Test-specific ranking and attempts (Never shared or copied from another test)
+      const leaderboard = getRankedLeaderboard(testId);
+      const userFirstAttempt = leaderboard.find(
+        (a) => (uid && a.userId === uid) || (uName && a.userName?.toLowerCase().trim() === uName)
+      ) || null;
 
-    let userFirstAttempt = leaderboard.find(
-      (a) => a.userId === uid || (a.userName && uName && a.userName.toLowerCase() === uName.toLowerCase())
-    ) || null;
-
-    if (!userFirstAttempt) {
-      const altTestId = targetTestId === 'mock-kpsc-master-87' ? 'mock-state-rank-1' : 'mock-kpsc-master-87';
-      const altLeaderboard = getRankedLeaderboard(altTestId);
-      const altAttempt = altLeaderboard.find(
-        (a) => a.userId === uid || (a.userName && uName && a.userName.toLowerCase() === uName.toLowerCase())
+      const thisTestAttempts = testAttempts.filter(
+        (a) => a.testId === testId && ((uid && a.userId === uid) || (uName && a.userName?.toLowerCase().trim() === uName))
       );
-      if (altAttempt) {
-        leaderboard = altLeaderboard;
-        userFirstAttempt = altAttempt;
+
+      return {
+        rank: (userFirstAttempt?.rank || 0) as number,
+        percentile: (userFirstAttempt?.percentile || 0) as number,
+        totalCandidates: leaderboard.length,
+        attempt: userFirstAttempt,
+        totalUserAttempts: thisTestAttempts.length,
+        allAttempts: thisTestAttempts,
+        isAttempted: !!userFirstAttempt
+      };
+    }
+
+    // Overall / General profile rank across any ranked test
+    const allRankedLeaderboards = mockTests
+      .filter((t) => t.isRankedExam)
+      .map((t) => ({ test: t, leaderboard: getRankedLeaderboard(t.id) }));
+
+    let bestAttempt: MockTestAttempt | null = null;
+    for (const { leaderboard } of allRankedLeaderboards) {
+      const att = leaderboard.find(
+        (a) => (uid && a.userId === uid) || (uName && a.userName?.toLowerCase().trim() === uName)
+      );
+      if (att && (!bestAttempt || att.score > bestAttempt.score)) {
+        bestAttempt = att;
       }
     }
 
     const allUserAttempts = testAttempts.filter(
-      (a) => a.userId === uid || (a.userName && uName && a.userName.toLowerCase() === uName.toLowerCase())
+      (a) => (uid && a.userId === uid) || (uName && a.userName?.toLowerCase().trim() === uName)
     );
-    
+
     return {
-      rank: userFirstAttempt?.rank || targetStudent?.stateRank || 0,
-      percentile: userFirstAttempt?.percentile || targetStudent?.percentile || 0,
-      totalCandidates: leaderboard.length || 10,
-      attempt: userFirstAttempt,
+      rank: (bestAttempt?.rank ?? targetStudent?.stateRank ?? 0) as number,
+      percentile: (bestAttempt?.percentile ?? targetStudent?.percentile ?? 0) as number,
+      totalCandidates: bestAttempt ? getRankedLeaderboard(bestAttempt.testId).length : 0,
+      attempt: bestAttempt,
       totalUserAttempts: allUserAttempts.length,
-      allAttempts: allUserAttempts
+      allAttempts: allUserAttempts,
+      isAttempted: !!bestAttempt
     };
   };
 
