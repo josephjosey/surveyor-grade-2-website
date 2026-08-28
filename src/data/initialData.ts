@@ -1,5 +1,6 @@
 import { ClassModule, StudyNote, PYQPaper, MockTest, MockTestAttempt, Doubt, User } from '../types';
 import { MOCK_TEST_87_QUESTIONS } from './survey87Questions';
+import { MOCK_TEST_THEODOLITE_30 } from './theodoliteQuestions';
 
 export const INITIAL_MODULES: ClassModule[] = [
   {
@@ -465,6 +466,7 @@ export const INITIAL_PYQ_PAPERS: PYQPaper[] = [
 ];
 
 export const INITIAL_MOCK_TESTS: MockTest[] = [
+  MOCK_TEST_THEODOLITE_30,
   MOCK_TEST_87_QUESTIONS,
   {
     id: 'mock-state-rank-1',
@@ -1069,6 +1071,50 @@ export const INITIAL_STATEWIDE_ATTEMPTS: MockTestAttempt[] = [
     unattemptedCount: 5,
     accuracy: 40.0,
     timeSpentSeconds: 18,
+    rank: 2,
+    percentile: 0.0
+  },
+
+  // =========================================================================
+  // 3. THEODOLITE MCQ STATE-LEVEL RANKED EXAM (mock-theodolite-mcq-30)
+  // =========================================================================
+  {
+    id: 'att-real-mariya-theo-30',
+    testId: 'mock-theodolite-mcq-30',
+    userId: '55f5d228-0fbe-49a4-abe2-261e343dbf12',
+    userName: 'Mariya Josey',
+    userAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80',
+    district: 'Idukki',
+    startedAt: '2026-08-28T07:15:00Z',
+    submittedAt: '2026-08-28T07:22:30Z',
+    answers: {},
+    markedForReview: [],
+    score: 7.01,
+    correctCount: 9,
+    wrongCount: 6,
+    unattemptedCount: 15,
+    accuracy: 60.0,
+    timeSpentSeconds: 450,
+    rank: 1,
+    percentile: 100.0
+  },
+  {
+    id: 'att-real-joseph-theo-30',
+    testId: 'mock-theodolite-mcq-30',
+    userId: '11550992-238a-4e9c-ad5f-a95edef72423',
+    userName: 'JOSEPH JOSEY',
+    userAvatar: 'https://lh3.googleusercontent.com/a/ACg8ocIaBMAwuWUqnDUrEGQPCwFlLpQ8gGRd7SPCQvnJWg0-LuEwH_qu=s96-c',
+    district: 'Palakkad',
+    startedAt: '2026-08-28T07:25:00Z',
+    submittedAt: '2026-08-28T07:28:15Z',
+    answers: {},
+    markedForReview: [],
+    score: 3.68,
+    correctCount: 5,
+    wrongCount: 4,
+    unattemptedCount: 21,
+    accuracy: 55.6,
+    timeSpentSeconds: 195,
     rank: 2,
     percentile: 0.0
   }

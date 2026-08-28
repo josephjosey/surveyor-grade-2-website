@@ -198,11 +198,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     if (saved) {
       try {
         const parsed = JSON.parse(saved) as MockTest[];
-        const hasRanked = parsed.some((t) => t.isRankedExam || t.id === 'mock-state-rank-1');
-        if (!hasRanked) {
-          return [...INITIAL_MOCK_TESTS.filter((t) => t.isRankedExam), ...parsed];
-        }
-        return parsed;
+        const existingIds = new Set(parsed.map((t) => t.id));
+        const missing = INITIAL_MOCK_TESTS.filter((t) => !existingIds.has(t.id));
+        return [...missing, ...parsed];
       } catch (e) {
         return INITIAL_MOCK_TESTS;
       }

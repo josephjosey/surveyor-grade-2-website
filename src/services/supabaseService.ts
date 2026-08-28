@@ -350,15 +350,19 @@ export async function saveTestAttempt(attempt: MockTestAttempt, userId?: string)
 
     // Ensure mock_test record exists to satisfy foreign key constraint
     try {
+      const isTheodolite = attempt.testId === 'mock-theodolite-mcq-30';
+      const isMaster87 = attempt.testId === 'mock-kpsc-master-87';
       await supabase.from('mock_tests').upsert({
         id: attempt.testId,
-        title: attempt.testId === 'mock-kpsc-master-87' 
+        title: isTheodolite
+          ? 'Theodolite MCQ'
+          : isMaster87 
           ? 'Kerala PSC Surveyor Grade II & Overseer - 87 MCQ Master Test Series' 
           : 'All-Kerala Survey & Land Records State-Level Ranked Grand Exam',
         category: 'All-Kerala State Ranked Exam',
-        duration_minutes: attempt.testId === 'mock-kpsc-master-87' ? 75 : 45,
-        total_questions: attempt.testId === 'mock-kpsc-master-87' ? 87 : 10,
-        total_marks: attempt.testId === 'mock-kpsc-master-87' ? 87 : 10,
+        duration_minutes: isTheodolite ? 30 : isMaster87 ? 75 : 45,
+        total_questions: isTheodolite ? 30 : isMaster87 ? 87 : 10,
+        total_marks: isTheodolite ? 30 : isMaster87 ? 87 : 10,
         is_ranked_exam: true
       });
     } catch (e) {
