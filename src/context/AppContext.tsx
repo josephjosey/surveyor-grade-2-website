@@ -200,7 +200,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         const parsed = JSON.parse(saved) as MockTest[];
         const existingIds = new Set(parsed.map((t) => t.id));
         const missing = INITIAL_MOCK_TESTS.filter((t) => !existingIds.has(t.id));
-        return [...missing, ...parsed];
+        const combined = [...parsed, ...missing];
+        const enriched = combined.map((t) => {
+          const initMatch = INITIAL_MOCK_TESTS.find((it) => it.id === t.id);
+          if (initMatch && (!t.questions || t.questions.length === 0)) {
+            return { ...initMatch, ...t, questions: initMatch.questions };
+          }
+          return t;
+        });
+        safeSetItem('survey_academy_tests', enriched);
+        return enriched;
       } catch (e) {
         return INITIAL_MOCK_TESTS;
       }
@@ -304,7 +313,29 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         ]);
 
         if (notes && notes.length > 0) setStudyNotes(notes);
-        if (tests && tests.length > 0) setMockTests(tests);
+        if (tests && tests.length > 0) {
+          setMockTests((prev) => {
+            const combined = [...tests];
+            const existingIds = new Set(tests.map((t) => t.id));
+            for (const initTest of INITIAL_MOCK_TESTS) {
+              if (!existingIds.has(initTest.id)) {
+                combined.push(initTest);
+              }
+            }
+            const enriched = combined.map((t) => {
+              const initMatch = INITIAL_MOCK_TESTS.find((it) => it.id === t.id);
+              if (initMatch && (!t.questions || t.questions.length === 0)) {
+                return { ...initMatch, ...t, questions: initMatch.questions };
+              }
+              return t;
+            });
+            safeSetItem('survey_academy_tests', enriched);
+            return enriched;
+          });
+        } else {
+          setMockTests(INITIAL_MOCK_TESTS);
+          safeSetItem('survey_academy_tests', INITIAL_MOCK_TESTS);
+        }
         if (attempts && attempts.length > 0) {
           const cleanCloudAttempts = attempts.filter((a) => !isDummyCandidate(a.userName, a.id));
           setTestAttempts((prev) => {

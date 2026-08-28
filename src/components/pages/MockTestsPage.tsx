@@ -800,77 +800,105 @@ export const MockTestsPage: React.FC = () => {
       {/* ---------------------------------------------------------------- */}
       {examTab === 'ranked' && (
         <div className="space-y-8 animate-fadeIn">
-          {/* Multi-Exam Switcher Bar (when multiple ranked tests exist) */}
-          {rankedExams.length > 1 && (
-            <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="p-1.5 bg-amber-50 rounded-lg text-amber-600">
-                    <Trophy className="w-4 h-4" />
-                  </span>
-                  <h3 className="text-xs sm:text-sm font-extrabold text-slate-900 uppercase tracking-wider">
-                    Select State Ranked Exam ({rankedExams.length} Active)
-                  </h3>
-                </div>
-                <span className="text-[11px] text-slate-500 font-medium hidden sm:inline">
-                  Click any exam to view its specifications, attempt, or view leaderboard
+          {/* SELECT DIFFERENT MCQS GRID (ALWAYS VISIBLE) */}
+          <div className="bg-white rounded-3xl p-6 border-2 border-amber-400/50 shadow-md space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-100">
+              <div className="flex items-center gap-2.5">
+                <span className="p-2 bg-amber-50 rounded-xl text-amber-600 border border-amber-200">
+                  <Trophy className="w-5 h-5" />
                 </span>
+                <div>
+                  <h3 className="text-base font-extrabold text-slate-900">
+                    Select Kerala PSC Mock MCQ ({rankedExams.length} Series Available)
+                  </h3>
+                  <p className="text-xs text-slate-500">
+                    Click any MCQ series to enter its exam session and view candidates' ranks strictly for that exam.
+                  </p>
+                </div>
               </div>
+              <span className="px-3 py-1 bg-slate-100 text-slate-700 text-xs font-bold rounded-full self-start sm:self-auto">
+                {rankedExams.length} Exams Active
+              </span>
+            </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                {rankedExams.map((test) => {
-                  const isSelected = test.id === activeRankedExam.id;
-                  const rankInfo = getUserRankInfo(test.id);
-                  const isAttempted = rankInfo.isAttempted && rankInfo.attempt;
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {rankedExams.map((test) => {
+                const isSelected = test.id === activeRankedExam?.id;
+                const rankInfo = getUserRankInfo(test.id);
+                const isAttempted = rankInfo.isAttempted && rankInfo.attempt;
 
-                  return (
-                    <button
-                      key={test.id}
-                      onClick={() => setSelectedRankedExamId(test.id)}
-                      className={`p-4 rounded-xl border text-left transition flex flex-col justify-between space-y-3 relative ${
-                        isSelected
-                          ? 'bg-amber-50/90 border-amber-500 ring-2 ring-amber-500 shadow-sm'
-                          : 'bg-slate-50/70 hover:bg-slate-100/90 border-slate-200'
-                      }`}
-                    >
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="space-y-1">
-                          <span className="text-[10px] font-bold text-amber-800 uppercase tracking-wider bg-amber-100 px-2 py-0.5 rounded">
-                            {test.examCode || 'STATE-RANKED'}
-                          </span>
-                          <h4 className="font-bold text-sm text-slate-900 line-clamp-1">
-                            {test.title}
-                          </h4>
-                        </div>
-
+                return (
+                  <button
+                    key={test.id}
+                    onClick={() => setSelectedRankedExamId(test.id)}
+                    className={`p-5 rounded-2xl border-2 text-left transition-all flex flex-col justify-between space-y-4 relative ${
+                      isSelected
+                        ? 'bg-amber-50/90 border-amber-500 ring-2 ring-amber-500 shadow-md'
+                        : 'bg-slate-50/80 hover:bg-slate-100/90 border-slate-200 hover:border-slate-300'
+                    }`}
+                  >
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-[10px] font-black text-amber-900 uppercase tracking-wider bg-amber-200/80 px-2 py-0.5 rounded">
+                          {test.totalQuestions} MCQs
+                        </span>
                         {isAttempted && rankInfo.attempt ? (
-                          <div className="flex flex-col items-end gap-1 flex-shrink-0">
-                            <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 text-[10px] font-extrabold border border-amber-300">
-                              Score: {rankInfo.attempt.score.toFixed(2)} / {test.totalMarks}
-                            </span>
-                            <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">
-                              Rank #{rankInfo.rank}
-                            </span>
-                          </div>
+                          <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">
+                            Rank #{rankInfo.rank}
+                          </span>
                         ) : (
-                          <span className="px-2.5 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-[10px] font-bold flex-shrink-0">
+                          <span className="px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 text-[10px] font-bold">
                             1st Try Available
                           </span>
                         )}
                       </div>
 
-                      <div className="flex items-center justify-between text-[11px] text-slate-500 pt-2 border-t border-slate-200/60">
-                        <span>{test.totalQuestions} Questions • {test.durationMinutes} mins • {test.totalMarks} Marks</span>
-                        <span className={`font-bold ${isSelected ? 'text-amber-700 font-black' : 'text-brand-600'}`}>
-                          {isSelected ? '● Viewing Now' : 'Select Exam →'}
-                        </span>
+                      <h4 className="font-extrabold text-sm text-slate-900 line-clamp-2">
+                        {test.title}
+                      </h4>
+                      <p className="text-xs text-slate-500 line-clamp-2">
+                        {test.description}
+                      </p>
+                    </div>
+
+                    <div className="space-y-3 pt-3 border-t border-slate-200/70 text-xs">
+                      <div className="flex items-center justify-between text-[11px] text-slate-600">
+                        <span>⏱ {test.durationMinutes} mins</span>
+                        <span>🎯 {test.totalMarks} Marks (+1 / -0.33)</span>
                       </div>
-                    </button>
-                  );
-                })}
-              </div>
+
+                      {isAttempted && rankInfo.attempt ? (
+                        <div className="bg-emerald-50 text-emerald-900 p-2 rounded-xl border border-emerald-200 text-center font-bold text-xs">
+                          Your Marks: {rankInfo.attempt.score.toFixed(2)} / {test.totalMarks} (Rank #{rankInfo.rank})
+                        </div>
+                      ) : (
+                        <div className="bg-slate-100 text-slate-600 p-2 rounded-xl text-center font-medium text-[11px]">
+                          Unranked • Not attempted yet
+                        </div>
+                      )}
+
+                      <div className={`w-full py-2 px-3 rounded-xl font-bold text-xs text-center flex items-center justify-center gap-1.5 transition ${
+                        isSelected
+                          ? 'bg-amber-500 text-slate-950 shadow-sm font-black'
+                          : 'bg-slate-900 text-white hover:bg-slate-800'
+                      }`}>
+                        {isSelected ? (
+                          <>
+                            <CheckCircle2 className="w-4 h-4" />
+                            <span>Currently Active Session</span>
+                          </>
+                        ) : (
+                          <>
+                            <span>Enter This Exam & View Ranks →</span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </button>
+                );
+              })}
             </div>
-          )}
+          </div>
 
           {/* Main Ranked Exam Action Card */}
           <div className="bg-gradient-to-br from-slate-950 via-brand-950 to-navy-950 rounded-3xl p-6 sm:p-8 text-white border-2 border-amber-500/40 shadow-2xl space-y-6">

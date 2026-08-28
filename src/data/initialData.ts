@@ -466,11 +466,11 @@ export const INITIAL_PYQ_PAPERS: PYQPaper[] = [
 ];
 
 export const INITIAL_MOCK_TESTS: MockTest[] = [
-  MOCK_TEST_THEODOLITE_30,
   MOCK_TEST_87_QUESTIONS,
+  MOCK_TEST_THEODOLITE_30,
   {
     id: 'mock-state-rank-1',
-    title: 'All-Kerala Survey & Land Records State-Level Ranked Grand Exam (1 Attempt Only)',
+    title: 'All-Kerala Survey & Land Records State-Level Ranked Grand Exam (10 Questions)',
     category: 'All-Kerala State Ranked Exam',
     description: 'Official Kerala PSC Pattern Statewide Evaluation (1 Attempt Only). Evaluated with -0.33 negative marking. Compare your marks and obtain your Kerala State Rank & Percentile on the live Statewide Leaderboard!',
     durationMinutes: 45,
