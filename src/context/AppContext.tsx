@@ -107,6 +107,30 @@ interface AppContextType {
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
+const DUMMY_CANDIDATE_NAMES = new Set([
+  'anoop m. v.',
+  'sneha parvathy',
+  'jithesh kumar k.',
+  'deepa s. nair',
+  'mohammed ashiq',
+  'kavya ramesh',
+  'akhil george',
+  'reshmi v. pillai',
+  'sujith sasi',
+  'aswathy mohan',
+  'anandu krishnan',
+  'sneha mohan',
+  'rahul varma',
+  'deepa s. kumar',
+  'aswathi nair'
+]);
+
+export const isDummyCandidate = (name?: string, id?: string): boolean => {
+  if (id && (id.startsWith('att-rank-') || id.startsWith('att-m87-') || id.startsWith('u-std-') || id === 'u-demo-student')) return true;
+  if (name && DUMMY_CANDIDATE_NAMES.has(name.toLowerCase().trim())) return true;
+  return false;
+};
+
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User>(() => {
     const saved = localStorage.getItem('survey_academy_user');
@@ -191,9 +215,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     if (saved) {
       try {
         const parsed = JSON.parse(saved) as MockTestAttempt[];
-        const existingIds = new Set(parsed.map((a) => a.id));
-        const missing = INITIAL_STATEWIDE_ATTEMPTS.filter((a) => !existingIds.has(a.id));
-        return [...parsed, ...missing];
+        const cleaned = parsed.filter((a) => !isDummyCandidate(a.userName, a.id));
+        const cleanedIds = new Set(cleaned.map((a) => a.id));
+        const missing = INITIAL_STATEWIDE_ATTEMPTS.filter((a) => !cleanedIds.has(a.id));
+        return [...cleaned, ...missing];
       } catch (e) {
         return INITIAL_STATEWIDE_ATTEMPTS;
       }
@@ -208,7 +233,18 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const [students, setStudents] = useState<User[]>(() => {
     const saved = localStorage.getItem('survey_academy_students');
-    return saved ? JSON.parse(saved) : ENROLLED_STUDENTS_LIST;
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved) as User[];
+        const cleaned = parsed.filter((s) => !isDummyCandidate(s.name, s.id));
+        const cleanedIds = new Set(cleaned.map((s) => s.id));
+        const missing = ENROLLED_STUDENTS_LIST.filter((s) => !cleanedIds.has(s.id));
+        return [...cleaned, ...missing];
+      } catch (e) {
+        return ENROLLED_STUDENTS_LIST;
+      }
+    }
+    return ENROLLED_STUDENTS_LIST;
   });
 
   const [isEnrollmentModalOpen, setIsEnrollmentModalOpen] = useState<boolean>(false);
@@ -272,11 +308,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         if (notes && notes.length > 0) setStudyNotes(notes);
         if (tests && tests.length > 0) setMockTests(tests);
         if (attempts && attempts.length > 0) {
+          const cleanCloudAttempts = attempts.filter((a) => !isDummyCandidate(a.userName, a.id));
           setTestAttempts((prev) => {
-            const combined = [...attempts];
-            const existingIds = new Set(attempts.map((a) => a.id));
+            const combined = [...cleanCloudAttempts];
+            const existingIds = new Set(cleanCloudAttempts.map((a) => a.id));
             for (const item of prev) {
-              if (!existingIds.has(item.id)) combined.push(item);
+              if (!existingIds.has(item.id) && !isDummyCandidate(item.userName, item.id)) {
+                combined.push(item);
+              }
             }
             safeSetItem('survey_academy_attempts', combined);
             return combined;
@@ -285,9 +324,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         if (pyqs && pyqs.length > 0) setPyqPapers(pyqs);
         if (doubtsList && doubtsList.length > 0) setDoubts(doubtsList);
         if (allProfiles && allProfiles.length > 0) {
-          setStudents(allProfiles);
+          const cleanProfiles = allProfiles.filter((p) => !isDummyCandidate(p.name, p.id));
+          setStudents(cleanProfiles);
           setCurrentUser((prev) => {
-            const matched = allProfiles.find(
+            const matched = cleanProfiles.find(
               (p) => p.id === prev.id || (p.email && prev.email && p.email.toLowerCase() === prev.email.toLowerCase())
             );
             if (matched) {

@@ -1007,36 +1007,17 @@ export const MockTestsPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Top 3 State Rankers Podium Showcase */}
-            {fullLeaderboard.length >= 3 && (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
-                {/* Rank 2 - Silver */}
-                <div className="order-2 md:order-1 bg-gradient-to-b from-slate-50 to-slate-100 p-5 rounded-2xl border-2 border-slate-300 text-center relative shadow-sm space-y-3">
-                  <div className="w-8 h-8 rounded-full bg-slate-300 text-slate-800 font-black text-xs flex items-center justify-center mx-auto shadow">
-                    🥈 2
-                  </div>
-                  <img
-                    src={fullLeaderboard[1].userAvatar || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&q=80'}
-                    alt={fullLeaderboard[1].userName}
-                    className="w-16 h-16 rounded-2xl object-cover mx-auto ring-4 ring-slate-300 shadow"
-                  />
-                  <div>
-                    <div className="font-extrabold text-slate-900 text-sm">
-                      {fullLeaderboard[1].userName}
-                    </div>
-                    <div className="text-xs text-slate-500 font-medium flex items-center justify-center gap-1">
-                      <MapPin className="w-3 h-3 text-slate-400" /> {fullLeaderboard[1].district}
-                    </div>
-                  </div>
-                  <div className="bg-white p-2 rounded-xl border border-slate-200">
-                    <div className="text-xs text-slate-500 font-semibold">Score</div>
-                    <div className="text-lg font-black text-slate-800">{fullLeaderboard[1].score.toFixed(2)} / {activeRankedExam.totalMarks || 87}</div>
-                    <div className="text-[10px] text-emerald-600 font-bold">{fullLeaderboard[1].accuracy}% Accuracy</div>
-                  </div>
-                </div>
-
+            {/* Top State Rankers Podium Showcase */}
+            {fullLeaderboard.length >= 1 && (
+              <div className={`grid gap-4 pt-2 ${
+                fullLeaderboard.length === 1 
+                  ? 'grid-cols-1 max-w-sm mx-auto' 
+                  : fullLeaderboard.length === 2 
+                  ? 'grid-cols-1 sm:grid-cols-2 max-w-2xl mx-auto' 
+                  : 'grid-cols-1 md:grid-cols-3'
+              }`}>
                 {/* Rank 1 - Gold Champion */}
-                <div className="order-1 md:order-2 bg-gradient-to-b from-amber-50 to-amber-100/70 p-6 rounded-3xl border-2 border-amber-400 text-center relative shadow-md space-y-3 -mt-2">
+                <div className={`${fullLeaderboard.length >= 3 ? 'order-1 md:order-2 -mt-2' : 'order-1'} bg-gradient-to-b from-amber-50 to-amber-100/70 p-6 rounded-3xl border-2 border-amber-400 text-center relative shadow-md space-y-3`}>
                   <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-amber-400 text-slate-950 text-[10px] font-black uppercase px-3 py-0.5 rounded-full shadow">
                     👑 State Rank 1
                   </span>
@@ -1044,7 +1025,7 @@ export const MockTestsPage: React.FC = () => {
                     🥇 1
                   </div>
                   <img
-                    src={fullLeaderboard[0].userAvatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=120&q=80'}
+                    src={fullLeaderboard[0].userAvatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80'}
                     alt={fullLeaderboard[0].userName}
                     className="w-20 h-20 rounded-2xl object-cover mx-auto ring-4 ring-amber-400 shadow-lg"
                   />
@@ -1059,34 +1040,63 @@ export const MockTestsPage: React.FC = () => {
                   <div className="bg-white p-2.5 rounded-xl border border-amber-300 shadow-sm">
                     <div className="text-xs text-slate-500 font-semibold">Highest Score</div>
                     <div className="text-2xl font-black text-amber-600">{fullLeaderboard[0].score.toFixed(2)} / {activeRankedExam.totalMarks || 87}</div>
-                    <div className="text-[11px] text-emerald-600 font-bold">{fullLeaderboard[0].accuracy}% Accuracy • 99.8%ile</div>
+                    <div className="text-[11px] text-emerald-600 font-bold">{fullLeaderboard[0].accuracy}% Accuracy • {fullLeaderboard[0].percentile}%ile</div>
                   </div>
                 </div>
 
+                {/* Rank 2 - Silver */}
+                {fullLeaderboard.length >= 2 && (
+                  <div className={`${fullLeaderboard.length >= 3 ? 'order-2 md:order-1' : 'order-2'} bg-gradient-to-b from-slate-50 to-slate-100 p-5 rounded-2xl border-2 border-slate-300 text-center relative shadow-sm space-y-3`}>
+                    <div className="w-8 h-8 rounded-full bg-slate-300 text-slate-800 font-black text-xs flex items-center justify-center mx-auto shadow">
+                      🥈 2
+                    </div>
+                    <img
+                      src={fullLeaderboard[1].userAvatar || 'https://lh3.googleusercontent.com/a/ACg8ocIaBMAwuWUqnDUrEGQPCwFlLpQ8gGRd7SPCQvnJWg0-LuEwH_qu=s96-c'}
+                      alt={fullLeaderboard[1].userName}
+                      className="w-16 h-16 rounded-2xl object-cover mx-auto ring-4 ring-slate-300 shadow"
+                    />
+                    <div>
+                      <div className="font-extrabold text-slate-900 text-sm">
+                        {fullLeaderboard[1].userName}
+                      </div>
+                      <div className="text-xs text-slate-500 font-medium flex items-center justify-center gap-1">
+                        <MapPin className="w-3 h-3 text-slate-400" /> {fullLeaderboard[1].district}
+                      </div>
+                    </div>
+                    <div className="bg-white p-2 rounded-xl border border-slate-200">
+                      <div className="text-xs text-slate-500 font-semibold">Score</div>
+                      <div className="text-lg font-black text-slate-800">{fullLeaderboard[1].score.toFixed(2)} / {activeRankedExam.totalMarks || 87}</div>
+                      <div className="text-[10px] text-emerald-600 font-bold">{fullLeaderboard[1].accuracy}% Accuracy • {fullLeaderboard[1].percentile}%ile</div>
+                    </div>
+                  </div>
+                )}
+
                 {/* Rank 3 - Bronze */}
-                <div className="order-3 bg-gradient-to-b from-orange-50/60 to-amber-50/40 p-5 rounded-2xl border-2 border-amber-300/80 text-center relative shadow-sm space-y-3">
-                  <div className="w-8 h-8 rounded-full bg-amber-600 text-white font-black text-xs flex items-center justify-center mx-auto shadow">
-                    🥉 3
-                  </div>
-                  <img
-                    src={fullLeaderboard[2].userAvatar || 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=120&q=80'}
-                    alt={fullLeaderboard[2].userName}
-                    className="w-16 h-16 rounded-2xl object-cover mx-auto ring-4 ring-amber-500/40 shadow"
-                  />
-                  <div>
-                    <div className="font-extrabold text-slate-900 text-sm">
-                      {fullLeaderboard[2].userName}
+                {fullLeaderboard.length >= 3 && (
+                  <div className="order-3 bg-gradient-to-b from-orange-50/60 to-amber-50/40 p-5 rounded-2xl border-2 border-amber-300/80 text-center relative shadow-sm space-y-3">
+                    <div className="w-8 h-8 rounded-full bg-amber-600 text-white font-black text-xs flex items-center justify-center mx-auto shadow">
+                      🥉 3
                     </div>
-                    <div className="text-xs text-slate-500 font-medium flex items-center justify-center gap-1">
-                      <MapPin className="w-3 h-3 text-slate-400" /> {fullLeaderboard[2].district}
+                    <img
+                      src={fullLeaderboard[2].userAvatar || 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=120&q=80'}
+                      alt={fullLeaderboard[2].userName}
+                      className="w-16 h-16 rounded-2xl object-cover mx-auto ring-4 ring-amber-500/40 shadow"
+                    />
+                    <div>
+                      <div className="font-extrabold text-slate-900 text-sm">
+                        {fullLeaderboard[2].userName}
+                      </div>
+                      <div className="text-xs text-slate-500 font-medium flex items-center justify-center gap-1">
+                        <MapPin className="w-3 h-3 text-slate-400" /> {fullLeaderboard[2].district}
+                      </div>
+                    </div>
+                    <div className="bg-white p-2 rounded-xl border border-amber-200">
+                      <div className="text-xs text-slate-500 font-semibold">Score</div>
+                      <div className="text-lg font-black text-slate-800">{fullLeaderboard[2].score.toFixed(2)} / {activeRankedExam.totalMarks || 87}</div>
+                      <div className="text-[10px] text-emerald-600 font-bold">{fullLeaderboard[2].accuracy}% Accuracy • {fullLeaderboard[2].percentile}%ile</div>
                     </div>
                   </div>
-                  <div className="bg-white p-2 rounded-xl border border-amber-200">
-                    <div className="text-xs text-slate-500 font-semibold">Score</div>
-                    <div className="text-lg font-black text-slate-800">{fullLeaderboard[2].score.toFixed(2)} / {activeRankedExam.totalMarks || 87}</div>
-                    <div className="text-[10px] text-emerald-600 font-bold">{fullLeaderboard[2].accuracy}% Accuracy</div>
-                  </div>
-                </div>
+                )}
               </div>
             )}
 
