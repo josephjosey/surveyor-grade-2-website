@@ -2,6 +2,7 @@ import { ClassModule, StudyNote, PYQPaper, MockTest, MockTestAttempt, Doubt, Use
 import { MOCK_TEST_87_QUESTIONS } from './survey87Questions';
 import { MOCK_TEST_THEODOLITE_30 } from './theodoliteQuestions';
 import { INITIAL_BANK_QUESTIONS } from './bankQuestions';
+import { SIMULATED_STUDENTS, SIMULATED_ATTEMPTS } from './simulatedStudents';
 
 export { INITIAL_BANK_QUESTIONS };
 
@@ -1014,7 +1015,8 @@ export const ENROLLED_STUDENTS_LIST: User[] = [
     stateRank: 1,
     percentile: 100.0,
     mockScore: 4.37
-  }
+  },
+  ...SIMULATED_STUDENTS
 ];
 
 export const INITIAL_STATEWIDE_ATTEMPTS: MockTestAttempt[] = [
@@ -1060,5 +1062,6 @@ export const INITIAL_STATEWIDE_ATTEMPTS: MockTestAttempt[] = [
     timeSpentSeconds: 18,
     rank: 2,
     percentile: 0.0
-  }
+  },
+  ...SIMULATED_ATTEMPTS
 ];

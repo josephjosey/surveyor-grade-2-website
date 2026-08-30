@@ -1316,7 +1316,7 @@ export const AdminPortalPage: React.FC = () => {
               </thead>
               <tbody className="divide-y divide-slate-100 text-slate-700">
                 {filteredStudents.map((std) => {
-                  const rankInfo = getUserRankInfo('mock-kpsc-master-87', std.id);
+                  const rankInfo = getUserRankInfo(undefined, std.id);
                   return (
                     <tr key={std.id} className="hover:bg-slate-50 transition">
                       <td className="p-4 flex items-center gap-3">

@@ -1163,6 +1163,18 @@ export const MockTestsPage: React.FC = () => {
               </div>
             </div>
 
+            {/* Live Count & Policy Indicator */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-xs text-slate-500 font-medium px-1">
+              <span>
+                Showing <strong className="text-slate-900">{filteredLeaderboard.length}</strong> of{' '}
+                <strong className="text-slate-900">{fullLeaderboard.length}</strong> evaluated rankers
+                {selectedDistrictFilter !== 'all' && ` in ${selectedDistrictFilter} District`}
+              </span>
+              <span className="text-[11px] text-slate-400">
+                Sorted by Kerala PSC Standard Tie-Breaking (Marks → Penalties → Speed)
+              </span>
+            </div>
+
             {/* Full Statewide Leaderboard Table */}
             <div className="overflow-x-auto rounded-2xl border border-slate-200">
               <table className="w-full text-left text-xs">

@@ -47,7 +47,7 @@ export const DashboardPage: React.FC = () => {
   } = useApp();
 
   const primaryRankedTest = mockTests.find((t) => t.id === 'mock-kpsc-master-87' || t.isRankedExam || t.id === 'mock-state-rank-1') || mockTests[0];
-  const userRankInfo = getUserRankInfo(primaryRankedTest?.id);
+  const userRankInfo = getUserRankInfo();
 
   // Dynamically calculate completed notes that actually exist in the current active studyNotes array
   const validCompletedNotes = studyNotes.filter((n) => currentUser.completedClassIds?.includes(n.id));
@@ -176,7 +176,7 @@ export const DashboardPage: React.FC = () => {
           {userRankInfo.rank > 0 ? (
             <button
               onClick={() => {
-                setSelectedMockTestId('mock-kpsc-master-87');
+                setSelectedMockTestId(userRankInfo.attempt?.testId || 'mock-kpsc-master-87');
                 setActiveTab('mocktests');
               }}
               className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-black shadow transition transform hover:scale-105"

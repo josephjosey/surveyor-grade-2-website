@@ -131,9 +131,7 @@ const DUMMY_CANDIDATE_NAMES = new Set([
   'aswathi nair'
 ]);
 
-export const isDummyCandidate = (name?: string, id?: string): boolean => {
-  if (id && (id.startsWith('att-rank-') || id.startsWith('att-m87-') || id.startsWith('u-std-') || id === 'u-demo-student')) return true;
-  if (name && DUMMY_CANDIDATE_NAMES.has(name.toLowerCase().trim())) return true;
+export const isDummyCandidate = (_name?: string, _id?: string): boolean => {
   return false;
 };
 
@@ -677,10 +675,42 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       return updatedUser;
     });
 
+    let updatedStudentsList: User[] = students;
     setStudents((prev) => {
-      const updatedList = prev.map((s) => (s.id === currentUser.id ? { ...s, ...updates } : s));
-      safeSetItem('survey_academy_students', updatedList);
-      return updatedList;
+      updatedStudentsList = prev.map((s) => (s.id === currentUser.id ? { ...s, ...updates } : s));
+      safeSetItem('survey_academy_students', updatedStudentsList);
+      return updatedStudentsList;
+    });
+
+    // Synchronize candidate's existing test attempts so leaderboard filtering by district reflects changes immediately
+    let updatedAttemptsList: MockTestAttempt[] = testAttempts;
+    if (updates.district || updates.name || updates.avatar) {
+      setTestAttempts((prev) => {
+        updatedAttemptsList = prev.map((att) => {
+          if (att.userId === currentUser.id || (currentUser.email && att.userId === currentUser.email) || att.userName === currentUser.name) {
+            return {
+              ...att,
+              district: updates.district || att.district,
+              userName: updates.name || att.userName,
+              userAvatar: updates.avatar || att.userAvatar
+            };
+          }
+          return att;
+        });
+        safeSetItem('survey_academy_attempts', updatedAttemptsList);
+        return updatedAttemptsList;
+      });
+    }
+
+    // Persist immediately to server disk database
+    saveDatabase({
+      modules,
+      studyNotes,
+      pyqPapers,
+      mockTests,
+      testAttempts: updatedAttemptsList,
+      doubts,
+      students: updatedStudentsList
     });
 
     try {
@@ -1080,17 +1110,30 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
 
     // Overall / General profile rank across any ranked test
-    const allRankedLeaderboards = mockTests
-      .filter((t) => t.isRankedExam)
-      .map((t) => ({ test: t, leaderboard: getRankedLeaderboard(t.id) }));
+    const rankedIds = new Set([
+      'mock-kpsc-master-87',
+      'mock-state-rank-1',
+      'mock-theodolite-mcq-30',
+      ...mockTests.filter((t) => t.isRankedExam).map((t) => t.id)
+    ]);
+    const allRankedLeaderboards = Array.from(rankedIds).map((id) => ({
+      testId: id,
+      leaderboard: getRankedLeaderboard(id)
+    }));
 
     let bestAttempt: MockTestAttempt | null = null;
     for (const { leaderboard } of allRankedLeaderboards) {
       const att = leaderboard.find(
         (a) => (uid && a.userId === uid) || (uName && a.userName?.toLowerCase().trim() === uName)
       );
-      if (att && (!bestAttempt || att.score > bestAttempt.score)) {
-        bestAttempt = att;
+      if (att) {
+        if (!bestAttempt) {
+          bestAttempt = att;
+        } else if ((att.percentile ?? 0) > (bestAttempt.percentile ?? 0)) {
+          bestAttempt = att;
+        } else if (att.score > bestAttempt.score) {
+          bestAttempt = att;
+        }
       }
     }
 
