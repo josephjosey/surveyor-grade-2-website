@@ -232,11 +232,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         const parsed = JSON.parse(saved) as BankQuestion[];
         const existingIds = new Set(parsed.map((q) => q.id));
         const missing = INITIAL_BANK_QUESTIONS.filter((q) => !existingIds.has(q.id));
-        return [...parsed, ...missing];
+        const combined = [...parsed, ...missing];
+        safeSetItem('survey_academy_bank_questions', combined);
+        return combined;
       } catch (e) {
         return INITIAL_BANK_QUESTIONS;
       }
     }
+    safeSetItem('survey_academy_bank_questions', INITIAL_BANK_QUESTIONS);
     return INITIAL_BANK_QUESTIONS;
   });
 
@@ -331,6 +334,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           setStudyNotes(INITIAL_STUDY_NOTES);
           safeSetItem('survey_academy_notes', INITIAL_STUDY_NOTES);
         }
+        if (diskData.bankQuestions && diskData.bankQuestions.length > 0) {
+          const existingIds = new Set(diskData.bankQuestions.map((q: any) => q.id));
+          const missing = INITIAL_BANK_QUESTIONS.filter((q) => !existingIds.has(q.id));
+          const combined = [...diskData.bankQuestions, ...missing];
+          setBankQuestions(combined);
+          safeSetItem('survey_academy_bank_questions', combined);
+        } else {
+          setBankQuestions(INITIAL_BANK_QUESTIONS);
+          safeSetItem('survey_academy_bank_questions', INITIAL_BANK_QUESTIONS);
+        }
         if (diskData.pyqPapers && diskData.pyqPapers.length > 0) setPyqPapers(diskData.pyqPapers);
         if (diskData.mockTests && diskData.mockTests.length > 0) setMockTests(diskData.mockTests);
         if (diskData.testAttempts && diskData.testAttempts.length > 0) setTestAttempts(diskData.testAttempts);
@@ -341,6 +354,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         saveDatabase({
           modules,
           studyNotes,
+          bankQuestions,
           pyqPapers,
           mockTests,
           testAttempts,
@@ -1225,6 +1239,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setBankQuestions((prev) => {
       const updated = [newQ, ...prev];
       safeSetItem('survey_academy_bank_questions', updated);
+      saveDatabase({
+        modules,
+        studyNotes,
+        bankQuestions: updated,
+        pyqPapers,
+        mockTests,
+        testAttempts,
+        doubts,
+        students
+      });
       return updated;
     });
     showToast(`Question added to Module ${newQ.moduleNumber} successfully!`, 'success');
@@ -1234,6 +1258,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setBankQuestions((prev) => {
       const updated = prev.filter((q) => q.id !== questionId);
       safeSetItem('survey_academy_bank_questions', updated);
+      saveDatabase({
+        modules,
+        studyNotes,
+        bankQuestions: updated,
+        pyqPapers,
+        mockTests,
+        testAttempts,
+        doubts,
+        students
+      });
       return updated;
     });
     showToast('Question removed from bank.', 'info');
@@ -1243,6 +1277,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setBankQuestions((prev) => {
       const updated = prev.map((q) => (q.id === updatedQuestion.id ? updatedQuestion : q));
       safeSetItem('survey_academy_bank_questions', updated);
+      saveDatabase({
+        modules,
+        studyNotes,
+        bankQuestions: updated,
+        pyqPapers,
+        mockTests,
+        testAttempts,
+        doubts,
+        students
+      });
       return updated;
     });
     showToast('Question updated successfully.', 'success');

@@ -1,6 +1,8 @@
+import { CHAIN_SURVEY_204_QUESTIONS } from './chainSurvey204Questions';
 import { BankQuestion } from '../types';
 
 export const INITIAL_BANK_QUESTIONS: BankQuestion[] = [
+  ...CHAIN_SURVEY_204_QUESTIONS,
   // MODULE 1: BASIC ENGINEERING DRAWING (10 Marks)
   {
     id: 'bq-m1-1',

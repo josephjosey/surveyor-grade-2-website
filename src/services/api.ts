@@ -5,7 +5,8 @@ import {
   MockTest,
   MockTestAttempt,
   Doubt,
-  User
+  User,
+  BankQuestion
 } from '../types';
 
 export interface DatabaseState {
@@ -16,6 +17,7 @@ export interface DatabaseState {
   testAttempts?: MockTestAttempt[];
   doubts?: Doubt[];
   students?: User[];
+  bankQuestions?: BankQuestion[];
   lastUpdated?: string;
 }
 
