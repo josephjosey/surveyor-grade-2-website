@@ -170,7 +170,18 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   
   const [modules, setModules] = useState<ClassModule[]>(() => {
     const saved = localStorage.getItem('survey_academy_modules');
-    return saved ? JSON.parse(saved) : INITIAL_MODULES;
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved) as ClassModule[];
+        if (Array.isArray(parsed) && parsed.length === 10 && parsed[0]?.title === 'Basic Engineering Drawing') {
+          return parsed;
+        }
+      } catch (e) {}
+    }
+    try {
+      localStorage.setItem('survey_academy_modules', JSON.stringify(INITIAL_MODULES));
+    } catch (e) {}
+    return INITIAL_MODULES;
   });
 
   const [studyNotes, setStudyNotes] = useState<StudyNote[]>(() => {
@@ -297,7 +308,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   useEffect(() => {
     fetchDatabase().then((diskData) => {
       if (diskData) {
-        if (diskData.modules && diskData.modules.length > 0) setModules(diskData.modules);
+        if (diskData.modules && diskData.modules.length === 10 && diskData.modules[0]?.title === 'Basic Engineering Drawing') {
+          setModules(diskData.modules);
+        } else {
+          setModules(INITIAL_MODULES);
+          safeSetItem('survey_academy_modules', INITIAL_MODULES);
+        }
         if (diskData.studyNotes && diskData.studyNotes.length > 0) setStudyNotes(diskData.studyNotes);
         if (diskData.pyqPapers && diskData.pyqPapers.length > 0) setPyqPapers(diskData.pyqPapers);
         if (diskData.mockTests && diskData.mockTests.length > 0) setMockTests(diskData.mockTests);
