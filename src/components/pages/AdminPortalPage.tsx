@@ -23,9 +23,11 @@ import {
   Edit3,
   ListOrdered,
   Crown,
-  Trophy
+  Trophy,
+  Layers,
+  Filter
 } from 'lucide-react';
-import { PYQPaper, PYQQuestion } from '../../types';
+import { PYQPaper, PYQQuestion, BankQuestion } from '../../types';
 import { CreateClassModal } from '../modals/CreateClassModal';
 import { CreateMockTestModal } from '../modals/CreateMockTestModal';
 import { ManagePYQQuestionsModal } from '../modals/ManagePYQQuestionsModal';
@@ -33,6 +35,7 @@ import { uploadUserFile, deleteUserFile } from '../../services/storageService';
 
 export const AdminPortalPage: React.FC = () => {
   const {
+    modules,
     studyNotes,
     deleteStudyNote,
     mockTests,
@@ -40,6 +43,9 @@ export const AdminPortalPage: React.FC = () => {
     pyqPapers,
     addPYQPaper,
     deletePYQPaper,
+    bankQuestions,
+    addBankQuestion,
+    deleteBankQuestion,
     doubts,
     addDoubtAnswer,
     students,
@@ -84,6 +90,137 @@ export const AdminPortalPage: React.FC = () => {
   const [pdfUploadMode, setPdfUploadMode] = useState<'file' | 'url'>('file');
   const [uploadedPdfFile, setUploadedPdfFile] = useState<File | null>(null);
   const [uploadedKeyFile, setUploadedKeyFile] = useState<File | null>(null);
+
+  // MCQ & PYQ Bank State
+  const [bankSubTab, setBankSubTab] = useState<'syllabus_portions' | 'pdf_papers'>('syllabus_portions');
+  const [bankFilterModule, setBankFilterModule] = useState<number | 'all'>('all');
+  const [bankSearch, setBankSearch] = useState<string>('');
+  const [bankTypeFilter, setBankTypeFilter] = useState<'all' | 'pyq' | 'mcq'>('all');
+
+  // Add Question to Bank Form State
+  const [bankFormModule, setBankFormModule] = useState<number>(1);
+  const [bankFormType, setBankFormType] = useState<'pyq' | 'mcq'>('mcq');
+  const [bankFormExamName, setBankFormExamName] = useState<string>('Kerala PSC Surveyor Gr. II 2022');
+  const [bankFormExamYear, setBankFormExamYear] = useState<number>(2022);
+  const [bankFormTopic, setBankFormTopic] = useState<string>('');
+  const [bankFormQuestion, setBankFormQuestion] = useState<string>('');
+  const [bankFormOptA, setBankFormOptA] = useState<string>('');
+  const [bankFormOptB, setBankFormOptB] = useState<string>('');
+  const [bankFormOptC, setBankFormOptC] = useState<string>('');
+  const [bankFormOptD, setBankFormOptD] = useState<string>('');
+  const [bankFormCorrect, setBankFormCorrect] = useState<number>(0);
+  const [bankFormExplanation, setBankFormExplanation] = useState<string>('');
+  const [bankFormTip, setBankFormTip] = useState<string>('');
+
+  // Bulk Paste for Bank Form State
+  const [showBankBulkPaste, setShowBankBulkPaste] = useState<boolean>(false);
+  const [bankBulkText, setBankBulkText] = useState<string>('');
+  const [bankBulkKeyText, setBankBulkKeyText] = useState<string>('');
+
+  const handleAddBankQuestionSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!bankFormQuestion.trim() || !bankFormOptA.trim() || !bankFormOptB.trim()) {
+      showToast('Please provide question text and at least options A & B.', 'warning');
+      return;
+    }
+
+    const targetMod = modules.find((m) => m.order === bankFormModule) || modules[0];
+
+    addBankQuestion({
+      moduleId: targetMod.id,
+      moduleNumber: bankFormModule,
+      question: bankFormQuestion.trim(),
+      options: [
+        bankFormOptA.trim(),
+        bankFormOptB.trim(),
+        bankFormOptC.trim() || 'Option C',
+        bankFormOptD.trim() || 'Option D'
+      ],
+      correctOptionIndex: bankFormCorrect,
+      explanation: bankFormExplanation.trim() || 'Official answer as per Kerala PSC Survey syllabus.',
+      rankerTip: bankFormTip.trim() || undefined,
+      topic: bankFormTopic.trim() || targetMod.title,
+      type: bankFormType,
+      examName: bankFormType === 'pyq' ? (bankFormExamName.trim() || 'Kerala PSC Surveyor Gr. II') : undefined,
+      year: bankFormType === 'pyq' ? bankFormExamYear : undefined
+    });
+
+    setBankFormQuestion('');
+    setBankFormOptA('');
+    setBankFormOptB('');
+    setBankFormOptC('');
+    setBankFormOptD('');
+    setBankFormExplanation('');
+    setBankFormTip('');
+    setBankFormTopic('');
+  };
+
+  const handleParseAndAddBankBulk = () => {
+    if (!bankBulkText.trim()) {
+      showToast('Please paste questions in the bulk box.', 'warning');
+      return;
+    }
+
+    const keyMap: Record<number, number> = {};
+    if (bankBulkKeyText.trim()) {
+      const keyMatches = bankBulkKeyText.matchAll(/(\d+)[\s.:)-]+([a-dA-D])/g);
+      for (const m of keyMatches) {
+        const qNum = parseInt(m[1], 10);
+        const letter = m[2].toLowerCase();
+        const idx = letter === 'a' ? 0 : letter === 'b' ? 1 : letter === 'c' ? 2 : 3;
+        keyMap[qNum] = idx;
+      }
+    }
+
+    const blocks = bankBulkText.trim().split(/\n\s*\n/);
+    const targetMod = modules.find((m) => m.order === bankFormModule) || modules[0];
+    let addedCount = 0;
+
+    for (const block of blocks) {
+      const lines = block.trim().split('\n').map((l) => l.trim()).filter(Boolean);
+      if (lines.length < 3) continue;
+
+      const qLineMatch = lines[0].match(/^(\d+)\.\s*(.+)$/);
+      const qNum = qLineMatch ? parseInt(qLineMatch[1], 10) : addedCount + 1;
+      const qText = qLineMatch ? qLineMatch[2] : lines[0];
+
+      const opts: string[] = [];
+      for (let i = 1; i <= 4; i++) {
+        if (lines[i]) {
+          opts.push(lines[i].replace(/^[a-dA-D][\s.):-]+\s*/, ''));
+        }
+      }
+
+      while (opts.length < 4) {
+        opts.push(`Option ${String.fromCharCode(65 + opts.length)}`);
+      }
+
+      const correctIndex = keyMap[qNum] !== undefined ? keyMap[qNum] : 0;
+
+      addBankQuestion({
+        moduleId: targetMod.id,
+        moduleNumber: bankFormModule,
+        question: qText,
+        options: opts,
+        correctOptionIndex: correctIndex,
+        explanation: 'Official answer as per Kerala PSC Survey syllabus.',
+        topic: targetMod.title,
+        type: bankFormType,
+        examName: bankFormType === 'pyq' ? (bankFormExamName.trim() || 'Kerala PSC Surveyor Gr. II') : undefined,
+        year: bankFormType === 'pyq' ? bankFormExamYear : undefined
+      });
+      addedCount++;
+    }
+
+    if (addedCount > 0) {
+      showToast(`Added ${addedCount} questions into Module ${bankFormModule}!`, 'success');
+      setBankBulkText('');
+      setBankBulkKeyText('');
+      setShowBankBulkPaste(false);
+    } else {
+      showToast('Could not parse questions. Ensure questions are separated by blank lines.', 'error');
+    }
+  };
 
   const handlePdfFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -354,8 +491,8 @@ export const AdminPortalPage: React.FC = () => {
               : 'text-slate-600 hover:bg-slate-100'
           }`}
         >
-          <FileCheck className="w-4 h-4" />
-          <span>PYQ Papers ({pyqPapers.length})</span>
+          <BookOpen className="w-4 h-4" />
+          <span>MCQ & PYQ Bank ({bankQuestions.length})</span>
         </button>
 
         <button
@@ -500,93 +637,515 @@ export const AdminPortalPage: React.FC = () => {
         </div>
       )}
 
-      {/* TAB 3: PYQ PAPERS */}
+      {/* TAB 3: MCQ & PYQ BANK MANAGER */}
       {activeAdminTab === 'pyq' && (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Upload Form */}
-          <div className="lg:col-span-5 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="font-bold text-slate-900 text-sm flex items-center gap-2">
-                <Upload className="w-4 h-4 text-blue-600" />
-                <span>Upload New PYQ Paper</span>
-              </h3>
+        <div className="space-y-6">
+          {/* Sub-tab switcher */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+            <div className="flex items-center gap-2">
+              <span className="p-2 rounded-xl bg-blue-50 text-blue-700">
+                <BookOpen className="w-5 h-5" />
+              </span>
+              <div>
+                <h3 className="font-extrabold text-slate-900 text-sm">MCQ & PYQ Question Bank Management</h3>
+                <p className="text-[11px] text-slate-500">
+                  Manage questions across the 10 Kerala PSC syllabus portions or upload original PDF booklets.
+                </p>
+              </div>
             </div>
 
-            <form onSubmit={handleAddPYQSubmit} className="space-y-3 text-xs">
-              <div>
-                <label className="block font-semibold text-slate-700 mb-1">Paper Title *</label>
-                <input
-                  type="text"
-                  required
-                  value={pyqTitle}
-                  onChange={(e) => setPyqTitle(e.target.value)}
-                  placeholder="e.g. Surveyor Gr. II (Cat. No: 154/2024)"
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
+            <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl border border-slate-200 self-start sm:self-auto text-xs">
+              <button
+                type="button"
+                onClick={() => setBankSubTab('syllabus_portions')}
+                className={`px-3.5 py-1.5 rounded-lg font-bold transition flex items-center gap-1.5 ${
+                  bankSubTab === 'syllabus_portions'
+                    ? 'bg-slate-900 text-white shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                <Layers className="w-3.5 h-3.5" />
+                <span>10 Syllabus Portions ({bankQuestions.length} Qs)</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setBankSubTab('pdf_papers')}
+                className={`px-3.5 py-1.5 rounded-lg font-bold transition flex items-center gap-1.5 ${
+                  bankSubTab === 'pdf_papers'
+                    ? 'bg-slate-900 text-white shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                <FileText className="w-3.5 h-3.5" />
+                <span>Original PDF Papers ({pyqPapers.length})</span>
+              </button>
+            </div>
+          </div>
 
-              <div>
-                <label className="block font-semibold text-slate-700 mb-1">Department</label>
-                <input
-                  type="text"
-                  value={pyqDept}
-                  onChange={(e) => setPyqDept(e.target.value)}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Exam Code</label>
-                  <input
-                    type="text"
-                    value={pyqCode}
-                    onChange={(e) => setPyqCode(e.target.value)}
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Year</label>
-                  <input
-                    type="number"
-                    value={pyqYear}
-                    onChange={(e) => setPyqYear(Number(e.target.value))}
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none"
-                  />
-                </div>
-              </div>
-
-              {/* PDF Document Upload from System / URL */}
-              <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2.5">
-                <div className="flex items-center justify-between">
-                  <label className="font-bold text-slate-800 flex items-center gap-1.5">
-                    <FileCheck className="w-4 h-4 text-blue-600" />
-                    <span>Question Paper PDF *</span>
-                  </label>
-                  <div className="flex items-center gap-1 bg-slate-200/80 p-0.5 rounded-lg text-[10px]">
+          {/* SUB-VIEW 1: 10 SYLLABUS PORTIONS */}
+          {bankSubTab === 'syllabus_portions' && (
+            <div className="space-y-6">
+              {/* 10 MODULES QUICK STRIP */}
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                {modules.map((mod) => {
+                  const isFiltered = bankFilterModule === mod.order;
+                  const count = bankQuestions.filter((q) => q.moduleNumber === mod.order).length;
+                  return (
                     <button
+                      key={mod.id}
                       type="button"
-                      onClick={() => setPdfUploadMode('file')}
-                      className={`px-2 py-0.5 rounded font-bold transition ${
-                        pdfUploadMode === 'file' ? 'bg-white text-blue-700 shadow-xs' : 'text-slate-600'
+                      onClick={() => {
+                        setBankFilterModule(isFiltered ? 'all' : mod.order);
+                        setBankFormModule(mod.order);
+                      }}
+                      className={`p-3 rounded-xl border text-left transition space-y-1 ${
+                        isFiltered
+                          ? 'bg-blue-600 text-white border-blue-600 shadow-md'
+                          : 'bg-white text-slate-800 border-slate-200 hover:bg-slate-50'
                       }`}
                     >
-                      From Device (.pdf)
+                      <div className="flex items-center justify-between text-[10px] font-extrabold uppercase">
+                        <span>Mod {mod.order < 10 ? `0${mod.order}` : mod.order}</span>
+                        <span className={isFiltered ? 'bg-blue-500 text-white px-1.5 py-0.2 rounded' : 'bg-slate-100 text-slate-600 px-1.5 py-0.2 rounded'}>
+                          {mod.marks || 10}m
+                        </span>
+                      </div>
+                      <div className="font-bold text-xs line-clamp-1">{mod.title}</div>
+                      <div className={`text-[11px] ${isFiltered ? 'text-blue-100' : 'text-slate-500'}`}>
+                        {count} questions
+                      </div>
                     </button>
+                  );
+                })}
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                {/* Left Form: Add Question to Syllabus Portion */}
+                <div className="lg:col-span-5 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4 text-xs text-left">
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <h4 className="font-extrabold text-slate-900 text-sm flex items-center gap-2">
+                      <Plus className="w-4 h-4 text-blue-600" />
+                      <span>Add Question to Syllabus Portion</span>
+                    </h4>
+
                     <button
                       type="button"
-                      onClick={() => setPdfUploadMode('url')}
-                      className={`px-2 py-0.5 rounded font-bold transition ${
-                        pdfUploadMode === 'url' ? 'bg-white text-blue-700 shadow-xs' : 'text-slate-600'
-                      }`}
+                      onClick={() => setShowBankBulkPaste(!showBankBulkPaste)}
+                      className="px-2.5 py-1 rounded-lg bg-amber-50 border border-amber-300 text-amber-900 font-bold text-[11px] hover:bg-amber-100 transition flex items-center gap-1"
                     >
-                      Web Link / Drive
+                      <Sparkles className="w-3 h-3 text-amber-600" />
+                      <span>{showBankBulkPaste ? 'Single Form' : 'Bulk Paste'}</span>
                     </button>
                   </div>
+
+                  {showBankBulkPaste ? (
+                    /* Bulk Paste Form */
+                    <div className="space-y-3 bg-amber-50/50 p-4 rounded-xl border border-amber-200">
+                      <div>
+                        <label className="block font-semibold text-slate-700 mb-1">Target Syllabus Module *</label>
+                        <select
+                          value={bankFormModule}
+                          onChange={(e) => setBankFormModule(Number(e.target.value))}
+                          className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none bg-white font-semibold"
+                        >
+                          {modules.map((m) => (
+                            <option key={m.id} value={m.order}>
+                              Module {m.order}: {m.title} ({m.marks} Marks)
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <label className="block font-semibold text-slate-700 mb-1">Question Type</label>
+                          <select
+                            value={bankFormType}
+                            onChange={(e) => setBankFormType(e.target.value as 'pyq' | 'mcq')}
+                            className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none bg-white font-semibold"
+                          >
+                            <option value="mcq">Standard Syllabus MCQ</option>
+                            <option value="pyq">Previous Year Question (PYQ)</option>
+                          </select>
+                        </div>
+                        {bankFormType === 'pyq' && (
+                          <div>
+                            <label className="block font-semibold text-slate-700 mb-1">Exam Name</label>
+                            <input
+                              type="text"
+                              value={bankFormExamName}
+                              onChange={(e) => setBankFormExamName(e.target.value)}
+                              placeholder="e.g. Surveyor Gr. II"
+                              className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none bg-white"
+                            />
+                          </div>
+                        )}
+                      </div>
+
+                      <div>
+                        <label className="block font-semibold text-slate-700 mb-1">Paste Questions & 4 Options:</label>
+                        <textarea
+                          rows={6}
+                          value={bankBulkText}
+                          onChange={(e) => setBankBulkText(e.target.value)}
+                          placeholder={`1. The trimmed size of A1 sheet is\na) 841 x 1189 mm\nb) 594 x 841 mm\nc) 420 x 594 mm\nd) 297 x 420 mm\n\n2. Gunter chain length is\na) 66 ft\nb) 100 ft\nc) 33 ft\nd) 20 m`}
+                          className="w-full p-2.5 border border-slate-300 rounded-lg font-mono text-xs outline-none bg-white"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block font-semibold text-slate-700 mb-1">Answer Key (Optional):</label>
+                        <textarea
+                          rows={2}
+                          value={bankBulkKeyText}
+                          onChange={(e) => setBankBulkKeyText(e.target.value)}
+                          placeholder="1: b, 2: a..."
+                          className="w-full p-2 border border-slate-300 rounded-lg font-mono text-xs outline-none bg-white"
+                        />
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={handleParseAndAddBankBulk}
+                        className="w-full py-2.5 bg-amber-600 hover:bg-amber-700 text-white rounded-xl font-bold shadow transition flex items-center justify-center gap-1.5"
+                      >
+                        <Plus className="w-4 h-4" />
+                        <span>Parse & Add All into Module {bankFormModule}</span>
+                      </button>
+                    </div>
+                  ) : (
+                    /* Single Question Add Form */
+                    <form onSubmit={handleAddBankQuestionSubmit} className="space-y-3">
+                      <div>
+                        <label className="block font-semibold text-slate-700 mb-1">Target Syllabus Module *</label>
+                        <select
+                          value={bankFormModule}
+                          onChange={(e) => setBankFormModule(Number(e.target.value))}
+                          className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none bg-white font-semibold"
+                        >
+                          {modules.map((m) => (
+                            <option key={m.id} value={m.order}>
+                              Module {m.order}: {m.title} ({m.marks} Marks)
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <label className="block font-semibold text-slate-700 mb-1">Question Type *</label>
+                          <select
+                            value={bankFormType}
+                            onChange={(e) => setBankFormType(e.target.value as 'pyq' | 'mcq')}
+                            className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none bg-white font-semibold"
+                          >
+                            <option value="mcq">Standard Syllabus MCQ</option>
+                            <option value="pyq">Previous Year Question (PYQ)</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block font-semibold text-slate-700 mb-1">Topic within Module</label>
+                          <input
+                            type="text"
+                            value={bankFormTopic}
+                            onChange={(e) => setBankFormTopic(e.target.value)}
+                            placeholder="e.g. Metric Chain / Collimation"
+                            className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none bg-white"
+                          />
+                        </div>
+                      </div>
+
+                      {bankFormType === 'pyq' && (
+                        <div className="grid grid-cols-2 gap-2 p-2.5 bg-blue-50/60 rounded-xl border border-blue-200">
+                          <div>
+                            <label className="block font-semibold text-blue-900 mb-1">Exam Title</label>
+                            <input
+                              type="text"
+                              value={bankFormExamName}
+                              onChange={(e) => setBankFormExamName(e.target.value)}
+                              placeholder="e.g. Kerala PSC Surveyor Gr. II"
+                              className="w-full px-2.5 py-1.5 border border-blue-300 rounded bg-white text-xs"
+                            />
+                          </div>
+                          <div>
+                            <label className="block font-semibold text-blue-900 mb-1">Exam Year</label>
+                            <input
+                              type="number"
+                              value={bankFormExamYear}
+                              onChange={(e) => setBankFormExamYear(Number(e.target.value))}
+                              className="w-full px-2.5 py-1.5 border border-blue-300 rounded bg-white text-xs"
+                            />
+                          </div>
+                        </div>
+                      )}
+
+                      <div>
+                        <label className="block font-semibold text-slate-700 mb-1">Question Text *</label>
+                        <textarea
+                          rows={2}
+                          required
+                          value={bankFormQuestion}
+                          onChange={(e) => setBankFormQuestion(e.target.value)}
+                          placeholder="Enter complete question text..."
+                          className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none bg-white text-xs"
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <label className="block font-semibold text-slate-600 mb-1">Option A *</label>
+                          <input
+                            type="text"
+                            required
+                            value={bankFormOptA}
+                            onChange={(e) => setBankFormOptA(e.target.value)}
+                            className="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white"
+                          />
+                        </div>
+                        <div>
+                          <label className="block font-semibold text-slate-600 mb-1">Option B *</label>
+                          <input
+                            type="text"
+                            required
+                            value={bankFormOptB}
+                            onChange={(e) => setBankFormOptB(e.target.value)}
+                            className="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white"
+                          />
+                        </div>
+                        <div>
+                          <label className="block font-semibold text-slate-600 mb-1">Option C</label>
+                          <input
+                            type="text"
+                            value={bankFormOptC}
+                            onChange={(e) => setBankFormOptC(e.target.value)}
+                            className="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white"
+                          />
+                        </div>
+                        <div>
+                          <label className="block font-semibold text-slate-600 mb-1">Option D</label>
+                          <input
+                            type="text"
+                            value={bankFormOptD}
+                            onChange={(e) => setBankFormOptD(e.target.value)}
+                            className="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <label className="block font-semibold text-slate-700 mb-1">Correct Option *</label>
+                          <select
+                            value={bankFormCorrect}
+                            onChange={(e) => setBankFormCorrect(Number(e.target.value))}
+                            className="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white font-bold text-blue-700"
+                          >
+                            <option value={0}>Option A</option>
+                            <option value={1}>Option B</option>
+                            <option value={2}>Option C</option>
+                            <option value={3}>Option D</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block font-semibold text-slate-700 mb-1">Ranker Tip (Optional)</label>
+                          <input
+                            type="text"
+                            value={bankFormTip}
+                            onChange={(e) => setBankFormTip(e.target.value)}
+                            placeholder="e.g. High-yield memory trick"
+                            className="w-full px-2.5 py-1.5 border border-slate-300 rounded bg-white"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block font-semibold text-slate-700 mb-1">Explanation & Formulas</label>
+                        <textarea
+                          rows={2}
+                          value={bankFormExplanation}
+                          onChange={(e) => setBankFormExplanation(e.target.value)}
+                          placeholder="Detailed explanation for candidate review..."
+                          className="w-full px-3 py-1.5 border border-slate-300 rounded-lg outline-none bg-white text-xs"
+                        />
+                      </div>
+
+                      <button
+                        type="submit"
+                        className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold shadow transition flex items-center justify-center gap-1.5"
+                      >
+                        <Plus className="w-4 h-4" />
+                        <span>Add Question to Module {bankFormModule}</span>
+                      </button>
+                    </form>
+                  )}
                 </div>
 
-                {pdfUploadMode === 'file' ? (
+                {/* Right Column: Question Bank Pool */}
+                <div className="lg:col-span-7 space-y-3 text-left">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <h4 className="font-extrabold text-slate-900 text-sm flex items-center gap-2">
+                      <span>Uploaded Question Bank</span>
+                      <span className="px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 font-bold text-[10px]">
+                        {bankQuestions.length} Questions
+                      </span>
+                    </h4>
+
+                    {/* Filter Strip */}
+                    <div className="flex items-center gap-2">
+                      <select
+                        value={bankTypeFilter}
+                        onChange={(e) => setBankTypeFilter(e.target.value as any)}
+                        className="px-2.5 py-1 border border-slate-300 rounded-lg text-xs bg-white font-medium"
+                      >
+                        <option value="all">All Types</option>
+                        <option value="pyq">PYQs Only</option>
+                        <option value="mcq">MCQs Only</option>
+                      </select>
+
+                      <div className="relative w-40">
+                        <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+                        <input
+                          type="text"
+                          value={bankSearch}
+                          onChange={(e) => setBankSearch(e.target.value)}
+                          placeholder="Search..."
+                          className="w-full pl-8 pr-2 py-1 border border-slate-300 rounded-lg text-xs outline-none bg-white"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Questions List */}
+                  <div className="space-y-2.5 max-h-[600px] overflow-y-auto pr-1">
+                    {bankQuestions
+                      .filter((q) => {
+                        if (bankFilterModule !== 'all' && q.moduleNumber !== bankFilterModule) return false;
+                        if (bankTypeFilter !== 'all' && q.type !== bankTypeFilter) return false;
+                        if (bankSearch.trim()) {
+                          const query = bankSearch.toLowerCase();
+                          return q.question.toLowerCase().includes(query) || q.topic?.toLowerCase().includes(query);
+                        }
+                        return true;
+                      })
+                      .map((q) => (
+                        <div
+                          key={q.id}
+                          className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs space-y-2 text-xs hover:border-slate-300 transition"
+                        >
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="flex items-center gap-2">
+                              <span className="px-2 py-0.5 rounded bg-slate-900 text-white font-bold text-[10px]">
+                                Mod {q.moduleNumber}
+                              </span>
+                              {q.type === 'pyq' ? (
+                                <span className="px-2 py-0.5 rounded bg-blue-50 border border-blue-200 text-blue-700 font-bold text-[10px]">
+                                  PYQ: {q.examName || 'Kerala PSC'} ({q.year || '2022'})
+                                </span>
+                              ) : (
+                                <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-700 font-semibold text-[10px]">
+                                  MCQ
+                                </span>
+                              )}
+                              {q.topic && <span className="text-slate-400 text-[11px]">• {q.topic}</span>}
+                            </div>
+
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (window.confirm('Delete this question from question bank?')) {
+                                  deleteBankQuestion(q.id);
+                                }
+                              }}
+                              className="text-slate-400 hover:text-red-600 p-1 transition"
+                              title="Delete Question"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+
+                          <p className="font-bold text-slate-900 leading-snug">{q.question}</p>
+
+                          <div className="grid grid-cols-2 gap-1.5 text-[11px] text-slate-600">
+                            {q.options.map((opt, optIdx) => (
+                              <div
+                                key={optIdx}
+                                className={`px-2 py-1 rounded border ${
+                                  optIdx === q.correctOptionIndex
+                                    ? 'border-emerald-500 bg-emerald-50 text-emerald-950 font-bold'
+                                    : 'border-slate-100 bg-slate-50'
+                                }`}
+                              >
+                                {String.fromCharCode(65 + optIdx)}: {opt}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* SUB-VIEW 2: OFFICIAL PDF PAPERS */}
+          {bankSubTab === 'pdf_papers' && (
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 text-left">
+              {/* Upload Form */}
+              <div className="lg:col-span-5 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                <h4 className="font-bold text-slate-900 text-sm flex items-center gap-2">
+                  <Upload className="w-4 h-4 text-blue-600" />
+                  <span>Upload Question Paper PDF Booklet</span>
+                </h4>
+
+                <form onSubmit={handleAddPYQSubmit} className="space-y-3 text-xs">
                   <div>
+                    <label className="block font-semibold text-slate-700 mb-1">Paper Title *</label>
+                    <input
+                      type="text"
+                      required
+                      value={pyqTitle}
+                      onChange={(e) => setPyqTitle(e.target.value)}
+                      placeholder="e.g. Surveyor Gr. II (Cat. No: 154/2024)"
+                      className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-semibold text-slate-700 mb-1">Department</label>
+                    <input
+                      type="text"
+                      value={pyqDept}
+                      onChange={(e) => setPyqDept(e.target.value)}
+                      className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="block font-semibold text-slate-700 mb-1">Exam Code</label>
+                      <input
+                        type="text"
+                        value={pyqCode}
+                        onChange={(e) => setPyqCode(e.target.value)}
+                        className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block font-semibold text-slate-700 mb-1">Year</label>
+                      <input
+                        type="number"
+                        value={pyqYear}
+                        onChange={(e) => setPyqYear(Number(e.target.value))}
+                        className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2">
+                    <label className="font-bold text-slate-800 flex items-center gap-1.5">
+                      <FileCheck className="w-4 h-4 text-blue-600" />
+                      <span>Question Paper PDF File *</span>
+                    </label>
                     <label className="border-2 border-dashed border-blue-200 hover:border-blue-400 bg-blue-50/40 rounded-xl p-3.5 flex flex-col items-center justify-center cursor-pointer transition text-center space-y-1">
                       <input
                         type="file"
@@ -595,279 +1154,69 @@ export const AdminPortalPage: React.FC = () => {
                         className="hidden"
                       />
                       {uploadedPdfFile ? (
-                        <div className="space-y-0.5">
-                          <div className="flex items-center justify-center gap-1.5 text-emerald-700 font-bold">
-                            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                            <span>{uploadedPdfFile.name}</span>
-                          </div>
-                          <div className="text-[10px] text-slate-500 font-mono">
-                            {(uploadedPdfFile.size / (1024 * 1024)).toFixed(2)} MB • Ready to publish
-                          </div>
-                          <div className="text-[10px] text-blue-600 font-semibold underline pt-0.5">
-                            Click to replace file
-                          </div>
+                        <div className="space-y-0.5 text-emerald-700 font-bold">
+                          ✓ {uploadedPdfFile.name} (Ready to publish)
                         </div>
                       ) : (
-                        <div className="space-y-1">
+                        <div className="space-y-1 text-slate-600 font-medium">
                           <Upload className="w-5 h-5 text-blue-600 mx-auto" />
-                          <div className="font-semibold text-slate-800">
-                            Click to browse PDF from your computer
-                          </div>
-                          <div className="text-[10px] text-slate-400">
-                            Supports .PDF files (Question Booklets, Solved Papers)
-                          </div>
+                          <span>Click to browse .pdf booklet from device</span>
                         </div>
                       )}
                     </label>
                   </div>
-                ) : (
-                  <div>
-                    <input
-                      type="text"
-                      value={pyqPdfUrl}
-                      onChange={(e) => setPyqPdfUrl(e.target.value)}
-                      placeholder="https://example.com/question_paper.pdf"
-                      className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none bg-white font-mono text-xs"
-                    />
-                  </div>
-                )}
-              </div>
 
-              {/* Optional Answer Key Uploader */}
-              <div className="pt-1">
-                <label className="block font-semibold text-slate-700 mb-1">Answer Key Document (Optional)</label>
-                <div className="flex items-center gap-2">
-                  <label className="flex-1 px-3 py-2 border border-slate-300 rounded-lg bg-white cursor-pointer hover:bg-slate-50 text-slate-600 truncate flex items-center justify-between">
-                    <span className="truncate">
-                      {uploadedKeyFile ? uploadedKeyFile.name : 'Choose Answer Key PDF (optional)...'}
-                    </span>
-                    <input
-                      type="file"
-                      accept="application/pdf,.pdf"
-                      onChange={handleKeyFileChange}
-                      className="hidden"
-                    />
-                    <Upload className="w-3.5 h-3.5 text-slate-400 flex-shrink-0 ml-2" />
-                  </label>
-                </div>
-              </div>
-
-              {/* Optional Inline Interactive Question Builder Toggle */}
-              <div className="pt-2 border-t border-slate-200">
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <label className="font-bold text-slate-800 text-xs flex items-center gap-1.5">
-                      <ListOrdered className="w-4 h-4 text-blue-600" />
-                      <span>Interactive MCQs for Online Solving</span>
-                    </label>
-                    <div className="text-[11px] text-slate-500">
-                      {pyqDraftQuestions.length > 0
-                        ? `${pyqDraftQuestions.length} questions ready to publish with this paper`
-                        : 'You can add questions now or manage them anytime after publishing'}
-                    </div>
-                  </div>
                   <button
-                    type="button"
-                    onClick={() => setShowDraftQBuilder(!showDraftQBuilder)}
-                    className="px-3 py-1 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-lg text-xs font-bold transition flex items-center gap-1"
+                    type="submit"
+                    className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold shadow transition flex items-center justify-center gap-2"
                   >
-                    <Plus className="w-3 h-3" />
-                    <span>{showDraftQBuilder ? 'Hide Form' : 'Add Questions'}</span>
+                    <Upload className="w-4 h-4" />
+                    <span>Publish PDF Paper</span>
                   </button>
-                </div>
+                </form>
+              </div>
 
-                {showDraftQBuilder && (
-                  <div className="mt-3 p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
-                    <div className="font-bold text-slate-800 text-xs flex items-center justify-between">
-                      <span>Add MCQ #{pyqDraftQuestions.length + 1}</span>
-                      <span className="text-[10px] text-blue-600 font-semibold uppercase">Kerala PSC Format</span>
-                    </div>
-
-                    <div>
-                      <input
-                        type="text"
-                        placeholder="Question Text (English) *"
-                        value={draftQText}
-                        onChange={(e) => setDraftQText(e.target.value)}
-                        className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none bg-white text-xs"
-                      />
-                    </div>
-
-                    <div>
-                      <input
-                        type="text"
-                        placeholder="Malayalam Translation (Optional)"
-                        value={draftQMal}
-                        onChange={(e) => setDraftQMal(e.target.value)}
-                        className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none bg-white text-xs font-sans"
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-2">
-                      <select
-                        value={draftTopic}
-                        onChange={(e) => setDraftTopic(e.target.value)}
-                        className="px-3 py-2 border border-slate-300 rounded-lg outline-none bg-white text-xs"
-                      >
-                        <option value="Chain Surveying">Chain Surveying</option>
-                        <option value="Compass Surveying">Compass Surveying</option>
-                        <option value="Levelling">Levelling</option>
-                        <option value="Theodolite">Theodolite</option>
-                        <option value="Total Station">Total Station</option>
-                        <option value="GPS / GIS">GPS / GIS</option>
-                        <option value="Kerala Survey & Boundaries Act">Kerala Survey & Boundaries Act</option>
-                        <option value="General Surveying">General Surveying</option>
-                      </select>
-
-                      <div className="flex items-center gap-1 text-[11px] text-slate-600 bg-white px-2 rounded-lg border border-slate-200">
-                        <span>Correct:</span>
-                        {[0, 1, 2, 3].map((idx) => (
-                          <label key={idx} className="cursor-pointer font-bold flex items-center gap-0.5 ml-1.5">
-                            <input
-                              type="radio"
-                              name="draft-correct"
-                              checked={draftCorrect === idx}
-                              onChange={() => setDraftCorrect(idx)}
-                              className="text-blue-600"
-                            />
-                            <span>{String.fromCharCode(65 + idx)}</span>
-                          </label>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-2">
-                      <input
-                        type="text"
-                        placeholder="Option A *"
-                        value={draftOptA}
-                        onChange={(e) => setDraftOptA(e.target.value)}
-                        className="px-3 py-1.5 border border-slate-300 rounded-lg outline-none bg-white text-xs"
-                      />
-                      <input
-                        type="text"
-                        placeholder="Option B *"
-                        value={draftOptB}
-                        onChange={(e) => setDraftOptB(e.target.value)}
-                        className="px-3 py-1.5 border border-slate-300 rounded-lg outline-none bg-white text-xs"
-                      />
-                      <input
-                        type="text"
-                        placeholder="Option C"
-                        value={draftOptC}
-                        onChange={(e) => setDraftOptC(e.target.value)}
-                        className="px-3 py-1.5 border border-slate-300 rounded-lg outline-none bg-white text-xs"
-                      />
-                      <input
-                        type="text"
-                        placeholder="Option D"
-                        value={draftOptD}
-                        onChange={(e) => setDraftOptD(e.target.value)}
-                        className="px-3 py-1.5 border border-slate-300 rounded-lg outline-none bg-white text-xs"
-                      />
-                    </div>
-
-                    <div>
-                      <input
-                        type="text"
-                        placeholder="Solution Explanation / Answer Key Tip"
-                        value={draftExp}
-                        onChange={(e) => setDraftExp(e.target.value)}
-                        className="w-full px-3 py-1.5 border border-slate-300 rounded-lg outline-none bg-white text-xs"
-                      />
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={handleAddDraftQuestion}
-                      className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold text-xs shadow-xs transition flex items-center justify-center gap-1.5"
+              {/* Published Papers List */}
+              <div className="lg:col-span-7 space-y-3">
+                <h4 className="font-bold text-slate-900 text-sm">
+                  Published PDF Question Papers ({pyqPapers.length})
+                </h4>
+                <div className="space-y-3">
+                  {pyqPapers.map((p) => (
+                    <div
+                      key={p.id}
+                      className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs"
                     >
-                      <Plus className="w-3.5 h-3.5" />
-                      <span>Add MCQ to Draft Paper</span>
-                    </button>
-                  </div>
-                )}
-
-                {/* Draft questions chips */}
-                {pyqDraftQuestions.length > 0 && (
-                  <div className="mt-2 space-y-1.5">
-                    {pyqDraftQuestions.map((q, idx) => (
-                      <div key={idx} className="p-2 bg-white rounded-lg border border-slate-200 text-[11px] flex items-center justify-between gap-2 shadow-xs">
-                        <div className="truncate">
-                          <strong className="text-blue-700">Q{idx + 1}:</strong> {q.question}
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-slate-900 text-sm">{p.title}</span>
+                          <span className="text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded text-[10px] font-bold">
+                            {p.questions?.length || 0} Questions
+                          </span>
                         </div>
+                        <div className="text-slate-500">{p.examCode} • {p.department} ({p.year})</div>
+                      </div>
+
+                      <div className="flex items-center gap-2">
                         <button
                           type="button"
-                          onClick={() => handleRemoveDraftQuestion(idx)}
-                          className="text-slate-400 hover:text-red-600 p-1"
+                          onClick={() => {
+                            if (window.confirm(`Delete PDF paper "${p.title}"?`)) {
+                              deletePYQPaper(p.id);
+                            }
+                          }}
+                          className="p-1.5 text-slate-400 hover:text-red-600 rounded-lg hover:bg-red-50 transition"
+                          title="Delete PDF Paper"
                         >
-                          <Trash2 className="w-3.5 h-3.5" />
+                          <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              <button
-                type="submit"
-                className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold shadow transition flex items-center justify-center gap-2"
-              >
-                <Upload className="w-4 h-4" />
-                <span>Publish PYQ Paper ({pyqDraftQuestions.length} Questions)</span>
-              </button>
-            </form>
-          </div>
-
-          {/* List */}
-          <div className="lg:col-span-7 space-y-3">
-            <div className="flex items-center justify-between">
-              <h3 className="font-bold text-slate-900 text-sm">Published PYQ Question Papers ({pyqPapers.length})</h3>
-              <span className="text-[11px] text-slate-500">Click Manage to add/edit student interactive MCQs</span>
-            </div>
-            <div className="space-y-3">
-              {pyqPapers.map((p) => (
-                <div key={p.id} className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="font-bold text-slate-900 text-sm">{p.title}</span>
-                      <span className="text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded text-[10px] font-bold">
-                        {p.questions?.length || 0} Interactive MCQs
-                      </span>
                     </div>
-                    <div className="text-slate-500">{p.examCode} • {p.department} ({p.year})</div>
-                  </div>
-
-                  <div className="flex items-center gap-2 flex-shrink-0">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setSelectedPYQToManage(p);
-                        setIsManagePYQModalOpen(true);
-                      }}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold rounded-lg border border-blue-200 transition shadow-xs"
-                    >
-                      <Edit3 className="w-3.5 h-3.5" />
-                      <span>Manage Questions ({p.questions?.length || 0})</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (window.confirm(`Delete PYQ paper "${p.title}"?`)) {
-                          deletePYQPaper(p.id);
-                        }
-                      }}
-                      className="p-1.5 text-slate-400 hover:text-red-600 rounded-lg hover:bg-red-50 transition"
-                      title="Delete PYQ Paper"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </div>
+                  ))}
                 </div>
-              ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       )}
 

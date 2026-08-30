@@ -1,7 +1,20 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
-import { X, CheckSquare, Plus, Trash2, HelpCircle, Award, Sparkles, FileText, Zap } from 'lucide-react';
-import { MockQuestion } from '../../types';
+import {
+  X,
+  CheckSquare,
+  Plus,
+  Trash2,
+  HelpCircle,
+  Award,
+  Sparkles,
+  FileText,
+  Zap,
+  BookOpen,
+  Filter,
+  Check
+} from 'lucide-react';
+import { MockQuestion, BankQuestion } from '../../types';
 
 interface CreateMockTestModalProps {
   isOpen: boolean;
@@ -9,7 +22,7 @@ interface CreateMockTestModalProps {
 }
 
 export const CreateMockTestModal: React.FC<CreateMockTestModalProps> = ({ isOpen, onClose }) => {
-  const { addMockTest, showToast } = useApp();
+  const { addMockTest, showToast, modules, bankQuestions } = useApp();
 
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState<'Full-Length Kerala PSC' | 'Module Specific' | 'High-Yield PYQ Special' | 'Rapid Fire' | 'All-Kerala State Ranked Exam'>('All-Kerala State Ranked Exam');
@@ -22,24 +35,16 @@ export const CreateMockTestModal: React.FC<CreateMockTestModalProps> = ({ isOpen
   const [isOneTimeOnly, setIsOneTimeOnly] = useState(true);
   const [examCode, setExamCode] = useState('KPSC-SLR-2026');
 
-  // Questions builder
-  const [questions, setQuestions] = useState<MockQuestion[]>([
-    {
-      id: 'q-new-1',
-      questionNumber: 1,
-      question: 'Which instrument is used to enlarge or reduce engineering and survey plans mechanically?',
-      questionMalayalam: 'സർവേ പ്ലാനുകൾ ചെറുതാക്കാനും വലുതാക്കാനും ഉപയോഗിക്കുന്ന ഉപകരണം ഏത്?',
-      options: ['Pantograph', 'Planimeter', 'Passometer', 'Clinometer'],
-      correctOptionIndex: 0,
-      explanation: 'A Pantograph is an instrument based on the principle of a parallelogram used for copying, enlarging or reducing maps. Planimeter measures area.',
-      rankerTip: 'Do not confuse Pantograph (for scaling/enlarging) with Planimeter (for area measurement)!',
-      topic: 'Engineering Drawing'
-    }
-  ]);
+  // Questions in this Mock Test
+  const [questions, setQuestions] = useState<MockQuestion[]>([]);
 
-  // Current question draft
+  // Bank Question Picker State
+  const [showBankPicker, setShowBankPicker] = useState(false);
+  const [bankFilterModule, setBankFilterModule] = useState<number | 'all'>('all');
+  const [selectedBankIds, setSelectedBankIds] = useState<Set<string>>(new Set());
+
+  // Current manual question draft
   const [curQText, setCurQText] = useState('');
-  const [curQMal, setCurQMal] = useState('');
   const [curTopic, setCurTopic] = useState('Survey Basics');
   const [curOptA, setCurOptA] = useState('');
   const [curOptB, setCurOptB] = useState('');
@@ -55,6 +60,57 @@ export const CreateMockTestModal: React.FC<CreateMockTestModalProps> = ({ isOpen
   const [bulkKeysText, setBulkKeysText] = useState('');
 
   if (!isOpen) return null;
+
+  // Filter bank questions for the picker
+  const filteredBankQuestions = bankQuestions.filter((q) => {
+    if (bankFilterModule !== 'all' && q.moduleNumber !== bankFilterModule) return false;
+    return true;
+  });
+
+  const toggleBankQuestionSelection = (id: string) => {
+    setSelectedBankIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
+
+  const handleSelectAllInModule = () => {
+    const idsToAdd = filteredBankQuestions.map((q) => q.id);
+    setSelectedBankIds((prev) => {
+      const next = new Set(prev);
+      idsToAdd.forEach((id) => next.add(id));
+      return next;
+    });
+  };
+
+  const handleAddSelectedFromBank = () => {
+    if (selectedBankIds.size === 0) {
+      showToast('Please select at least one question from the bank.', 'warning');
+      return;
+    }
+
+    const selectedList = bankQuestions.filter((q) => selectedBankIds.has(q.id));
+    const newMockQuestions: MockQuestion[] = selectedList.map((bq, idx) => ({
+      id: `q-from-bank-${bq.id}-${Date.now()}-${idx}`,
+      questionNumber: questions.length + idx + 1,
+      question: bq.question,
+      options: bq.options,
+      correctOptionIndex: bq.correctOptionIndex,
+      explanation: bq.explanation,
+      rankerTip: bq.rankerTip,
+      topic: bq.topic || `Module ${bq.moduleNumber}`
+    }));
+
+    setQuestions([...questions, ...newMockQuestions]);
+    setSelectedBankIds(new Set());
+    setShowBankPicker(false);
+    showToast(`Added ${newMockQuestions.length} questions from question bank!`, 'success');
+  };
 
   const handleParseAndAddBulk = () => {
     if (!bulkQuestionsText.trim()) {
@@ -99,27 +155,28 @@ export const CreateMockTestModal: React.FC<CreateMockTestModalProps> = ({ isOpen
         id: `q-bulk-${Date.now()}-${qNum}-${Math.random().toString().slice(2, 5)}`,
         questionNumber: questions.length + parsedList.length + 1,
         question: qText,
-        options: opts,
+        options: opts.length === 4 ? opts : [...opts, 'Option C', 'Option D'].slice(0, 4),
         correctOptionIndex: correctIndex,
-        explanation: `Official Kerala PSC Answer Key: Option ${String.fromCharCode(65 + correctIndex)} (${opts[correctIndex] || ''}). Standard curriculum.`,
-        topic: 'General Surveying & PSC Syllabus'
+        explanation: 'Official answer as per standard Kerala PSC survey answer key.',
+        topic: 'General Surveying'
       });
     }
 
-    if (parsedList.length > 0) {
-      setQuestions((prev) => [...prev, ...parsedList]);
-      showToast(`Successfully parsed and appended ${parsedList.length} questions!`, 'success');
-      setBulkQuestionsText('');
-      setBulkKeysText('');
-      setShowBulkPaste(false);
-    } else {
-      showToast('Could not find questions matching "1. Question... a)... b)... c)... d)..."', 'warning');
+    if (parsedList.length === 0) {
+      showToast('Could not parse any questions. Make sure format is "1. Question... a) ... b) ..."', 'error');
+      return;
     }
+
+    setQuestions([...questions, ...parsedList]);
+    setBulkQuestionsText('');
+    setBulkKeysText('');
+    setShowBulkPaste(false);
+    showToast(`Successfully added ${parsedList.length} questions from bulk text!`, 'success');
   };
 
   const handleAddQuestion = () => {
     if (!curQText.trim() || !curOptA.trim() || !curOptB.trim()) {
-      alert('Please fill at least the question text and options A & B.');
+      showToast('Please fill at least the question text and options A & B.', 'warning');
       return;
     }
 
@@ -127,7 +184,6 @@ export const CreateMockTestModal: React.FC<CreateMockTestModalProps> = ({ isOpen
       id: 'q-custom-' + Date.now(),
       questionNumber: questions.length + 1,
       question: curQText,
-      questionMalayalam: curQMal.trim() ? curQMal : undefined,
       options: [curOptA, curOptB, curOptC || 'Option C', curOptD || 'Option D'],
       correctOptionIndex: curCorrect,
       explanation: curExp || 'Official answer as per standard Kerala PSC survey answer key.',
@@ -136,9 +192,7 @@ export const CreateMockTestModal: React.FC<CreateMockTestModalProps> = ({ isOpen
     };
 
     setQuestions([...questions, newQ]);
-    // Reset draft
     setCurQText('');
-    setCurQMal('');
     setCurOptA('');
     setCurOptB('');
     setCurOptC('');
@@ -154,16 +208,19 @@ export const CreateMockTestModal: React.FC<CreateMockTestModalProps> = ({ isOpen
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title.trim()) return;
+    if (!title.trim()) {
+      showToast('Please provide an exam title.', 'warning');
+      return;
+    }
     if (questions.length === 0) {
-      alert('Please add at least one question to the mock test.');
+      showToast('Please add at least one question to the mock test.', 'warning');
       return;
     }
 
     addMockTest({
       title,
       category,
-      description: description || 'Kerala PSC survey pattern timed practice test.',
+      description: description || 'Kerala PSC survey pattern timed practice test with Statewide Rank List.',
       durationMinutes,
       totalQuestions: questions.length,
       marksPerCorrect,
@@ -180,28 +237,22 @@ export const CreateMockTestModal: React.FC<CreateMockTestModalProps> = ({ isOpen
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/75 backdrop-blur-sm animate-fadeIn">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[92vh] flex flex-col overflow-hidden border border-slate-200">
-        {/* Header */}
-        <div className="bg-slate-900 px-6 py-4 text-white flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <CheckSquare className="w-5 h-5 text-brand-400" />
-            <h3 className="text-lg font-bold">Create Kerala PSC Mock Test</h3>
+    <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 overflow-y-auto">
+      <div className="bg-white rounded-2xl max-w-4xl w-full p-6 space-y-5 my-8 shadow-2xl border border-slate-100 max-h-[90vh] overflow-y-auto text-left">
+        <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+          <div className="flex items-center gap-2 text-brand-600">
+            <CheckSquare className="w-5 h-5" />
+            <h3 className="font-black text-slate-900 text-lg">Create New Kerala PSC Mock Exam</h3>
           </div>
-          <button
-            onClick={onClose}
-            className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition"
-          >
+          <button onClick={onClose} className="p-1 text-slate-400 hover:text-slate-600 rounded-lg">
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Form Body */}
-        <form onSubmit={handleSubmit} className="p-6 overflow-y-auto space-y-5 flex-1">
-          {/* Test Meta */}
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold uppercase text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-slate-700 mb-1">
                 Mock Test Title *
               </label>
               <input
@@ -209,72 +260,77 @@ export const CreateMockTestModal: React.FC<CreateMockTestModalProps> = ({ isOpen
                 required
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="e.g. Kerala PSC Survey & Land Records Model Exam #2"
+                placeholder="e.g. Grand Mock Exam 04: Full Syllabus 100 Marks"
                 className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-brand-500"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold uppercase text-slate-700 mb-1">
-                Category
-              </label>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">Category</label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value as any)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white outline-none focus:ring-2 focus:ring-brand-500"
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none"
               >
                 <option value="All-Kerala State Ranked Exam">All-Kerala State Ranked Exam</option>
-                <option value="Full-Length Kerala PSC">Full-Length Kerala PSC</option>
-                <option value="Module Specific">Module Specific</option>
+                <option value="Full-Length Kerala PSC">Full-Length Kerala PSC (100 Qs)</option>
+                <option value="Module Specific">Module Specific Practice</option>
                 <option value="High-Yield PYQ Special">High-Yield PYQ Special</option>
-                <option value="Rapid Fire">Rapid Fire</option>
+                <option value="Rapid Fire">Rapid Fire Exam</option>
               </select>
             </div>
           </div>
 
-          {/* Ranked Exam & 1-Attempt Settings */}
-          <div className="bg-amber-50/80 p-4 rounded-xl border border-amber-200 space-y-3">
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="isRankedCheck"
-                checked={isRankedExam}
-                onChange={(e) => {
-                  setIsRankedExam(e.target.checked);
-                  if (e.target.checked) setIsOneTimeOnly(true);
-                }}
-                className="w-4 h-4 text-amber-600 rounded border-slate-300 focus:ring-amber-500"
-              />
-              <label htmlFor="isRankedCheck" className="text-xs font-bold text-slate-800 cursor-pointer">
-                🏆 Official All-Kerala State-Level Ranked Exam (Publishes to Statewide Leaderboard)
-              </label>
+          <div>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">
+              Description / Instructions
+            </label>
+            <input
+              type="text"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="e.g. 100 Questions based on official Kerala PSC Surveyor syllabus. Negative marks: 0.33."
+              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none"
+            />
+          </div>
+
+          <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                <Award className="w-4 h-4 text-amber-600" />
+                Statewide Ranking & Candidate Podium Rules
+              </span>
+              <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded">
+                Leaderboard Active
+              </span>
             </div>
 
-            {isRankedExam && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 text-xs">
-                <div className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    id="isOneTimeCheck"
-                    checked={isOneTimeOnly}
-                    onChange={(e) => setIsOneTimeOnly(e.target.checked)}
-                    className="w-4 h-4 text-brand-600 rounded border-slate-300 focus:ring-brand-500"
-                  />
-                  <label htmlFor="isOneTimeCheck" className="font-semibold text-slate-700 cursor-pointer">
-                    Strictly 1 Attempt Per Student
-                  </label>
-                </div>
-
-                <div>
-                  <input
-                    type="text"
-                    value={examCode}
-                    onChange={(e) => setExamCode(e.target.value)}
-                    placeholder="Exam Code (e.g. KPSC-SLR-2026)"
-                    className="w-full px-2.5 py-1 text-xs border border-slate-300 rounded bg-white"
-                  />
-                </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 text-xs">
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="isRankedExamCheck"
+                  checked={isRankedExam}
+                  onChange={(e) => setIsRankedExam(e.target.checked)}
+                  className="w-4 h-4 text-brand-600 rounded border-slate-300"
+                />
+                <label htmlFor="isRankedExamCheck" className="font-semibold text-slate-700 cursor-pointer">
+                  Enable Statewide Leaderboard & Rank
+                </label>
               </div>
-            )}
+
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="isOneTimeCheck"
+                  checked={isOneTimeOnly}
+                  onChange={(e) => setIsOneTimeOnly(e.target.checked)}
+                  className="w-4 h-4 text-brand-600 rounded border-slate-300"
+                />
+                <label htmlFor="isOneTimeCheck" className="font-semibold text-slate-700 cursor-pointer">
+                  1st Try for Statewide Rank (Subsequent = Practice)
+                </label>
+              </div>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -317,25 +373,148 @@ export const CreateMockTestModal: React.FC<CreateMockTestModalProps> = ({ isOpen
             </div>
           </div>
 
-          {/* Existing Questions in test */}
-          <div className="border-t border-slate-200 pt-4">
-            <div className="flex items-center justify-between mb-2">
+          {/* QUESTION SOURCES STRIP */}
+          <div className="border-t border-slate-200 pt-4 space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <h4 className="text-sm font-bold text-slate-900 flex items-center gap-1.5">
-                Questions in this Test ({questions.length})
+                <span>Questions in this Mock Test:</span>
+                <span className="px-2 py-0.5 rounded-full bg-brand-100 text-brand-800 text-xs font-black">
+                  {questions.length} Questions ({questions.length * marksPerCorrect} Marks)
+                </span>
               </h4>
-              <button
-                type="button"
-                onClick={() => setShowBulkPaste(!showBulkPaste)}
-                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-50 border border-amber-300 text-amber-800 text-xs font-bold hover:bg-amber-100 transition shadow-xs"
-              >
-                <Zap className="w-3.5 h-3.5 text-amber-600" />
-                <span>{showBulkPaste ? 'Hide Bulk Paste' : '⚡ Bulk Paste / Import Questions'}</span>
-              </button>
+
+              <div className="flex items-center gap-2">
+                {/* 1. BUTTON TO PICK FROM MCQ & PYQ BANK */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowBankPicker(!showBankPicker);
+                    setShowBulkPaste(false);
+                  }}
+                  className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-bold transition shadow-xs ${
+                    showBankPicker
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-blue-50 border border-blue-200 text-blue-800 hover:bg-blue-100'
+                  }`}
+                >
+                  <BookOpen className="w-3.5 h-3.5" />
+                  <span>Select from MCQ & PYQ Bank</span>
+                </button>
+
+                {/* 2. BUTTON FOR BULK PASTE */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowBulkPaste(!showBulkPaste);
+                    setShowBankPicker(false);
+                  }}
+                  className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-bold transition shadow-xs ${
+                    showBulkPaste
+                      ? 'bg-amber-600 text-white'
+                      : 'bg-amber-50 border border-amber-300 text-amber-800 hover:bg-amber-100'
+                  }`}
+                >
+                  <Zap className="w-3.5 h-3.5 text-amber-600" />
+                  <span>Bulk Paste</span>
+                </button>
+              </div>
             </div>
 
-            {/* Bulk Paste Drawer */}
+            {/* DRAWER 1: SELECT FROM QUESTION BANK */}
+            {showBankPicker && (
+              <div className="p-4 bg-blue-50/70 border border-blue-200 rounded-2xl space-y-3 animate-fadeIn">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-blue-200/80 pb-2.5">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
+                    <span className="font-bold text-xs text-blue-900">
+                      Choose from 10 Syllabus Portions ({bankQuestions.length} Questions in Bank)
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <select
+                      value={bankFilterModule}
+                      onChange={(e) => setBankFilterModule(e.target.value === 'all' ? 'all' : Number(e.target.value))}
+                      className="px-2.5 py-1 text-xs border border-blue-300 rounded-lg bg-white font-medium text-slate-800 outline-none"
+                    >
+                      <option value="all">All 10 Modules ({bankQuestions.length} Qs)</option>
+                      {modules.map((m) => {
+                        const count = bankQuestions.filter((q) => q.moduleNumber === m.order).length;
+                        return (
+                          <option key={m.id} value={m.order}>
+                            Module {m.order}: {m.title} ({count} Qs)
+                          </option>
+                        );
+                      })}
+                    </select>
+
+                    <button
+                      type="button"
+                      onClick={handleSelectAllInModule}
+                      className="px-2.5 py-1 bg-white border border-blue-300 text-blue-700 hover:bg-blue-50 rounded-lg text-xs font-semibold"
+                    >
+                      Select All ({filteredBankQuestions.length})
+                    </button>
+                  </div>
+                </div>
+
+                {/* Question Checkbox List */}
+                <div className="max-h-56 overflow-y-auto space-y-2 pr-1">
+                  {filteredBankQuestions.length === 0 ? (
+                    <div className="p-4 text-center text-xs text-slate-500">No questions available in this module.</div>
+                  ) : (
+                    filteredBankQuestions.map((bq) => {
+                      const isSelected = selectedBankIds.has(bq.id);
+                      return (
+                        <div
+                          key={bq.id}
+                          onClick={() => toggleBankQuestionSelection(bq.id)}
+                          className={`p-2.5 rounded-xl border text-xs cursor-pointer transition flex items-start gap-2.5 ${
+                            isSelected
+                              ? 'bg-blue-100/90 border-blue-600 text-blue-950 font-medium'
+                              : 'bg-white border-slate-200 text-slate-800 hover:bg-slate-50'
+                          }`}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={() => {}}
+                            className="mt-0.5 w-4 h-4 text-blue-600 rounded"
+                          />
+                          <div className="space-y-0.5 flex-1">
+                            <div className="flex items-center gap-1.5">
+                              <span className="font-bold text-slate-500 text-[10px]">
+                                Mod {bq.moduleNumber} • {bq.type === 'pyq' ? `PYQ (${bq.examName || 'Kerala PSC'})` : 'MCQ'}
+                              </span>
+                            </div>
+                            <p className="line-clamp-1">{bq.question}</p>
+                          </div>
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
+
+                {/* Bottom Action */}
+                <div className="flex items-center justify-between pt-2 border-t border-blue-200/80">
+                  <span className="text-xs font-bold text-blue-900">
+                    {selectedBankIds.size} questions selected
+                  </span>
+                  <button
+                    type="button"
+                    onClick={handleAddSelectedFromBank}
+                    className="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold shadow transition flex items-center gap-1.5"
+                  >
+                    <Check className="w-3.5 h-3.5" />
+                    <span>Insert Selected into Mock Test</span>
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* DRAWER 2: BULK PASTE */}
             {showBulkPaste && (
-              <div className="mb-4 p-4 bg-amber-50/70 border border-amber-200 rounded-xl space-y-3 animate-fadeIn">
+              <div className="p-4 bg-amber-50/70 border border-amber-200 rounded-xl space-y-3 animate-fadeIn">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1.5 font-bold text-xs text-amber-900">
                     <Sparkles className="w-4 h-4 text-amber-600" />
@@ -349,23 +528,23 @@ export const CreateMockTestModal: React.FC<CreateMockTestModalProps> = ({ isOpen
                     Paste Questions & Options:
                   </label>
                   <textarea
-                    rows={6}
+                    rows={5}
                     value={bulkQuestionsText}
                     onChange={(e) => setBulkQuestionsText(e.target.value)}
-                    placeholder={`1. Plane surveys are considered upto an area of\na) 200 sq km\nb) 300 sq km\nc) 260 sq km\nd) 150 sq km\n\n2. The smallest length that can be drawn on a map is\na) 0.2 mm\nb) 0.5 mm\nc) 10 mm\nd) 15 mm`}
+                    placeholder={`1. The trimmed size of A1 sheet is\na) 841 x 1189 mm\nb) 594 x 841 mm\nc) 420 x 594 mm\nd) 297 x 420 mm`}
                     className="w-full p-2 text-xs border border-slate-300 rounded-lg font-mono focus:ring-2 focus:ring-amber-500 outline-none"
                   />
                 </div>
 
                 <div>
                   <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-                    Paste Answer Key (e.g. 1 c, 2 a, 3 b... or tabular answer key):
+                    Paste Answer Key (optional):
                   </label>
                   <textarea
                     rows={2}
                     value={bulkKeysText}
                     onChange={(e) => setBulkKeysText(e.target.value)}
-                    placeholder="1 c) 2 a) 3 b) 4 c) 5 c) ... OR 1: c, 2: a, 3: b"
+                    placeholder="1: b, 2: a, 3: c..."
                     className="w-full p-2 text-xs border border-slate-300 rounded-lg font-mono focus:ring-2 focus:ring-amber-500 outline-none"
                   />
                 </div>
@@ -389,39 +568,47 @@ export const CreateMockTestModal: React.FC<CreateMockTestModalProps> = ({ isOpen
                 </div>
               </div>
             )}
-            <div className="space-y-2 max-h-40 overflow-y-auto pr-1">
-              {questions.map((q, idx) => (
-                <div key={q.id} className="p-3 bg-slate-50 border border-slate-200 rounded-lg flex items-start justify-between gap-3 text-xs">
-                  <div className="space-y-0.5">
-                    <div className="font-semibold text-slate-800">
-                      Q{idx + 1}: {q.question}
-                    </div>
-                    <div className="text-slate-500">
-                      Correct: Option {String.fromCharCode(65 + q.correctOptionIndex)} ({q.options[q.correctOptionIndex]})
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveQuestion(idx)}
-                    className="text-red-500 hover:text-red-700 p-1"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+
+            {/* List of Questions Added */}
+            <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
+              {questions.length === 0 ? (
+                <div className="p-6 text-center text-xs text-slate-400 bg-slate-50 border border-slate-200 rounded-xl">
+                  No questions added yet. Use "Select from MCQ & PYQ Bank" or add questions below.
                 </div>
-              ))}
+              ) : (
+                questions.map((q, idx) => (
+                  <div key={q.id} className="p-3 bg-slate-50 border border-slate-200 rounded-lg flex items-start justify-between gap-3 text-xs">
+                    <div className="space-y-0.5">
+                      <div className="font-semibold text-slate-800">
+                        Q{idx + 1}: {q.question}
+                      </div>
+                      <div className="text-slate-500">
+                        Correct: Option {String.fromCharCode(65 + q.correctOptionIndex)} ({q.options[q.correctOptionIndex]})
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveQuestion(idx)}
+                      className="text-red-500 hover:text-red-700 p-1"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))
+              )}
             </div>
           </div>
 
-          {/* Add New Question Section */}
+          {/* Add Question Manually */}
           <div className="bg-brand-50/40 p-4 rounded-xl border border-brand-200/80 space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold uppercase text-brand-900 flex items-center gap-1">
                 <Plus className="w-4 h-4 text-brand-600" />
-                Add Question #{questions.length + 1}
+                Add Single Question Manually #{questions.length + 1}
               </span>
               <input
                 type="text"
-                placeholder="Topic (e.g. Levelling)"
+                placeholder="Topic (e.g. Metric Chain)"
                 value={curTopic}
                 onChange={(e) => setCurTopic(e.target.value)}
                 className="px-2.5 py-1 text-xs border border-brand-200 rounded bg-white"
@@ -429,23 +616,12 @@ export const CreateMockTestModal: React.FC<CreateMockTestModalProps> = ({ isOpen
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-700 mb-1">Question (English)</label>
+              <label className="block text-xs font-medium text-slate-700 mb-1">Question Text</label>
               <textarea
                 rows={2}
                 value={curQText}
                 onChange={(e) => setCurQText(e.target.value)}
                 placeholder="Enter question text here..."
-                className="w-full px-3 py-1.5 border border-slate-300 rounded-lg text-xs bg-white outline-none"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-medium text-slate-700 mb-1">Malayalam Translation (Optional)</label>
-              <input
-                type="text"
-                value={curQMal}
-                onChange={(e) => setCurQMal(e.target.value)}
-                placeholder="മലയാളത്തിലുള്ള ചോദ്യം (Optional)"
                 className="w-full px-3 py-1.5 border border-slate-300 rounded-lg text-xs bg-white outline-none"
               />
             </div>
@@ -504,24 +680,24 @@ export const CreateMockTestModal: React.FC<CreateMockTestModalProps> = ({ isOpen
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Ranker Trick / Tip</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Ranker Tip</label>
                 <input
                   type="text"
                   value={curTip}
                   onChange={(e) => setCurTip(e.target.value)}
-                  placeholder="e.g. Remember to check units (cm vs m)"
+                  placeholder="e.g. Always check if question asks nominal or modular size"
                   className="w-full px-2.5 py-1.5 border border-slate-300 rounded text-xs bg-white"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs text-slate-600 mb-1">Explanation & Calculation Steps</label>
+              <label className="block text-xs text-slate-600 mb-1">Explanation & Reasoning</label>
               <textarea
                 rows={2}
                 value={curExp}
                 onChange={(e) => setCurExp(e.target.value)}
-                placeholder="Explain the step-by-step formula or reasoning..."
+                placeholder="Explain the solution steps..."
                 className="w-full px-3 py-1.5 border border-slate-300 rounded text-xs bg-white outline-none"
               />
             </div>

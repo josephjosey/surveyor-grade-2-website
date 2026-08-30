@@ -185,9 +185,9 @@ export const LandingPage: React.FC = () => {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-20">
         <div className="bg-white rounded-2xl shadow-xl border border-slate-200/80 p-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
           <div className="space-y-1 border-r border-slate-100 last:border-0">
-            <div className="text-2xl sm:text-3xl font-extrabold text-slate-900">8 Modules</div>
+            <div className="text-2xl sm:text-3xl font-extrabold text-slate-900">10 Modules</div>
             <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-              100% Kerala PSC Syllabus
+              100 Marks Official Syllabus
             </div>
           </div>
           <div className="space-y-1 border-r border-slate-100 last:border-0">
@@ -328,40 +328,44 @@ export const LandingPage: React.FC = () => {
               </p>
             </div>
             <button
-              onClick={() => setActiveTab('notes')}
+              onClick={() => setActiveTab('pyq')}
               className="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold rounded-xl transition self-start md:self-auto"
             >
-              View All Study Modules
+              View All 10 Syllabus Portions
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             {modules.map((mod) => (
               <div
                 key={mod.id}
-                onClick={() => setActiveTab('notes')}
-                className="bg-slate-800/80 hover:bg-slate-800 p-5 rounded-2xl border border-slate-700/80 hover:border-brand-500 transition cursor-pointer space-y-3 group"
+                onClick={() => setActiveTab('pyq')}
+                className="bg-slate-800/80 hover:bg-slate-800 p-5 rounded-2xl border border-slate-700/80 hover:border-brand-500 transition cursor-pointer space-y-3 group flex flex-col justify-between"
               >
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-mono font-bold text-slate-400">
-                    Module 0{mod.order}
-                  </span>
-                  <span className="text-[11px] font-semibold bg-brand-500/20 text-brand-300 px-2 py-0.5 rounded">
-                    {mod.badge}
-                  </span>
-                </div>
-                <div className="space-y-1">
-                  <h4 className="font-bold text-white text-sm group-hover:text-brand-400 transition-colors">
-                    {mod.title}
-                  </h4>
-                  <div className="text-xs text-amber-300/90 font-medium ml-text">
-                    {mod.titleMalayalam}
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-mono font-bold text-slate-400">
+                      Module {mod.order < 10 ? `0${mod.order}` : mod.order}
+                    </span>
+                    <span className="text-[11px] font-extrabold bg-amber-400/20 text-amber-300 px-2 py-0.5 rounded border border-amber-400/30">
+                      {mod.badge || `${mod.marks} Marks`}
+                    </span>
                   </div>
+                  <div className="space-y-1">
+                    <h4 className="font-bold text-white text-sm group-hover:text-brand-400 transition-colors">
+                      {mod.title}
+                    </h4>
+                  </div>
+                  <p className="text-xs text-slate-400 line-clamp-3 leading-relaxed">
+                    {mod.description}
+                  </p>
                 </div>
-                <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed">
-                  {mod.description}
-                </p>
+
+                <div className="pt-2 border-t border-slate-700/50 flex items-center justify-between text-[11px] text-brand-400 font-semibold">
+                  <span>Practice Questions</span>
+                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                </div>
               </div>
             ))}
           </div>

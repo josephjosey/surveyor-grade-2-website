@@ -23,11 +23,13 @@ export interface User {
 export interface ClassModule {
   id: string;
   title: string;
-  titleMalayalam: string;
+  titleMalayalam?: string;
   description: string;
   iconName: string;
   badge: string;
   order: number;
+  marks?: number;
+  topics?: string;
 }
 
 export interface StudyNote {
@@ -36,7 +38,7 @@ export interface StudyNote {
   title: string;
   titleMalayalam?: string;
   description: string;
-  readTime: string; // e.g. "25 mins read"
+  readTime: string;
   thumbnail: string;
   pdfNotesUrl: string;
   pdfNotesTitle: string;
@@ -47,6 +49,23 @@ export interface StudyNote {
   isFreePreview?: boolean;
   downloadsCount: number;
   uploadedAt: string;
+}
+
+export interface BankQuestion {
+  id: string;
+  moduleId: string;
+  moduleNumber: number;
+  question: string;
+  questionMalayalam?: string;
+  options: string[];
+  correctOptionIndex: number;
+  explanation: string;
+  rankerTip?: string;
+  topic?: string;
+  type: 'mcq' | 'pyq';
+  examName?: string;
+  year?: number;
+  createdAt: string;
 }
 
 export interface PYQQuestion {

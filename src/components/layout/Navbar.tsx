@@ -33,7 +33,7 @@ export const Navbar: React.FC = () => {
     { id: 'home', label: 'Home', icon: Compass },
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'notes', label: 'Study Notes', icon: BookOpen },
-    { id: 'pyq', label: 'PYQ Bank', icon: FileCheck },
+    { id: 'pyq', label: 'PYQ & MCQ Bank', icon: FileCheck },
     { id: 'mocktests', label: 'Mock Tests', icon: CheckSquare },
     { id: 'doubts', label: 'Doubts Forum', icon: HelpCircle },
   ];
@@ -42,7 +42,7 @@ export const Navbar: React.FC = () => {
   const instructorNavItems: { id: NavigationTab; label: string; icon: any }[] = [
     { id: 'admin', label: 'Admin Portal', icon: ShieldAlert },
     { id: 'notes', label: 'Study Notes', icon: BookOpen },
-    { id: 'pyq', label: 'PYQ Bank', icon: FileCheck },
+    { id: 'pyq', label: 'PYQ & MCQ Bank', icon: FileCheck },
     { id: 'mocktests', label: 'Mock Tests', icon: CheckSquare },
     { id: 'doubts', label: 'Doubts Forum', icon: HelpCircle },
     { id: 'home', label: 'Student View', icon: Compass },

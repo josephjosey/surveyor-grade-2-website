@@ -9,7 +9,8 @@ import {
   MockTest,
   MockTestAttempt,
   Doubt,
-  DoubtAnswer
+  DoubtAnswer,
+  BankQuestion
 } from '../types';
 import {
   INITIAL_MODULES,
@@ -20,7 +21,8 @@ import {
   DEMO_STUDENT,
   DEMO_INSTRUCTOR,
   ENROLLED_STUDENTS_LIST,
-  INITIAL_STATEWIDE_ATTEMPTS
+  INITIAL_STATEWIDE_ATTEMPTS,
+  INITIAL_BANK_QUESTIONS
 } from '../data/initialData';
 
 import { fetchDatabase, saveDatabase } from '../services/api';
@@ -47,6 +49,7 @@ interface AppContextType {
   modules: ClassModule[];
   studyNotes: StudyNote[];
   pyqPapers: PYQPaper[];
+  bankQuestions: BankQuestion[];
   mockTests: MockTest[];
   testAttempts: MockTestAttempt[];
   doubts: Doubt[];
@@ -84,6 +87,9 @@ interface AppContextType {
   getUserRankInfo: (testId?: string, userId?: string) => { rank: number; percentile: number; totalCandidates: number; attempt: MockTestAttempt | null; totalUserAttempts: number; allAttempts: MockTestAttempt[]; isAttempted?: boolean };
   addStudyNote: (newNote: Omit<StudyNote, 'id' | 'downloadsCount' | 'uploadedAt'>) => void;
   deleteStudyNote: (noteId: string) => void;
+  addBankQuestion: (question: Omit<BankQuestion, 'id' | 'createdAt'>) => void;
+  deleteBankQuestion: (questionId: string) => void;
+  updateBankQuestion: (question: BankQuestion) => void;
   addMockTest: (newTest: Omit<MockTest, 'id' | 'attemptsCount'>) => void;
   deleteMockTest: (testId: string) => void;
   addPYQPaper: (newPaper: Omit<PYQPaper, 'id'>) => void;
@@ -191,6 +197,21 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [pyqPapers, setPyqPapers] = useState<PYQPaper[]>(() => {
     const saved = localStorage.getItem('survey_academy_pyqs');
     return saved ? JSON.parse(saved) : INITIAL_PYQ_PAPERS;
+  });
+
+  const [bankQuestions, setBankQuestions] = useState<BankQuestion[]>(() => {
+    const saved = localStorage.getItem('survey_academy_bank_questions');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved) as BankQuestion[];
+        const existingIds = new Set(parsed.map((q) => q.id));
+        const missing = INITIAL_BANK_QUESTIONS.filter((q) => !existingIds.has(q.id));
+        return [...parsed, ...missing];
+      } catch (e) {
+        return INITIAL_BANK_QUESTIONS;
+      }
+    }
+    return INITIAL_BANK_QUESTIONS;
   });
 
   const [mockTests, setMockTests] = useState<MockTest[]>(() => {
@@ -1110,6 +1131,38 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     showToast('Study note deleted successfully', 'info');
   };
 
+  const addBankQuestion = (questionData: Omit<BankQuestion, 'id' | 'createdAt'>) => {
+    const newQ: BankQuestion = {
+      ...questionData,
+      id: `bq-${Date.now()}-${Math.random().toString().slice(2, 6)}`,
+      createdAt: new Date().toISOString()
+    };
+    setBankQuestions((prev) => {
+      const updated = [newQ, ...prev];
+      safeSetItem('survey_academy_bank_questions', updated);
+      return updated;
+    });
+    showToast(`Question added to Module ${newQ.moduleNumber} successfully!`, 'success');
+  };
+
+  const deleteBankQuestion = (questionId: string) => {
+    setBankQuestions((prev) => {
+      const updated = prev.filter((q) => q.id !== questionId);
+      safeSetItem('survey_academy_bank_questions', updated);
+      return updated;
+    });
+    showToast('Question removed from bank.', 'info');
+  };
+
+  const updateBankQuestion = (updatedQuestion: BankQuestion) => {
+    setBankQuestions((prev) => {
+      const updated = prev.map((q) => (q.id === updatedQuestion.id ? updatedQuestion : q));
+      safeSetItem('survey_academy_bank_questions', updated);
+      return updated;
+    });
+    showToast('Question updated successfully.', 'success');
+  };
+
   const addMockTest = (newTestData: Omit<MockTest, 'id' | 'attemptsCount'>) => {
     const newTest: MockTest = {
       ...newTestData,
@@ -1323,6 +1376,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         modules,
         studyNotes,
         pyqPapers,
+        bankQuestions,
         mockTests,
         testAttempts,
         doubts,
@@ -1358,6 +1412,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         getUserRankInfo,
         addStudyNote,
         deleteStudyNote,
+        addBankQuestion,
+        deleteBankQuestion,
+        updateBankQuestion,
         addMockTest,
         deleteMockTest,
         addPYQPaper,

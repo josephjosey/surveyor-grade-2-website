@@ -1,79 +1,110 @@
-import { ClassModule, StudyNote, PYQPaper, MockTest, MockTestAttempt, Doubt, User } from '../types';
+import { ClassModule, StudyNote, PYQPaper, MockTest, MockTestAttempt, Doubt, User, BankQuestion } from '../types';
 import { MOCK_TEST_87_QUESTIONS } from './survey87Questions';
 import { MOCK_TEST_THEODOLITE_30 } from './theodoliteQuestions';
+import { INITIAL_BANK_QUESTIONS } from './bankQuestions';
+
+export { INITIAL_BANK_QUESTIONS };
 
 export const INITIAL_MODULES: ClassModule[] = [
   {
     id: 'mod-1',
-    title: 'Chain Surveying & Basic Principles',
-    titleMalayalam: 'ചെയിൻ സർവേ & അടിസ്ഥാന തത്വങ്ങൾ',
-    description: 'Fundamental surveying concepts, types of chains, ranging, offsets, chain errors, and field book plotting.',
-    iconName: 'Ruler',
-    badge: 'Core Subject',
-    order: 1
+    title: 'Basic Engineering Drawing',
+    description: 'Drawing Instruments, Drawing sheet, Types of lines, Lettering, Dimensioning, Scales, Geometrical constructions, Conic sections, Projection.',
+    iconName: 'PenTool',
+    badge: '10 Marks',
+    order: 1,
+    marks: 10,
+    topics: 'Drawing Instruments, Drawing sheet, Types of lines, Lettering, Dimensioning, Scales, Geometrical constructions, Conic sections, Projection.'
   },
   {
     id: 'mod-2',
-    title: 'Compass Surveying & Traversing',
-    titleMalayalam: 'കമ്പാസ് സർവേ & പ്രിസ്മാറ്റിക് കോമ്പസ്',
-    description: 'Prismatic & Surveyor compass, Whole Circle Bearing, Quadrantal Bearing, Local Attraction & corrections.',
-    iconName: 'Compass',
-    badge: 'High Weightage',
-    order: 2
+    title: 'Chain Survey',
+    description: 'Introduction of Survey, Main divisions, classifications, Principles, Instruments used in Chain survey, Terms used in Chain survey, Ranging, Offsetting, Field book, Errors in Chain survey, Area calculation.',
+    iconName: 'Ruler',
+    badge: '12 Marks',
+    order: 2,
+    marks: 12,
+    topics: 'Introduction of Survey, Main divisions, classifications, Principles, Instruments used in Chain survey, Terms used in Chain survey, Ranging, Offsetting, Field book, Errors in Chain survey, Area calculation.'
   },
   {
     id: 'mod-3',
-    title: 'Levelling, Contouring & RL Calculations',
-    titleMalayalam: 'ലെവലിംഗ് & കണ്ടാറിങ്',
-    description: 'Dumpy level, Auto level, Rise and Fall method, Height of Instrument (HI) method, curvature & refraction.',
-    iconName: 'Activity',
-    badge: 'Numerical Heavy',
-    order: 3
+    title: 'Compass Survey',
+    description: 'Basic terms, Instruments used, Setting up of Compass, Conversion of bearings from one system to other, Included angles, Local attraction, Dip, Magnetic declination, Closing error.',
+    iconName: 'Compass',
+    badge: '12 Marks',
+    order: 3,
+    marks: 12,
+    topics: 'Basic terms, Instruments used, Setting up of Compass, Conversion of bearings from one system to other, Included angles, Local attraction, Dip, Magnetic declination, Closing error.'
   },
   {
     id: 'mod-4',
-    title: 'Theodolite & Tacheometric Surveying',
-    titleMalayalam: 'തിയോഡലൈറ്റ് സർവേ & കർവുകൾ',
-    description: 'Transit theodolite adjustments, horizontal/vertical angles, stadia tacheometry, and curve setting.',
-    iconName: 'Target',
-    badge: 'Core Subject',
-    order: 4
+    title: 'Planetable Survey',
+    description: 'Instruments used, Setting up of Plane table, Methods of Plane tabling, Errors.',
+    iconName: 'Layout',
+    badge: '5 Marks',
+    order: 4,
+    marks: 5,
+    topics: 'Instruments used, Setting up of Plane table, Methods of Plane tabling, Errors.'
   },
   {
     id: 'mod-5',
-    title: 'Total Station, GPS, DGPS & GIS',
-    titleMalayalam: 'ടോട്ടൽ സ്റ്റേഷൻ & ജി.പി.എസ് ടെക്നോളജി',
-    description: 'Modern survey instruments, EDM principles, prism constants, coordinate systems, and GIS layers.',
-    iconName: 'Cpu',
-    badge: 'Modern Tech',
-    order: 5
+    title: 'Levelling and Contouring',
+    description: 'Terms used, Types of Levelling, Temporary and Permanent adjustments, Curvature and Refraction, Sensitivity of bubble tube, Common errors, Contouring, Characteristics of Contours, Interpolation, Computation of Volume, Gradient, Abney level.',
+    iconName: 'Activity',
+    badge: '15 Marks',
+    order: 5,
+    marks: 15,
+    topics: 'Terms used, Types of Levelling, Temporary and Permanent adjustments, Curvature and Refraction, Sensitivity of bubble tube, Common errors, Contouring, Characteristics of Contours, Interpolation, Computation of Volume, Gradient, Abney level.'
   },
   {
     id: 'mod-6',
-    title: 'Kerala Survey & Boundaries Act & Land Records',
-    titleMalayalam: 'കേരള സർവേ & അതിരടയാള നിയമം (1961)',
-    description: 'Kerala Survey & Boundaries Act 1961, Survey manual, Resurvey procedures, FMB diagrams & revenue records.',
-    iconName: 'FileText',
-    badge: 'Dept Exam Must',
-    order: 6
+    title: 'Theodolite Survey',
+    description: 'Types of Theodolite, Parts of Theodolite, Terms used, Temporary and Permanent adjustments, Angle measurement processes, Traversing, Consecutive and Independent co-ordinates, Gales Traverse Table, Terms used in Tacheometry, Tacheometric constants, Horizontal and Vertical distance, Curves, Types of Curves, Elements of Curves.',
+    iconName: 'Target',
+    badge: '10 Marks',
+    order: 6,
+    marks: 10,
+    topics: 'Types of Theodolite, Parts of Theodolite, Terms used, Temporary and Permanent adjustments, Angle measurement processes, Traversing, Consecutive and Independent co-ordinates, Gales Traverse Table, Terms used in Tacheometry, Tacheometric constants, Horizontal and Vertical distance, Curves, Types of Curves, Elements of Curves.'
   },
   {
     id: 'mod-7',
-    title: 'Engineering Drawing & AutoCad for Surveyors',
-    titleMalayalam: 'എഞ്ചിനീയറിംഗ് ഡ്രോയിംഗ് & ഓട്ടോകോഡ്',
-    description: 'Scales, orthographic projections, AutoCad commands for digital survey maps, hatching, and plot generation.',
-    iconName: 'Layout',
-    badge: 'Drafting',
-    order: 7
+    title: 'Modern Survey Instruments',
+    description: 'Digital Theodolite, GPS, GIS, Total Station, Cartographic Projection, Hydrographic Survey.',
+    iconName: 'Cpu',
+    badge: '8 Marks',
+    order: 7,
+    marks: 8,
+    topics: 'Digital Theodolite, GPS, GIS, Total Station, Cartographic Projection, Hydrographic Survey.'
   },
   {
     id: 'mod-8',
-    title: 'Kerala Water Authority (KWA) Technical Topics',
-    titleMalayalam: 'കേരള വാട്ടർ അതോറിറ്റി പ്രത്യേക സിലബസ്',
-    description: 'Pipe alignment surveying, hydraulic gradients, invert levels, water pipeline layouts, and contouring for reservoirs.',
-    iconName: 'Droplets',
-    badge: 'KWA Special Topics',
-    order: 8
+    title: 'AutoCAD',
+    description: 'Introduction, Basic commands, Tool bars, Function keys and shortcut keys, 2D drafting, knowledge of layout and printing.',
+    iconName: 'Monitor',
+    badge: '8 Marks',
+    order: 8,
+    marks: 8,
+    topics: 'Introduction, Basic commands, Tool bars, Function keys and shortcut keys, 2D drafting, knowledge of layout and printing.'
+  },
+  {
+    id: 'mod-9',
+    title: 'Workshop Calculation and Science',
+    description: 'Units, Fractions, Square Root, Ratio and Proportions, Percentage, Mensuration, Trigonometry, Material science, Mass, Weight and Density, Speed and Velocity, Work, Power and Energy, Heat and Temperature, Basic Electricity, Simple Machines.',
+    iconName: 'Calculator',
+    badge: '12 Marks',
+    order: 9,
+    marks: 12,
+    topics: 'Units, Fractions, Square Root, Ratio and Proportions, Percentage, Mensuration, Trigonometry, Material science, Mass, Weight and Density, Speed and Velocity, Work, Power and Energy, Heat and Temperature, Basic Electricity, Simple Machines.'
+  },
+  {
+    id: 'mod-10',
+    title: 'Building Materials and Construction',
+    description: 'Building Stones, Bricks, Lime, Timber, Tiles, Sand, Mortar, Concrete, R C C, Foundation, Irrigation – Terms used in irrigation, Factors affecting duty of water, measures to improve duty of water, Roads – Important terms, Classification, Road gradient, Estimation – Terms used, Types of Estimate.',
+    iconName: 'Building2',
+    badge: '8 Marks',
+    order: 10,
+    marks: 8,
+    topics: 'Building Stones, Bricks, Lime, Timber, Tiles, Sand, Mortar, Concrete, R C C, Foundation, Irrigation – Terms used in irrigation, Factors affecting duty of water, measures to improve duty of water, Roads – Important terms, Classification, Road gradient, Estimation – Terms used, Types of Estimate.'
   }
 ];
 
