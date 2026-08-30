@@ -187,19 +187,27 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     if (saved) {
       try {
         const parsed = JSON.parse(saved) as StudyNote[];
-        return parsed.map((note) => {
-          if (!note.pdfNotesUrl || note.pdfNotesUrl.startsWith('blob:') || note.pdfNotesUrl.includes('example.com')) {
-            return {
-              ...note,
-              pdfNotesUrl: '/sample-notes.pdf'
-            };
-          }
-          return note;
-        });
+        if (parsed && parsed.length > 0) {
+          const cleaned = parsed.map((note) => {
+            if (!note.pdfNotesUrl || note.pdfNotesUrl.startsWith('blob:') || note.pdfNotesUrl.includes('example.com')) {
+              return {
+                ...note,
+                pdfNotesUrl: '/sample-notes.pdf'
+              };
+            }
+            return note;
+          });
+          const existingIds = new Set(cleaned.map((n) => n.id));
+          const missing = INITIAL_STUDY_NOTES.filter((n) => !existingIds.has(n.id));
+          const combined = [...cleaned, ...missing];
+          safeSetItem('survey_academy_notes', combined);
+          return combined;
+        }
       } catch (e) {
         return INITIAL_STUDY_NOTES;
       }
     }
+    safeSetItem('survey_academy_notes', INITIAL_STUDY_NOTES);
     return INITIAL_STUDY_NOTES;
   });
 
@@ -312,7 +320,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           setModules(INITIAL_MODULES);
           safeSetItem('survey_academy_modules', INITIAL_MODULES);
         }
-        if (diskData.studyNotes && diskData.studyNotes.length > 0) setStudyNotes(diskData.studyNotes);
+        if (diskData.studyNotes && diskData.studyNotes.length > 0) {
+          const existingIds = new Set(diskData.studyNotes.map((n: any) => n.id));
+          const missing = INITIAL_STUDY_NOTES.filter((n) => !existingIds.has(n.id));
+          const combined = [...diskData.studyNotes, ...missing];
+          setStudyNotes(combined);
+          safeSetItem('survey_academy_notes', combined);
+        } else {
+          setStudyNotes(INITIAL_STUDY_NOTES);
+          safeSetItem('survey_academy_notes', INITIAL_STUDY_NOTES);
+        }
         if (diskData.pyqPapers && diskData.pyqPapers.length > 0) setPyqPapers(diskData.pyqPapers);
         if (diskData.mockTests && diskData.mockTests.length > 0) setMockTests(diskData.mockTests);
         if (diskData.testAttempts && diskData.testAttempts.length > 0) setTestAttempts(diskData.testAttempts);
@@ -347,7 +364,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           SupabaseDb.fetchAllProfiles()
         ]);
 
-        if (notes && notes.length > 0) setStudyNotes(notes);
+        if (notes && notes.length > 0) {
+          setStudyNotes((prev) => {
+            const existingIds = new Set(notes.map((n) => n.id));
+            const missing = INITIAL_STUDY_NOTES.filter((n) => !existingIds.has(n.id));
+            const combined = [...notes, ...missing];
+            safeSetItem('survey_academy_notes', combined);
+            return combined;
+          });
+        }
         if (tests && tests.length > 0) {
           setMockTests((prev) => {
             const combined = [...tests];

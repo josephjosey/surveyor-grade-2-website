@@ -132,7 +132,7 @@ export const ClassesPage: React.FC = () => {
                 </span>
               </div>
               <p className="text-slate-600 text-xs mt-0.5">
-                You have free access to introductory chapters and PDF formula sheets. Purchase a course plan to unlock all 8 complete syllabus modules & full solved PYQ bank.
+                You have free access to introductory chapters and PDF formula sheets. Purchase a course plan to unlock all 10 complete syllabus modules & full solved PYQ bank.
               </p>
             </div>
           </div>

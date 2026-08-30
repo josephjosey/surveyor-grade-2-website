@@ -216,7 +216,7 @@ export const DashboardPage: React.FC = () => {
                 </span>
               </div>
               <p className="text-slate-600 text-xs sm:text-sm mt-1">
-                You are currently on the Free Tier with access to free preview documents. Upgrade anytime to unlock all 8 syllabus modules, handwritten formula books, and statewide rank tracking.
+                You are currently on the Free Tier with access to free preview documents. Upgrade anytime to unlock all 10 syllabus modules, handwritten formula books, and statewide rank tracking.
               </p>
             </div>
           </div>

@@ -435,7 +435,7 @@ export const AdminPortalPage: React.FC = () => {
         <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-1">
           <div className="text-xs text-slate-500 font-semibold uppercase">Study Notes</div>
           <div className="text-2xl font-black text-slate-900">{studyNotes.length}</div>
-          <div className="text-[11px] text-brand-600 font-medium">8 Syllabus Modules</div>
+          <div className="text-[11px] text-brand-600 font-medium">{modules.length} Syllabus Modules</div>
         </div>
 
         <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-1">
@@ -557,10 +557,17 @@ export const AdminPortalPage: React.FC = () => {
                     </td>
                     <td className="p-4 font-mono font-medium">{note.readTime}</td>
                     <td className="p-4">
-                      <span className="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 font-semibold flex items-center gap-1 w-max">
-                        <FileText className="w-3.5 h-3.5" />
-                        {note.pdfNotesTitle} ({note.pdfSize})
-                      </span>
+                      <a
+                        href={note.pdfNotesUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-emerald-700 hover:text-emerald-900 bg-emerald-50 hover:bg-emerald-100 px-2.5 py-1 rounded-lg border border-emerald-300 font-semibold inline-flex items-center gap-1.5 transition text-xs shadow-xs"
+                        title="Click to view/download PDF note"
+                      >
+                        <FileText className="w-3.5 h-3.5 text-emerald-600" />
+                        <span>{note.pdfNotesTitle}</span>
+                        <span className="text-[10px] text-emerald-600 font-normal">({note.pdfSize})</span>
+                      </a>
                     </td>
                     <td className="p-4 text-right">
                       <button

@@ -111,78 +111,149 @@ export const INITIAL_MODULES: ClassModule[] = [
 
 export const INITIAL_STUDY_NOTES: StudyNote[] = [
   {
-    id: 'note-1',
-    moduleId: 'mod-1',
-    title: 'Chain Surveying & Corrections Complete Master Notes',
-    titleMalayalam: 'ചെയിൻ സർവേ: തിയറിയും പ്രോബ്ലംസും ഫോർമുലകളും',
-    description: 'Complete breakdown of Metric chains, Gunter chain, Revenue chain, temperature correction, sag correction, and field book numerical problems frequently asked in Kerala PSC.',
+    id: 'note-desk-compass',
+    moduleId: 'mod-3',
+    title: 'compass survey final',
+    description: 'Official Kerala PSC study notes on Compass Surveying, Prismatic & Surveyor Compass, bearing conversions, and local attraction.',
     readTime: '25 mins read',
-    thumbnail: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80',
-    pdfNotesUrl: '/sample-notes.pdf',
-    pdfNotesTitle: 'Chain_Surveying_Complete_Formula_Sheet.pdf',
-    pdfSize: '2.4 MB PDF',
+    thumbnail: 'https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=800&q=80',
+    pdfNotesUrl: '/notes/compass-survey-final.pdf',
+    pdfNotesTitle: 'compass survey final.pdf',
+    pdfSize: '218 KB PDF',
     chapterOverview: [
-      'Classification of Surveys (Plane vs Geodetic Surveying)',
-      'Primary Principle: Working from whole to part to prevent error accumulation',
-      'Standard lengths of Metric Chains (20m with 100 links, 30m with 150 links, each link = 20cm)',
-      'Gunter Chain (66 ft, 100 links), Engineer Chain (100 ft), Revenue Chain (33 ft, 16 links)',
-      'Systematic Corrections: Temperature (Ct), Pull (Cp), Sag (Cs), Slope (Ch)'
+      'Prismatic Compass vs Surveyor Compass comparison',
+      'Whole Circle Bearing (WCB) to Quadrantal Bearing (QB) conversion',
+      'Local Attraction detection and elimination',
+      'Magnetic Declination and calculation of True Bearings'
     ],
     takeaways: [
-      'Length of 20m & 30m metric chain tallies distribution at every 5 metres',
-      'Correction for pull: Cp = (P - Po)L / (A x E)',
-      'Sag correction is always subtractive (-ve): Cs = (W² L) / (24 P²)',
-      'Standard stepping method used for sloping ground'
+      'FB ~ BB = 180° for an unaffected line',
+      'Prismatic compass graduated ring is fixed to the needle and reads from South',
+      'Agonic line connects points of zero magnetic declination'
     ],
     order: 1,
     isFreePreview: true,
-    downloadsCount: 1420,
-    uploadedAt: '2026-08-10'
+    downloadsCount: 2150,
+    uploadedAt: '2026-08-30'
   },
   {
-    id: 'note-2',
+    id: 'note-desk-doc1',
     moduleId: 'mod-2',
-    title: 'Compass Surveying & Local Attraction Elimination Notes',
-    titleMalayalam: 'പ്രിസ്മാറ്റിക് കോമ്പസ് & ലോക്കൽ അട്രാക്ഷൻ ട്രിക്ക്സ്',
-    description: 'Learn the foolproof 2-minute method to detect and eliminate Local Attraction in Closed Traverse without confusing plus/minus signs.',
-    readTime: '20 mins read',
-    thumbnail: 'https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=800&q=80',
-    pdfNotesUrl: '/sample-notes.pdf',
-    pdfNotesTitle: 'Compass_Traverse_Local_Attraction_Solved_Problems.pdf',
-    pdfSize: '3.1 MB PDF',
+    title: 'Document1',
+    description: 'Comprehensive study notes on Chain Surveying, linear measurements, direct methods, ranging, and field corrections.',
+    readTime: '30 mins read',
+    thumbnail: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80',
+    pdfNotesUrl: '/notes/Document1.pdf',
+    pdfNotesTitle: 'Document1.pdf',
+    pdfSize: '252 KB PDF',
     chapterOverview: [
-      'Prismatic Compass vs Surveyor Compass detailed comparison table',
-      'Whole Circle Bearing (WCB 0° to 360°) vs Quadrantal Bearing (QB 0° to 90°)',
-      'Magnetic Declination: True Bearing = Magnetic Bearing ± Declination (+ for East, - for West)',
-      'Agonic Line (Zero Declination) vs Isogonic Line (Equal Declination)',
-      'Aclinic Line (Zero Dip / Magnetic Equator) vs Isoclinic Line (Equal Dip)'
+      'Linear measurements & direct chaining methods',
+      'Ranging rods, arrows, pegs and measuring instruments',
+      'Chaining on sloping ground: Stepping method and Hypotenusal allowance',
+      'Standard corrections: Temperature, Pull, Sag, and Slope'
     ],
     takeaways: [
-      'Difference between FB and BB must be exactly 180° for an unaffected line',
-      'Prismatic compass reads WCB (0° to 360° clockwise from South via prism)',
-      'Surveyor compass reads QB (Quadrantal Bearing) directly with fixed needle'
+      'Sag correction is always subtractive (-ve)',
+      'Metric chains: 20m (100 links) and 30m (150 links), 20cm per link',
+      'Working from whole to part prevents accumulation of errors'
     ],
     order: 2,
     isFreePreview: true,
-    downloadsCount: 1890,
-    uploadedAt: '2026-08-12'
+    downloadsCount: 1840,
+    uploadedAt: '2026-08-30'
   },
   {
-    id: 'note-3',
-    moduleId: 'mod-3',
-    title: 'Levelling Field Book & Inverted Staff Calculations Summary',
-    titleMalayalam: 'ലെവലിംഗ് ഫീൽഡ് ബുക്ക് കാൽക്കുലേഷൻ & ഇൻവേർട്ടഡ് സ്റ്റാഫ്',
-    description: 'Solve any Levelling table within 60 seconds. Special focus on Inverted Staff Readings (used for ceiling/bridge soffit) and arithmetical checks.',
+    id: 'note-desk-plane-table',
+    moduleId: 'mod-4',
+    title: 'plane table',
+    description: 'Official lecture notes on Plane Table Surveying instruments, orientation, radiation, intersection, and resection methods.',
+    readTime: '20 mins read',
+    thumbnail: 'https://images.unsplash.com/photo-1450133064473-71024230f91b?auto=format&fit=crop&w=800&q=80',
+    pdfNotesUrl: '/notes/plane-table.pdf',
+    pdfNotesTitle: 'plane table.pdf',
+    pdfSize: '168 KB PDF',
+    chapterOverview: [
+      'Plane table accessories: Alidade, Trough Compass, Plumbing Fork with Plumb bob, Spirit Level',
+      'Setting up: Centering, Levelling, Orientation (by Magnetic Needle & Backsighting)',
+      'Methods of Plane Tabling: Radiation, Intersection, Traversing, Resection',
+      'Two-point and Three-point problems (Lehmann\'s method)'
+    ],
+    takeaways: [
+      'Graphical method where fieldwork and plotting are done simultaneously',
+      'Intersection method is ideal for inaccessible points like river banks or hills',
+      'Orientation is the most critical operation in plane tabling'
+    ],
+    order: 3,
+    isFreePreview: true,
+    downloadsCount: 1620,
+    uploadedAt: '2026-08-30'
+  },
+  {
+    id: 'note-desk-theodolite',
+    moduleId: 'mod-6',
+    title: 'theodolite final',
+    description: 'Official lecture notes on Transit Theodolite, temporary & permanent adjustments, horizontal and vertical angle measurement.',
+    readTime: '25 mins read',
+    thumbnail: 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=800&q=80',
+    pdfNotesUrl: '/notes/theodolite-final.pdf',
+    pdfNotesTitle: 'theodolite final.pdf',
+    pdfSize: '115 KB PDF',
+    chapterOverview: [
+      'Main parts of transit theodolite: Vernier plates, telescope, trunnion axis, levelling head',
+      'Temporary adjustments: Setting over station, Levelling up, Elimination of parallax',
+      'Methods of measuring horizontal angles: Repetition and Reiteration',
+      'Face Left & Face Right observations and index error elimination'
+    ],
+    takeaways: [
+      'Least count of transit theodolite is 20 seconds (20")',
+      'Upper plate is attached to the inner solid spindle',
+      'Plunging / Transiting rotates telescope 180° in a vertical plane'
+    ],
+    order: 4,
+    isFreePreview: true,
+    downloadsCount: 1980,
+    uploadedAt: '2026-08-30'
+  },
+  {
+    id: 'note-desk-traversing',
+    moduleId: 'mod-6',
+    title: 'traversing',
+    description: 'In-depth notes on closed & open traversing, consecutive coordinates, Gale\'s traverse table, and Bowditch adjustments.',
+    readTime: '20 mins read',
+    thumbnail: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=800&q=80',
+    pdfNotesUrl: '/notes/traversing.pdf',
+    pdfNotesTitle: 'traversing.pdf',
+    pdfSize: '144 KB PDF',
+    chapterOverview: [
+      'Closed traverse vs Open traverse checks',
+      'Sum of interior angles = (2n - 4) x 90°, exterior angles = (2n + 4) x 90°',
+      'Consecutive coordinates (Latitude L cos θ, Departure L sin θ)',
+      'Closing error formula e = √(ΣL² + ΣD²), Bowditch and Transit adjustment rules'
+    ],
+    takeaways: [
+      'Latitude is positive in North, Departure is positive in East',
+      'Bowditch\'s rule assumes linear and angular measurements have equal precision',
+      'Transit rule is used when angular measurements are more precise than linear'
+    ],
+    order: 5,
+    isFreePreview: true,
+    downloadsCount: 1750,
+    uploadedAt: '2026-08-30'
+  },
+  {
+    id: 'note-5',
+    moduleId: 'mod-5',
+    title: 'Levelling, Contouring & RL Calculations',
+    description: 'Dumpy level, Auto level, Rise and Fall method, Height of Instrument (HI) method, curvature and refraction corrections.',
     readTime: '30 mins read',
     thumbnail: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=800&q=80',
     pdfNotesUrl: '/sample-notes.pdf',
-    pdfNotesTitle: 'Levelling_Master_Handwritten_Notes.pdf',
-    pdfSize: '4.5 MB PDF',
+    pdfNotesTitle: 'Levelling_and_Contouring_Formulas.pdf',
+    pdfSize: '3.2 MB PDF',
     chapterOverview: [
       'Height of Instrument (HI) Method vs Rise and Fall Method',
       'Inverted Staff Reading principle for bridge soffits & building roofs',
       'Earth Curvature Correction: Cc = 0.0785 d² (subtract)',
-      'Atmospheric Refraction Correction: Cr = 0.0112 d² (add)',
       'Combined Correction: C = 0.0673 d² (subtract), Distance to Horizon: d = 3.855 √h'
     ],
     takeaways: [
@@ -190,102 +261,42 @@ export const INITIAL_STUDY_NOTES: StudyNote[] = [
       'Arithmetical check: ΣBS - ΣFS = ΣRise - ΣFall = Last RL - First RL',
       'Reciprocal levelling eliminates collimation error, curvature error & atmospheric refraction error'
     ],
-    order: 3,
-    isFreePreview: false,
-    downloadsCount: 960,
-    uploadedAt: '2026-08-14'
-  },
-  {
-    id: 'note-4',
-    moduleId: 'mod-4',
-    title: 'Theodolite Adjustments, Tacheometry & Curve Formulas',
-    titleMalayalam: 'തിയോഡലൈറ്റ് അഡ്ജസ്റ്റ്മെന്റുകൾ & ആംഗിൾ മെഷർമെന്റ്',
-    description: 'Detailed practical walk-through of theodolite axes relations, elimination of index error, repetition method for single angle, reiteration for multiple angles.',
-    readTime: '25 mins read',
-    thumbnail: 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=800&q=80',
-    pdfNotesUrl: '/sample-notes.pdf',
-    pdfNotesTitle: 'Theodolite_Fundamental_Lines_Relationships.pdf',
-    pdfSize: '1.8 MB PDF',
-    chapterOverview: [
-      'Fundamental Lines of Theodolite and their perpendicularity relations',
-      'Repetition method (precision for single angle) vs Reiteration method (angles around station)',
-      'Stadia Tacheometry: D = k·s + c (where k = 100, c = 0 for anallatic lens)',
-      'Simple Circular Curves: Radius R, Tangent length T = R tan(Δ/2), Length of curve L = π R Δ / 180°'
-    ],
-    takeaways: [
-      'Face Left & Face Right observations eliminate collimation error and horizontal axis index error',
-      'Plate level axis must be perpendicular to vertical axis',
-      'Stadia constants: Multiplying constant k = 100, Additive constant c = 0 for anallatic lens'
-    ],
-    order: 4,
-    isFreePreview: false,
-    downloadsCount: 820,
-    uploadedAt: '2026-08-17'
-  },
-  {
-    id: 'note-5',
-    moduleId: 'mod-5',
-    title: 'Total Station, EDM Principles & DGPS for Kerala Resurvey',
-    titleMalayalam: 'ടോട്ടൽ സ്റ്റേഷൻ & കേരള ഡിജിറ്റൽ റീസർവേ സാങ്കേതികവിദ്യ',
-    description: 'Understand EDM carrier waves, Phase shift method, Total Station coordinate computation (Easting, Northing, Elevation), Prism offsets, and CORS DGPS network used in Kerala Ente Bhoomi project.',
-    readTime: '30 mins read',
-    thumbnail: 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?auto=format&fit=crop&w=800&q=80',
-    pdfNotesUrl: '/sample-notes.pdf',
-    pdfNotesTitle: 'Total_Station_DGPS_Kerala_Resurvey_Guide.pdf',
-    pdfSize: '5.2 MB PDF',
-    chapterOverview: [
-      'Components of Electronic Total Station (ETS)',
-      'EDM Carrier Frequencies: Infrared (IR) lasers and visible spectrum',
-      'Atmospheric Correction (PPM) for temperature and pressure changes',
-      'Differential GPS (DGPS) & Real Time Kinematic (RTK) Rover operations',
-      'Kerala CORS Network setup for the digital resurvey project'
-    ],
-    takeaways: [
-      'Total Station integrates electronic theodolite + EDM + microprocessor',
-      'Prism constant correction is typically -30mm or 0mm',
-      'CORS (Continuously Operating Reference Station) gives centimetre-level real-time accuracy',
-      'Kerala Digital Resurvey utilizes RTK rover + Drone Survey + ETS'
-    ],
-    order: 5,
-    isFreePreview: false,
-    downloadsCount: 1150,
-    uploadedAt: '2026-08-20'
-  },
-  {
-    id: 'note-6',
-    moduleId: 'mod-6',
-    title: 'Kerala Survey & Boundaries Act 1961 & Land Records (FMB, Thandaper)',
-    titleMalayalam: 'കേരള സർവേ & അതിരടയാള നിയമം 1961 - സുപ്രധാന വകുപ്പുകൾ',
-    description: 'Direct high-scoring session on Section 6 (Notification), Section 9 (Notice to record boundaries), Section 13 (Completion of survey), FMB ladder reading, and survey stones specifications.',
-    readTime: '35 mins read',
-    thumbnail: 'https://images.unsplash.com/photo-1450133064473-71024230f91b?auto=format&fit=crop&w=800&q=80',
-    pdfNotesUrl: '/sample-notes.pdf',
-    pdfNotesTitle: 'Kerala_Survey_Boundaries_Act_1961_Key_Sections.pdf',
-    pdfSize: '3.7 MB PDF',
-    chapterOverview: [
-      'Section 6: Government notification regarding commencement of survey',
-      'Section 9: Notice requiring attendance and clearing of boundaries by landholders',
-      'Section 10: Determination of disputed boundaries',
-      'Section 13: Official notification of completion of survey',
-      'Field Measurement Book (FMB): G-line, F-line, offset ladder & subdivision lines'
-    ],
-    takeaways: [
-      'Section 6: Notification regarding commencement of survey',
-      'Section 9: Notice to registered owners to clear boundaries',
-      'Section 13: Final notification on completion of survey',
-      'FMB contains G-line, F-line, offset ladder, and sub-division measurements'
-    ],
     order: 6,
     isFreePreview: true,
-    downloadsCount: 2450,
-    uploadedAt: '2026-08-22'
+    downloadsCount: 1450,
+    uploadedAt: '2026-08-20'
   },
   {
     id: 'note-7',
     moduleId: 'mod-7',
-    title: 'AutoCad Commands, Scales & Map Projections for Kerala PSC',
-    titleMalayalam: 'ഓട്ടോകോഡ് കമാൻഡുകൾ & സ്കെയിലുകൾ PSC ചോദ്യങ്ങൾ',
-    description: 'Frequently repeated AutoCad questions in Kerala PSC: OSNAP, LIMITS, ZOOM, PLINE, HATCH, OFFSET, scale factor, Representative Fraction (RF) calculations.',
+    title: 'Modern Survey Instruments (Total Station, GPS & DGPS)',
+    description: 'Understand EDM carrier waves, Phase shift method, Total Station coordinate computation, Prism offsets, and CORS DGPS network.',
+    readTime: '30 mins read',
+    thumbnail: 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?auto=format&fit=crop&w=800&q=80',
+    pdfNotesUrl: '/sample-notes.pdf',
+    pdfNotesTitle: 'Modern_Survey_Instruments_Total_Station_GPS.pdf',
+    pdfSize: '4.1 MB PDF',
+    chapterOverview: [
+      'Components of Electronic Total Station (ETS)',
+      'EDM Carrier Frequencies: Infrared (IR) lasers and visible spectrum',
+      'Atmospheric Correction (PPM) for temperature and pressure changes',
+      'Differential GPS (DGPS) & Real Time Kinematic (RTK) Rover operations'
+    ],
+    takeaways: [
+      'Total Station integrates electronic theodolite + EDM + microprocessor',
+      'Prism constant correction is typically -30mm or 0mm',
+      'CORS (Continuously Operating Reference Station) gives centimetre-level real-time accuracy'
+    ],
+    order: 7,
+    isFreePreview: true,
+    downloadsCount: 1250,
+    uploadedAt: '2026-08-22'
+  },
+  {
+    id: 'note-8',
+    moduleId: 'mod-8',
+    title: 'AutoCAD Commands, Scales & Map Projections',
+    description: 'AutoCad commands for Kerala PSC: OSNAP, LIMITS, ZOOM, PLINE, HATCH, OFFSET, scale factor, Representative Fraction (RF) calculations.',
     readTime: '20 mins read',
     thumbnail: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=800&q=80',
     pdfNotesUrl: '/sample-notes.pdf',
@@ -300,40 +311,12 @@ export const INITIAL_STUDY_NOTES: StudyNote[] = [
     takeaways: [
       'Representative Fraction RF = Map Distance / Ground Distance (same units)',
       'Shrunk Scale = Original Scale x Shrinkage Factor',
-      'Diagonal Scale can measure three dimensions (e.g., metre, decimetre, centimetre)',
       'Standard Cad format extension: .DWG, exchange format: .DXF'
     ],
-    order: 7,
-    isFreePreview: false,
-    downloadsCount: 710,
-    uploadedAt: '2026-08-23'
-  },
-  {
-    id: 'note-8',
-    moduleId: 'mod-8',
-    title: 'Kerala Water Authority (KWA) Technical Surveying & Alignment Secrets',
-    titleMalayalam: 'KWA ഓവർസിയർ / സർവേയർ പരീക്ഷാ തന്ത്രങ്ങൾ',
-    description: 'Special strategies for KWA examinations: Pipeline gradient surveys, inverted siphons, bench mark transfers across rivers, pressure heads, and water distribution layout plotting.',
-    readTime: '25 mins read',
-    thumbnail: 'https://images.unsplash.com/photo-1584467735815-f778f274e296?auto=format&fit=crop&w=800&q=80',
-    pdfNotesUrl: '/sample-notes.pdf',
-    pdfNotesTitle: 'KWA_Technical_Handwritten_Formula_Sheet.pdf',
-    pdfSize: '3.9 MB PDF',
-    chapterOverview: [
-      'Hydraulic Gradient Line (HGL) vs Total Energy Line (TEL)',
-      'Invert Level calculations and trench excavation gradient control',
-      'Reciprocal levelling for river crossings and pipeline benchmarks',
-      'Minimum cover over water supply pipes (1.0m under vehicular roads)'
-    ],
-    takeaways: [
-      'Reciprocal levelling eliminates collimation error, curvature error & atmospheric refraction error across rivers',
-      'Bed slope calculations: s = (RL1 - RL2) / Distance',
-      'Top repeated numerical questions from previous KWA exams'
-    ],
     order: 8,
-    isFreePreview: false,
-    downloadsCount: 1680,
-    uploadedAt: '2026-08-24'
+    isFreePreview: true,
+    downloadsCount: 980,
+    uploadedAt: '2026-08-23'
   }
 ];
 

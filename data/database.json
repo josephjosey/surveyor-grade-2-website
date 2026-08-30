@@ -103,6 +103,136 @@
   ],
   "studyNotes": [
     {
+      "id": "note-desk-compass",
+      "moduleId": "mod-3",
+      "title": "compass survey final",
+      "description": "Official Kerala PSC study notes on Compass Surveying, Prismatic & Surveyor Compass, bearing conversions, and local attraction.",
+      "readTime": "25 mins read",
+      "thumbnail": "https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=800&q=80",
+      "pdfNotesUrl": "/notes/compass-survey-final.pdf",
+      "pdfNotesTitle": "compass survey final.pdf",
+      "pdfSize": "218 KB PDF",
+      "chapterOverview": [
+        "Prismatic Compass vs Surveyor Compass comparison",
+        "Whole Circle Bearing (WCB) to Quadrantal Bearing (QB) conversion",
+        "Local Attraction detection and elimination",
+        "Magnetic Declination and calculation of True Bearings"
+      ],
+      "takeaways": [
+        "FB ~ BB = 180° for an unaffected line",
+        "Prismatic compass graduated ring is fixed to the needle and reads from South",
+        "Agonic line connects points of zero magnetic declination"
+      ],
+      "order": 1,
+      "isFreePreview": true,
+      "downloadsCount": 2150,
+      "uploadedAt": "2026-08-30"
+    },
+    {
+      "id": "note-desk-doc1",
+      "moduleId": "mod-2",
+      "title": "Document1",
+      "description": "Comprehensive study notes on Chain Surveying, linear measurements, direct methods, ranging, and field corrections.",
+      "readTime": "30 mins read",
+      "thumbnail": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80",
+      "pdfNotesUrl": "/notes/Document1.pdf",
+      "pdfNotesTitle": "Document1.pdf",
+      "pdfSize": "252 KB PDF",
+      "chapterOverview": [
+        "Linear measurements & direct chaining methods",
+        "Ranging rods, arrows, pegs and measuring instruments",
+        "Chaining on sloping ground: Stepping method and Hypotenusal allowance",
+        "Standard corrections: Temperature, Pull, Sag, and Slope"
+      ],
+      "takeaways": [
+        "Sag correction is always subtractive (-ve)",
+        "Metric chains: 20m (100 links) and 30m (150 links), 20cm per link",
+        "Working from whole to part prevents accumulation of errors"
+      ],
+      "order": 2,
+      "isFreePreview": true,
+      "downloadsCount": 1840,
+      "uploadedAt": "2026-08-30"
+    },
+    {
+      "id": "note-desk-plane-table",
+      "moduleId": "mod-4",
+      "title": "plane table",
+      "description": "Official lecture notes on Plane Table Surveying instruments, orientation, radiation, intersection, and resection methods.",
+      "readTime": "20 mins read",
+      "thumbnail": "https://images.unsplash.com/photo-1450133064473-71024230f91b?auto=format&fit=crop&w=800&q=80",
+      "pdfNotesUrl": "/notes/plane-table.pdf",
+      "pdfNotesTitle": "plane table.pdf",
+      "pdfSize": "168 KB PDF",
+      "chapterOverview": [
+        "Plane table accessories: Alidade, Trough Compass, Plumbing Fork with Plumb bob, Spirit Level",
+        "Setting up: Centering, Levelling, Orientation (by Magnetic Needle & Backsighting)",
+        "Methods of Plane Tabling: Radiation, Intersection, Traversing, Resection",
+        "Two-point and Three-point problems (Lehmann's method)"
+      ],
+      "takeaways": [
+        "Graphical method where fieldwork and plotting are done simultaneously",
+        "Intersection method is ideal for inaccessible points like river banks or hills",
+        "Orientation is the most critical operation in plane tabling"
+      ],
+      "order": 3,
+      "isFreePreview": true,
+      "downloadsCount": 1620,
+      "uploadedAt": "2026-08-30"
+    },
+    {
+      "id": "note-desk-theodolite",
+      "moduleId": "mod-6",
+      "title": "theodolite final",
+      "description": "Official lecture notes on Transit Theodolite, temporary & permanent adjustments, horizontal and vertical angle measurement.",
+      "readTime": "25 mins read",
+      "thumbnail": "https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=800&q=80",
+      "pdfNotesUrl": "/notes/theodolite-final.pdf",
+      "pdfNotesTitle": "theodolite final.pdf",
+      "pdfSize": "115 KB PDF",
+      "chapterOverview": [
+        "Main parts of transit theodolite: Vernier plates, telescope, trunnion axis, levelling head",
+        "Temporary adjustments: Setting over station, Levelling up, Elimination of parallax",
+        "Methods of measuring horizontal angles: Repetition and Reiteration",
+        "Face Left & Face Right observations and index error elimination"
+      ],
+      "takeaways": [
+        "Least count of transit theodolite is 20 seconds (20\")",
+        "Upper plate is attached to the inner solid spindle",
+        "Plunging / Transiting rotates telescope 180° in a vertical plane"
+      ],
+      "order": 4,
+      "isFreePreview": true,
+      "downloadsCount": 1980,
+      "uploadedAt": "2026-08-30"
+    },
+    {
+      "id": "note-desk-traversing",
+      "moduleId": "mod-6",
+      "title": "traversing",
+      "description": "In-depth notes on closed & open traversing, consecutive coordinates, Gale's traverse table, and Bowditch adjustments.",
+      "readTime": "20 mins read",
+      "thumbnail": "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=800&q=80",
+      "pdfNotesUrl": "/notes/traversing.pdf",
+      "pdfNotesTitle": "traversing.pdf",
+      "pdfSize": "144 KB PDF",
+      "chapterOverview": [
+        "Closed traverse vs Open traverse checks",
+        "Sum of interior angles = (2n - 4) x 90°, exterior angles = (2n + 4) x 90°",
+        "Consecutive coordinates (Latitude L cos θ, Departure L sin θ)",
+        "Closing error formula e = √(ΣL² + ΣD²), Bowditch and Transit adjustment rules"
+      ],
+      "takeaways": [
+        "Latitude is positive in North, Departure is positive in East",
+        "Bowditch's rule assumes linear and angular measurements have equal precision",
+        "Transit rule is used when angular measurements are more precise than linear"
+      ],
+      "order": 5,
+      "isFreePreview": true,
+      "downloadsCount": 1750,
+      "uploadedAt": "2026-08-30"
+    },
+    {
       "id": "note-5",
       "moduleId": "mod-5",
       "title": "Total Station, EDM Principles & DGPS for Kerala Resurvey",
@@ -8188,5 +8318,5 @@
       "subscriptionPlan": "free"
     }
   ],
-  "lastUpdated": "2026-08-27T19:03:52.310Z"
+  "lastUpdated": "2026-08-30T10:30:20.144Z"
 }
