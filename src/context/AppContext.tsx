@@ -135,6 +135,15 @@ export const isDummyCandidate = (_name?: string, _id?: string): boolean => {
   return false;
 };
 
+// Safe LocalStorage helper that never crashes on quota limits and is available before component initialization
+export const safeSetItem = (key: string, val: any) => {
+  try {
+    localStorage.setItem(key, JSON.stringify(val));
+  } catch (e) {
+    console.warn(`LocalStorage quota reached for ${key}. Data is safely stored in persistent disk database.`);
+  }
+};
+
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User>(() => {
     const saved = localStorage.getItem('survey_academy_user');
@@ -301,14 +310,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [notifications, setNotifications] = useState<ToastNotification[]>([]);
   const [isDiskLoaded, setIsDiskLoaded] = useState<boolean>(false);
 
-  // Safe LocalStorage helper that never crashes on quota limits
-  const safeSetItem = (key: string, val: any) => {
-    try {
-      localStorage.setItem(key, JSON.stringify(val));
-    } catch (e) {
-      console.warn(`LocalStorage quota reached for ${key}. Data is safely stored in persistent disk database.`);
-    }
-  };
 
   // 1. Initial Load: Fetch from persistent server disk (data/database.json)
   useEffect(() => {
