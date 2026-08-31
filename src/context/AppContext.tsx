@@ -417,8 +417,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             const combined = [...cleanCloudAttempts];
             const existingIds = new Set(cleanCloudAttempts.map((a) => a.id));
             for (const item of prev) {
-              if (!existingIds.has(item.id) && !isDummyCandidate(item.userName, item.id)) {
-                combined.push(item);
+              if (!existingIds.has(item.id)) {
+                // Keep simulated/dummy student attempts, or attempts belonging to the currently logged in user
+                const isSimulated = item.id?.startsWith('att-sim-') || item.userId?.startsWith('std-sim-');
+                const isCurrentUser = currentUser && item.userId === currentUser.id;
+                if (isSimulated || isCurrentUser) {
+                  combined.push(item);
+                }
               }
             }
             safeSetItem('survey_academy_attempts', combined);
