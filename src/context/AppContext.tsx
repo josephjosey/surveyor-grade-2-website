@@ -191,66 +191,100 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return INITIAL_MODULES;
   });
 
+  // Helpers to persist and query explicitly deleted IDs across app sessions
+  const getDeletedIds = (key: string): Set<string> => {
+    try {
+      const saved = localStorage.getItem(key);
+      return saved ? new Set(JSON.parse(saved)) : new Set<string>();
+    } catch (e) {
+      return new Set<string>();
+    }
+  };
+
+  const addDeletedId = (key: string, id: string) => {
+    try {
+      const set = getDeletedIds(key);
+      set.add(id);
+      safeSetItem(key, Array.from(set));
+    } catch (e) {}
+  };
+
   const [studyNotes, setStudyNotes] = useState<StudyNote[]>(() => {
+    const deletedIds = getDeletedIds('survey_academy_deleted_notes');
     const saved = localStorage.getItem('survey_academy_notes');
     if (saved) {
       try {
         const parsed = JSON.parse(saved) as StudyNote[];
         if (parsed && parsed.length > 0) {
-          const cleaned = parsed.map((note) => {
-            if (!note.pdfNotesUrl || note.pdfNotesUrl.startsWith('blob:') || note.pdfNotesUrl.includes('example.com')) {
-              return {
-                ...note,
-                pdfNotesUrl: '/sample-notes.pdf'
-              };
-            }
-            return note;
-          });
+          const cleaned = parsed
+            .filter((n) => !deletedIds.has(n.id))
+            .map((note) => {
+              if (!note.pdfNotesUrl || note.pdfNotesUrl.startsWith('blob:') || note.pdfNotesUrl.includes('example.com')) {
+                return {
+                  ...note,
+                  pdfNotesUrl: '/sample-notes.pdf'
+                };
+              }
+              return note;
+            });
           const existingIds = new Set(cleaned.map((n) => n.id));
-          const missing = INITIAL_STUDY_NOTES.filter((n) => !existingIds.has(n.id));
+          const missing = INITIAL_STUDY_NOTES.filter((n) => !existingIds.has(n.id) && !deletedIds.has(n.id));
           const combined = [...cleaned, ...missing];
           safeSetItem('survey_academy_notes', combined);
           return combined;
         }
       } catch (e) {
-        return INITIAL_STUDY_NOTES;
+        return INITIAL_STUDY_NOTES.filter((n) => !deletedIds.has(n.id));
       }
     }
-    safeSetItem('survey_academy_notes', INITIAL_STUDY_NOTES);
-    return INITIAL_STUDY_NOTES;
+    const initialClean = INITIAL_STUDY_NOTES.filter((n) => !deletedIds.has(n.id));
+    safeSetItem('survey_academy_notes', initialClean);
+    return initialClean;
   });
 
   const [pyqPapers, setPyqPapers] = useState<PYQPaper[]>(() => {
+    const deletedIds = getDeletedIds('survey_academy_deleted_pyqs');
     const saved = localStorage.getItem('survey_academy_pyqs');
-    return saved ? JSON.parse(saved) : INITIAL_PYQ_PAPERS;
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved) as PYQPaper[];
+        return parsed.filter((p) => !deletedIds.has(p.id));
+      } catch (e) {}
+    }
+    return INITIAL_PYQ_PAPERS.filter((p) => !deletedIds.has(p.id));
   });
 
   const [bankQuestions, setBankQuestions] = useState<BankQuestion[]>(() => {
+    const deletedIds = getDeletedIds('survey_academy_deleted_bank_questions');
     const saved = localStorage.getItem('survey_academy_bank_questions');
     if (saved) {
       try {
         const parsed = JSON.parse(saved) as BankQuestion[];
-        const existingIds = new Set(parsed.map((q) => q.id));
-        const missing = INITIAL_BANK_QUESTIONS.filter((q) => !existingIds.has(q.id));
-        const combined = [...parsed, ...missing];
+        const filtered = parsed.filter((q) => !deletedIds.has(q.id));
+        const existingIds = new Set(filtered.map((q) => q.id));
+        const missing = INITIAL_BANK_QUESTIONS.filter((q) => !existingIds.has(q.id) && !deletedIds.has(q.id));
+        const combined = [...filtered, ...missing];
         safeSetItem('survey_academy_bank_questions', combined);
         return combined;
       } catch (e) {
-        return INITIAL_BANK_QUESTIONS;
+        return INITIAL_BANK_QUESTIONS.filter((q) => !deletedIds.has(q.id));
       }
     }
-    safeSetItem('survey_academy_bank_questions', INITIAL_BANK_QUESTIONS);
-    return INITIAL_BANK_QUESTIONS;
+    const initialClean = INITIAL_BANK_QUESTIONS.filter((q) => !deletedIds.has(q.id));
+    safeSetItem('survey_academy_bank_questions', initialClean);
+    return initialClean;
   });
 
   const [mockTests, setMockTests] = useState<MockTest[]>(() => {
+    const deletedIds = getDeletedIds('survey_academy_deleted_tests');
     const saved = localStorage.getItem('survey_academy_tests');
     if (saved) {
       try {
         const parsed = JSON.parse(saved) as MockTest[];
-        const existingIds = new Set(parsed.map((t) => t.id));
-        const missing = INITIAL_MOCK_TESTS.filter((t) => !existingIds.has(t.id));
-        const combined = [...parsed, ...missing];
+        const filtered = parsed.filter((t) => !deletedIds.has(t.id));
+        const existingIds = new Set(filtered.map((t) => t.id));
+        const missing = INITIAL_MOCK_TESTS.filter((t) => !existingIds.has(t.id) && !deletedIds.has(t.id));
+        const combined = [...filtered, ...missing];
         const enriched = combined.map((t) => {
           const initMatch = INITIAL_MOCK_TESTS.find((it) => it.id === t.id);
           if (initMatch && (!t.questions || t.questions.length === 0)) {
@@ -261,10 +295,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         safeSetItem('survey_academy_tests', enriched);
         return enriched;
       } catch (e) {
-        return INITIAL_MOCK_TESTS;
+        return INITIAL_MOCK_TESTS.filter((t) => !deletedIds.has(t.id));
       }
     }
-    return INITIAL_MOCK_TESTS;
+    const initialClean = INITIAL_MOCK_TESTS.filter((t) => !deletedIds.has(t.id));
+    return initialClean;
   });
 
   const [testAttempts, setTestAttempts] = useState<MockTestAttempt[]>(() => {
@@ -325,27 +360,41 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           safeSetItem('survey_academy_modules', INITIAL_MODULES);
         }
         if (diskData.studyNotes && diskData.studyNotes.length > 0) {
-          const existingIds = new Set(diskData.studyNotes.map((n: any) => n.id));
-          const missing = INITIAL_STUDY_NOTES.filter((n) => !existingIds.has(n.id));
-          const combined = [...diskData.studyNotes, ...missing];
+          const deletedIds = getDeletedIds('survey_academy_deleted_notes');
+          const cleanNotes = diskData.studyNotes.filter((n: any) => !deletedIds.has(n.id));
+          const existingIds = new Set(cleanNotes.map((n: any) => n.id));
+          const missing = INITIAL_STUDY_NOTES.filter((n) => !existingIds.has(n.id) && !deletedIds.has(n.id));
+          const combined = [...cleanNotes, ...missing];
           setStudyNotes(combined);
           safeSetItem('survey_academy_notes', combined);
         } else {
-          setStudyNotes(INITIAL_STUDY_NOTES);
-          safeSetItem('survey_academy_notes', INITIAL_STUDY_NOTES);
+          const deletedIds = getDeletedIds('survey_academy_deleted_notes');
+          const cleanInit = INITIAL_STUDY_NOTES.filter((n) => !deletedIds.has(n.id));
+          setStudyNotes(cleanInit);
+          safeSetItem('survey_academy_notes', cleanInit);
         }
         if (diskData.bankQuestions && diskData.bankQuestions.length > 0) {
-          const existingIds = new Set(diskData.bankQuestions.map((q: any) => q.id));
-          const missing = INITIAL_BANK_QUESTIONS.filter((q) => !existingIds.has(q.id));
-          const combined = [...diskData.bankQuestions, ...missing];
+          const deletedIds = getDeletedIds('survey_academy_deleted_bank_questions');
+          const cleanQuestions = diskData.bankQuestions.filter((q: any) => !deletedIds.has(q.id));
+          const existingIds = new Set(cleanQuestions.map((q: any) => q.id));
+          const missing = INITIAL_BANK_QUESTIONS.filter((q) => !existingIds.has(q.id) && !deletedIds.has(q.id));
+          const combined = [...cleanQuestions, ...missing];
           setBankQuestions(combined);
           safeSetItem('survey_academy_bank_questions', combined);
         } else {
-          setBankQuestions(INITIAL_BANK_QUESTIONS);
-          safeSetItem('survey_academy_bank_questions', INITIAL_BANK_QUESTIONS);
+          const deletedIds = getDeletedIds('survey_academy_deleted_bank_questions');
+          const cleanInit = INITIAL_BANK_QUESTIONS.filter((q) => !deletedIds.has(q.id));
+          setBankQuestions(cleanInit);
+          safeSetItem('survey_academy_bank_questions', cleanInit);
         }
-        if (diskData.pyqPapers && diskData.pyqPapers.length > 0) setPyqPapers(diskData.pyqPapers);
-        if (diskData.mockTests && diskData.mockTests.length > 0) setMockTests(diskData.mockTests);
+        if (diskData.pyqPapers && diskData.pyqPapers.length > 0) {
+          const deletedIds = getDeletedIds('survey_academy_deleted_pyqs');
+          setPyqPapers(diskData.pyqPapers.filter((p: any) => !deletedIds.has(p.id)));
+        }
+        if (diskData.mockTests && diskData.mockTests.length > 0) {
+          const deletedIds = getDeletedIds('survey_academy_deleted_tests');
+          setMockTests(diskData.mockTests.filter((t: any) => !deletedIds.has(t.id)));
+        }
         if (diskData.testAttempts && diskData.testAttempts.length > 0) setTestAttempts(diskData.testAttempts);
         if (diskData.doubts && diskData.doubts.length > 0) setDoubts(diskData.doubts);
         if (diskData.students && diskData.students.length > 0) setStudents(diskData.students);
@@ -380,20 +429,24 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         ]);
 
         if (notes && notes.length > 0) {
+          const deletedIds = getDeletedIds('survey_academy_deleted_notes');
           setStudyNotes((prev) => {
-            const existingIds = new Set(notes.map((n) => n.id));
-            const missing = INITIAL_STUDY_NOTES.filter((n) => !existingIds.has(n.id));
-            const combined = [...notes, ...missing];
+            const cleanNotes = notes.filter((n) => !deletedIds.has(n.id));
+            const existingIds = new Set(cleanNotes.map((n) => n.id));
+            const missing = INITIAL_STUDY_NOTES.filter((n) => !existingIds.has(n.id) && !deletedIds.has(n.id));
+            const combined = [...cleanNotes, ...missing];
             safeSetItem('survey_academy_notes', combined);
             return combined;
           });
         }
         if (tests && tests.length > 0) {
+          const deletedIds = getDeletedIds('survey_academy_deleted_tests');
           setMockTests((prev) => {
-            const combined = [...tests];
-            const existingIds = new Set(tests.map((t) => t.id));
+            const cleanTests = tests.filter((t) => !deletedIds.has(t.id));
+            const combined = [...cleanTests];
+            const existingIds = new Set(cleanTests.map((t) => t.id));
             for (const initTest of INITIAL_MOCK_TESTS) {
-              if (!existingIds.has(initTest.id)) {
+              if (!existingIds.has(initTest.id) && !deletedIds.has(initTest.id)) {
                 combined.push(initTest);
               }
             }
@@ -408,8 +461,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             return enriched;
           });
         } else {
-          setMockTests(INITIAL_MOCK_TESTS);
-          safeSetItem('survey_academy_tests', INITIAL_MOCK_TESTS);
+          const deletedIds = getDeletedIds('survey_academy_deleted_tests');
+          const cleanTests = INITIAL_MOCK_TESTS.filter((t) => !deletedIds.has(t.id));
+          setMockTests(cleanTests);
+          safeSetItem('survey_academy_tests', cleanTests);
         }
         if (attempts && attempts.length > 0) {
           const cleanCloudAttempts = attempts.filter((a) => !isDummyCandidate(a.userName, a.id));
@@ -436,7 +491,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             return combined;
           });
         }
-        if (pyqs && pyqs.length > 0) setPyqPapers(pyqs);
+        if (pyqs && pyqs.length > 0) {
+          const deletedIds = getDeletedIds('survey_academy_deleted_pyqs');
+          setPyqPapers(pyqs.filter((p) => !deletedIds.has(p.id)));
+        }
         if (doubtsList && doubtsList.length > 0) setDoubts(doubtsList);
         if (allProfiles && allProfiles.length > 0) {
           const cleanProfiles = allProfiles.filter((p) => !isDummyCandidate(p.name, p.id));
@@ -478,6 +536,86 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     // 1.55. Supabase Realtime Subscription: Instant live updates across all devices
     const realtimeChannel = supabase
       .channel('survey-live-sync')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'study_notes' },
+        async (payload) => {
+          try {
+            if (payload.eventType === 'DELETE' && payload.old?.id) {
+              const deletedId = payload.old.id;
+              addDeletedId('survey_academy_deleted_notes', deletedId);
+              setStudyNotes((prev) => {
+                const updated = prev.filter((n) => n.id !== deletedId);
+                safeSetItem('survey_academy_notes', updated);
+                return updated;
+              });
+            } else {
+              const freshNotes = await SupabaseDb.fetchStudyNotes();
+              if (freshNotes && freshNotes.length > 0) {
+                const deletedIds = getDeletedIds('survey_academy_deleted_notes');
+                const cleanNotes = freshNotes.filter((n) => !deletedIds.has(n.id));
+                const existingIds = new Set(cleanNotes.map((n) => n.id));
+                const missing = INITIAL_STUDY_NOTES.filter((n) => !existingIds.has(n.id) && !deletedIds.has(n.id));
+                const combined = [...cleanNotes, ...missing];
+                setStudyNotes(combined);
+                safeSetItem('survey_academy_notes', combined);
+              }
+            }
+          } catch (e) {
+            console.warn('Realtime study_notes sync notice:', e);
+          }
+        }
+      )
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'mock_tests' },
+        async (payload) => {
+          try {
+            if (payload.eventType === 'DELETE' && payload.old?.id) {
+              const deletedId = payload.old.id;
+              addDeletedId('survey_academy_deleted_tests', deletedId);
+              setMockTests((prev) => {
+                const updated = prev.filter((t) => t.id !== deletedId);
+                safeSetItem('survey_academy_tests', updated);
+                return updated;
+              });
+            } else {
+              const freshTests = await SupabaseDb.fetchMockTests();
+              if (freshTests && freshTests.length > 0) {
+                const deletedIds = getDeletedIds('survey_academy_deleted_tests');
+                setMockTests(freshTests.filter((t) => !deletedIds.has(t.id)));
+              }
+            }
+          } catch (e) {
+            console.warn('Realtime mock_tests sync notice:', e);
+          }
+        }
+      )
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'pyq_papers' },
+        async (payload) => {
+          try {
+            if (payload.eventType === 'DELETE' && payload.old?.id) {
+              const deletedId = payload.old.id;
+              addDeletedId('survey_academy_deleted_pyqs', deletedId);
+              setPyqPapers((prev) => {
+                const updated = prev.filter((p) => p.id !== deletedId);
+                safeSetItem('survey_academy_pyqs', updated);
+                return updated;
+              });
+            } else {
+              const freshPYQs = await SupabaseDb.fetchPYQPapers();
+              if (freshPYQs && freshPYQs.length > 0) {
+                const deletedIds = getDeletedIds('survey_academy_deleted_pyqs');
+                setPyqPapers(freshPYQs.filter((p) => !deletedIds.has(p.id)));
+              }
+            }
+          } catch (e) {
+            console.warn('Realtime pyq_papers sync notice:', e);
+          }
+        }
+      )
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'test_attempts' },
@@ -1306,11 +1444,26 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const deleteStudyNote = (noteId: string) => {
+    addDeletedId('survey_academy_deleted_notes', noteId);
     const targetNote = studyNotes.find((n) => n.id === noteId);
     if (targetNote?.pdfNotesUrl) {
       deleteUserFile(targetNote.pdfNotesUrl);
     }
-    setStudyNotes((prev) => prev.filter((n) => n.id !== noteId));
+    setStudyNotes((prev) => {
+      const updated = prev.filter((n) => n.id !== noteId);
+      safeSetItem('survey_academy_notes', updated);
+      saveDatabase({
+        modules,
+        studyNotes: updated,
+        bankQuestions,
+        pyqPapers,
+        mockTests,
+        testAttempts,
+        doubts,
+        students
+      });
+      return updated;
+    });
     SupabaseDb.deleteStudyNote(noteId);
     setCurrentUser((prev) => ({
       ...prev,
@@ -1327,7 +1480,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     if (selectedNoteId === noteId) {
       setSelectedNoteId(studyNotes.find((n) => n.id !== noteId)?.id || null);
     }
-    showToast('Study note deleted successfully', 'info');
+    showToast('Study note deleted successfully across all portals', 'info');
   };
 
   const addBankQuestion = (questionData: Omit<BankQuestion, 'id' | 'createdAt'>) => {
@@ -1355,6 +1508,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const deleteBankQuestion = (questionId: string) => {
+    addDeletedId('survey_academy_deleted_bank_questions', questionId);
     setBankQuestions((prev) => {
       const updated = prev.filter((q) => q.id !== questionId);
       safeSetItem('survey_academy_bank_questions', updated);
@@ -1405,9 +1559,24 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const deleteMockTest = (testId: string) => {
-    setMockTests((prev) => prev.filter((t) => t.id !== testId));
+    addDeletedId('survey_academy_deleted_tests', testId);
+    setMockTests((prev) => {
+      const updated = prev.filter((t) => t.id !== testId);
+      safeSetItem('survey_academy_tests', updated);
+      saveDatabase({
+        modules,
+        studyNotes,
+        bankQuestions,
+        pyqPapers,
+        mockTests: updated,
+        testAttempts,
+        doubts,
+        students
+      });
+      return updated;
+    });
     SupabaseDb.deleteMockTest(testId);
-    showToast('Mock test deleted', 'info');
+    showToast('Mock test deleted across all portals', 'info');
   };
 
   const addPYQPaper = (newPaperData: Omit<PYQPaper, 'id'>) => {
@@ -1422,6 +1591,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const deletePYQPaper = (paperId: string) => {
+    addDeletedId('survey_academy_deleted_pyqs', paperId);
     const targetPaper = pyqPapers.find((p) => p.id === paperId);
     if (targetPaper?.pdfUrl) {
       deleteUserFile(targetPaper.pdfUrl);
@@ -1429,9 +1599,23 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     if (targetPaper?.answerKeyUrl) {
       deleteUserFile(targetPaper.answerKeyUrl);
     }
-    setPyqPapers((prev) => prev.filter((p) => p.id !== paperId));
+    setPyqPapers((prev) => {
+      const updated = prev.filter((p) => p.id !== paperId);
+      safeSetItem('survey_academy_pyqs', updated);
+      saveDatabase({
+        modules,
+        studyNotes,
+        bankQuestions,
+        pyqPapers: updated,
+        mockTests,
+        testAttempts,
+        doubts,
+        students
+      });
+      return updated;
+    });
     SupabaseDb.deletePYQPaper(paperId);
-    showToast('PYQ Paper deleted', 'info');
+    showToast('PYQ Paper deleted across all portals', 'info');
   };
 
   const updatePYQQuestions = (paperId: string, questions: PYQQuestion[]) => {
