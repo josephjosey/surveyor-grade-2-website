@@ -416,13 +416,19 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           setTestAttempts((prev) => {
             const combined = [...cleanCloudAttempts];
             const existingIds = new Set(cleanCloudAttempts.map((a) => a.id));
+            for (const initAtt of INITIAL_STATEWIDE_ATTEMPTS) {
+              if (!existingIds.has(initAtt.id)) {
+                combined.push(initAtt);
+                existingIds.add(initAtt.id);
+              }
+            }
             for (const item of prev) {
               if (!existingIds.has(item.id)) {
-                // Keep simulated/dummy student attempts, or attempts belonging to the currently logged in user
                 const isSimulated = item.id?.startsWith('att-sim-') || item.userId?.startsWith('std-sim-');
                 const isCurrentUser = currentUser && item.userId === currentUser.id;
                 if (isSimulated || isCurrentUser) {
                   combined.push(item);
+                  existingIds.add(item.id);
                 }
               }
             }
@@ -434,7 +440,18 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         if (doubtsList && doubtsList.length > 0) setDoubts(doubtsList);
         if (allProfiles && allProfiles.length > 0) {
           const cleanProfiles = allProfiles.filter((p) => !isDummyCandidate(p.name, p.id));
-          setStudents(cleanProfiles);
+          setStudents((prev) => {
+            const combined = [...cleanProfiles];
+            const existingIds = new Set(cleanProfiles.map((p) => p.id));
+            for (const initStd of ENROLLED_STUDENTS_LIST) {
+              if (!existingIds.has(initStd.id)) {
+                combined.push(initStd);
+                existingIds.add(initStd.id);
+              }
+            }
+            safeSetItem('survey_academy_students', combined);
+            return combined;
+          });
           setCurrentUser((prev) => {
             const matched = cleanProfiles.find(
               (p) => p.id === prev.id || (p.email && prev.email && p.email.toLowerCase() === prev.email.toLowerCase())
@@ -457,6 +474,77 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
 
     loadSupabaseCloudData();
+
+    // 1.55. Supabase Realtime Subscription: Instant live updates across all devices
+    const realtimeChannel = supabase
+      .channel('survey-live-sync')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'test_attempts' },
+        async () => {
+          try {
+            const freshAttempts = await SupabaseDb.fetchTestAttempts();
+            if (freshAttempts && freshAttempts.length > 0) {
+              const cleanCloud = freshAttempts.filter((a) => !isDummyCandidate(a.userName, a.id));
+              setTestAttempts((prev) => {
+                const combined = [...cleanCloud];
+                const existingIds = new Set(cleanCloud.map((a) => a.id));
+                for (const initAtt of INITIAL_STATEWIDE_ATTEMPTS) {
+                  if (!existingIds.has(initAtt.id)) {
+                    combined.push(initAtt);
+                    existingIds.add(initAtt.id);
+                  }
+                }
+                for (const item of prev) {
+                  if (!existingIds.has(item.id)) {
+                    const isSimulated = item.id?.startsWith('att-sim-') || item.userId?.startsWith('std-sim-');
+                    const isCurrentUser = currentUser && item.userId === currentUser.id;
+                    if (isSimulated || isCurrentUser) {
+                      combined.push(item);
+                      existingIds.add(item.id);
+                    }
+                  }
+                }
+                safeSetItem('survey_academy_attempts', combined);
+                return combined;
+              });
+            }
+          } catch (e) {
+            console.warn('Realtime test_attempts sync notice:', e);
+          }
+        }
+      )
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'profiles' },
+        async () => {
+          try {
+            const freshProfiles = await SupabaseDb.fetchAllProfiles();
+            if (freshProfiles && freshProfiles.length > 0) {
+              const cleanProfiles = freshProfiles.filter((p) => !isDummyCandidate(p.name, p.id));
+              setStudents((prev) => {
+                const combined = [...cleanProfiles];
+                const existingIds = new Set(cleanProfiles.map((p) => p.id));
+                for (const initStd of ENROLLED_STUDENTS_LIST) {
+                  if (!existingIds.has(initStd.id)) {
+                    combined.push(initStd);
+                    existingIds.add(initStd.id);
+                  }
+                }
+                safeSetItem('survey_academy_students', combined);
+                return combined;
+              });
+            }
+          } catch (e) {
+            console.warn('Realtime profiles sync notice:', e);
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(realtimeChannel);
+    };
   }, []);
 
   // 1.6. Supabase Live Session & Profile Sync: Automatically sync Google & email accounts to currentUser
@@ -1085,7 +1173,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     );
 
     for (const att of chronological) {
-      const key = (att.userId && att.userId.trim()) || att.userName?.toLowerCase().trim();
+      const nameKey = (att.userName || '').toLowerCase().trim();
+      const uidKey = (att.userId || '').trim();
+
+      let key = uidKey || nameKey;
+      if (nameKey === 'joseph josey' || nameKey === 'mariya josey' || nameKey === 'joseph') {
+        key = nameKey;
+      }
+
       if (key && !firstAttemptsMap.has(key)) {
         firstAttemptsMap.set(key, att);
       }
