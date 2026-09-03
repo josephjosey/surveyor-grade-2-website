@@ -41,11 +41,11 @@ export const AuthPage: React.FC = () => {
   const [authSuccessMessage, setAuthSuccessMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Form Fields
-  const [email, setEmail] = useState('aswathi.surveyor@gmail.com');
-  const [password, setPassword] = useState('password123');
-  const [name, setName] = useState('Aswathi Nair');
-  const [phone, setPhone] = useState('+91 98471 23456');
+  // Form Fields - initialized to empty strings so light placeholder text is shown
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
   const [district, setDistrict] = useState('Palakkad');
   const [targetExam, setTargetExam] = useState('Kerala PSC Surveyor Gr. II');
   const [instructorPin, setInstructorPin] = useState('');
@@ -316,12 +316,12 @@ export const AuthPage: React.FC = () => {
                   </label>
                   <div className="relative">
                     <input
-                      type="email"
+                      type="text"
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="e.g. aswathi.surveyor@gmail.com"
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-slate-900 text-sm outline-none transition bg-white"
+                      placeholder="Enter your email ID or username"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-slate-900 placeholder:text-slate-400 placeholder:font-normal text-sm outline-none transition bg-white"
                     />
                   </div>
                 </div>
@@ -336,8 +336,8 @@ export const AuthPage: React.FC = () => {
                       required
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      placeholder="••••••••••"
-                      className="w-full pl-3.5 pr-10 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-slate-900 text-sm outline-none transition bg-white"
+                      placeholder="Enter your password"
+                      className="w-full pl-3.5 pr-10 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-slate-900 placeholder:text-slate-400 placeholder:font-normal text-sm outline-none transition bg-white"
                     />
                     <button
                       type="button"
@@ -419,8 +419,8 @@ export const AuthPage: React.FC = () => {
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="e.g. Rahul Varma"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-slate-900 text-sm outline-none transition bg-white"
+                    placeholder="Enter your full name"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-slate-900 placeholder:text-slate-400 placeholder:font-normal text-sm outline-none transition bg-white"
                   />
                 </div>
 
@@ -434,8 +434,8 @@ export const AuthPage: React.FC = () => {
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="you@email.com"
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-slate-900 text-sm outline-none transition bg-white"
+                      placeholder="Enter your email ID"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-slate-900 placeholder:text-slate-400 placeholder:font-normal text-sm outline-none transition bg-white"
                     />
                   </div>
                   <div>
@@ -447,8 +447,8 @@ export const AuthPage: React.FC = () => {
                       required
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
-                      placeholder="+91 98470 12345"
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-slate-900 text-sm outline-none transition bg-white"
+                      placeholder="Enter 10-digit mobile number"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-slate-900 placeholder:text-slate-400 placeholder:font-normal text-sm outline-none transition bg-white"
                     />
                   </div>
                 </div>
@@ -495,8 +495,8 @@ export const AuthPage: React.FC = () => {
                       required
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      placeholder="At least 6 characters"
-                      className="w-full pl-3.5 pr-10 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-slate-900 text-sm outline-none transition bg-white"
+                      placeholder="Create a password (min. 6 characters)"
+                      className="w-full pl-3.5 pr-10 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-slate-900 placeholder:text-slate-400 placeholder:font-normal text-sm outline-none transition bg-white"
                     />
                     <button
                       type="button"
@@ -573,8 +573,8 @@ export const AuthPage: React.FC = () => {
                       type="password"
                       value={instructorPin}
                       onChange={(e) => setInstructorPin(e.target.value)}
-                      placeholder="Enter 4-digit PIN (default: 1234)"
-                      className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-purple-600 focus:ring-2 focus:ring-purple-600/20 text-slate-900 text-sm outline-none transition bg-white"
+                      placeholder="Enter 4-digit security PIN"
+                      className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-purple-600 focus:ring-2 focus:ring-purple-600/20 text-slate-900 placeholder:text-slate-400 placeholder:font-normal text-sm outline-none transition bg-white"
                     />
                   </div>
                   <span className="text-[11px] text-slate-400 mt-1 block">Default PIN: 1234</span>

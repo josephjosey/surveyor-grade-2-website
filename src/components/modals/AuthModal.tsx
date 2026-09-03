@@ -31,12 +31,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
   const [authRole, setAuthRole] = useState<'student' | 'instructor'>(defaultRole);
 
-  // Student Fields
-  const [studentEmail, setStudentEmail] = useState('aswathi.surveyor@gmail.com');
-  const [studentPassword, setStudentPassword] = useState('••••••••');
+  // Student Fields - initialized to empty strings so light placeholder text is shown
+  const [studentEmail, setStudentEmail] = useState('');
+  const [studentPassword, setStudentPassword] = useState('');
 
   // Instructor Fields
-  const [instructorEmail, setInstructorEmail] = useState('joseph.surveyrankers@gmail.com');
+  const [instructorEmail, setInstructorEmail] = useState('');
   const [instructorPin, setInstructorPin] = useState('');
   const [pinError, setPinError] = useState(false);
 
@@ -188,15 +188,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     required
                     value={studentEmail}
                     onChange={(e) => setStudentEmail(e.target.value)}
-                    placeholder="aswathi.surveyor@gmail.com"
-                    className="w-full pl-9 pr-3 py-2.5 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-brand-500 bg-slate-50/50"
+                    placeholder="Enter your email ID or mobile number"
+                    className="w-full pl-9 pr-3 py-2.5 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-brand-500 bg-white text-slate-900 placeholder:text-slate-400 placeholder:font-normal"
                   />
                 </div>
               </div>
 
               <div>
                 <label className="block font-semibold uppercase text-slate-700 mb-1">
-                  Password / OTP
+                  Password
                 </label>
                 <div className="relative">
                   <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
@@ -204,8 +204,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     type="password"
                     value={studentPassword}
                     onChange={(e) => setStudentPassword(e.target.value)}
-                    placeholder="••••••••"
-                    className="w-full pl-9 pr-3 py-2.5 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-brand-500 bg-slate-50/50"
+                    placeholder="Enter your password"
+                    className="w-full pl-9 pr-3 py-2.5 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-brand-500 bg-white text-slate-900 placeholder:text-slate-400 placeholder:font-normal"
                   />
                 </div>
               </div>
@@ -254,14 +254,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   required
                   value={instructorEmail}
                   onChange={(e) => setInstructorEmail(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2.5 border border-slate-300 rounded-xl outline-none bg-slate-50"
+                  placeholder="Enter instructor email ID"
+                  className="w-full pl-9 pr-3 py-2.5 border border-slate-300 rounded-xl outline-none bg-white text-slate-900 placeholder:text-slate-400 placeholder:font-normal"
                 />
               </div>
             </div>
 
             <div>
               <label className="block font-semibold uppercase text-slate-700 mb-1">
-                Instructor Security PIN / Password
+                Instructor Security PIN
               </label>
               <div className="relative">
                 <KeyRound className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
@@ -272,9 +273,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     setInstructorPin(e.target.value);
                     setPinError(false);
                   }}
-                  placeholder="Enter PIN (Default: 1234)"
-                  className={`w-full pl-9 pr-3 py-2.5 border rounded-xl outline-none font-mono ${
-                    pinError ? 'border-red-500 bg-red-50' : 'border-slate-300 bg-slate-50/50 focus:ring-2 focus:ring-purple-500'
+                  placeholder="Enter 4-digit security PIN"
+                  className={`w-full pl-9 pr-3 py-2.5 border rounded-xl outline-none placeholder:text-slate-400 placeholder:font-normal ${
+                    pinError ? 'border-red-500 bg-red-50' : 'border-slate-300 bg-white focus:ring-2 focus:ring-purple-500'
                   }`}
                 />
               </div>
