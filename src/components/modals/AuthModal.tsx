@@ -176,7 +176,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               <div className="flex-1 border-t border-slate-200"></div>
             </div>
 
-            <form onSubmit={handleStudentLogin} className="space-y-4">
+            <form onSubmit={handleStudentLogin} autoComplete="off" className="space-y-4">
+              {/* Decoy inputs to intercept aggressive browser autofill */}
+              <div style={{ position: 'absolute', opacity: 0, height: 0, width: 0, pointerEvents: 'none', zIndex: -1 }}>
+                <input type="text" name="decoy_modal_user" tabIndex={-1} autoComplete="off" />
+                <input type="password" name="decoy_modal_pass" tabIndex={-1} autoComplete="off" />
+              </div>
+
               <div>
                 <label className="block font-semibold uppercase text-slate-700 mb-1">
                   Student Email / WhatsApp
@@ -185,6 +191,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
                     type="text"
+                    name="modal_survey_user"
+                    id="modal_survey_user"
+                    autoComplete="new-password"
+                    readOnly
+                    onFocus={(e) => { e.currentTarget.readOnly = false; }}
                     required
                     value={studentEmail}
                     onChange={(e) => setStudentEmail(e.target.value)}
@@ -202,6 +213,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
                     type="password"
+                    name="modal_survey_pass"
+                    id="modal_survey_pass"
+                    autoComplete="new-password"
+                    readOnly
+                    onFocus={(e) => { e.currentTarget.readOnly = false; }}
                     value={studentPassword}
                     onChange={(e) => setStudentPassword(e.target.value)}
                     placeholder="Enter your password"

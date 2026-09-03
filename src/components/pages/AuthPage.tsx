@@ -41,13 +41,19 @@ export const AuthPage: React.FC = () => {
   const [authSuccessMessage, setAuthSuccessMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Form Fields - initialized to empty strings so light placeholder text is shown
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [district, setDistrict] = useState('Palakkad');
-  const [targetExam, setTargetExam] = useState('Kerala PSC Surveyor Gr. II');
+  // Login Form Fields
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+
+  // Sign Up Form Fields
+  const [signupName, setSignupName] = useState('');
+  const [signupEmail, setSignupEmail] = useState('');
+  const [signupPhone, setSignupPhone] = useState('');
+  const [signupDistrict, setSignupDistrict] = useState('Palakkad');
+  const [signupTargetExam, setSignupTargetExam] = useState('Kerala PSC Surveyor Gr. II');
+  const [signupPassword, setSignupPassword] = useState('');
+
+  // Instructor Fields
   const [instructorPin, setInstructorPin] = useState('');
 
   const keralaDistricts = [
@@ -63,7 +69,7 @@ export const AuthPage: React.FC = () => {
     setAuthError(null);
     setAuthSuccessMessage(null);
 
-    if (!email.trim() || !password.trim()) {
+    if (!loginEmail.trim() || !loginPassword.trim()) {
       setAuthError('Please enter your email and password');
       return;
     }
@@ -71,8 +77,8 @@ export const AuthPage: React.FC = () => {
     setIsLoading(true);
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
-        email: email.trim(),
-        password: password.trim()
+        email: loginEmail.trim(),
+        password: loginPassword.trim()
       });
 
       if (error) {
@@ -82,7 +88,7 @@ export const AuthPage: React.FC = () => {
 
       // Only redirect when a real session exists after login
       if (data?.session) {
-        await loginWithCredentials(data.user?.email || email, password);
+        await loginWithCredentials(data.user?.email || loginEmail, loginPassword);
         setActiveTab('dashboard');
         window.history.pushState({}, '', '/');
         showToast('Login successful! Welcome back.', 'success');
@@ -102,12 +108,12 @@ export const AuthPage: React.FC = () => {
     setAuthError(null);
     setAuthSuccessMessage(null);
 
-    if (!email.trim() || !password.trim()) {
+    if (!signupEmail.trim() || !signupPassword.trim()) {
       setAuthError('Please enter your email and password');
       return;
     }
 
-    if (password.length < 6) {
+    if (signupPassword.length < 6) {
       setAuthError('Password should be at least 6 characters long');
       return;
     }
@@ -115,14 +121,14 @@ export const AuthPage: React.FC = () => {
     setIsLoading(true);
     try {
       const { data, error } = await supabase.auth.signUp({
-        email: email.trim(),
-        password: password.trim(),
+        email: signupEmail.trim(),
+        password: signupPassword.trim(),
         options: {
           data: {
-            full_name: name.trim(),
-            phone: phone.trim(),
-            district: district || 'Palakkad',
-            target_exam: targetExam || 'Kerala PSC Surveyor Gr. II'
+            full_name: signupName.trim(),
+            phone: signupPhone.trim(),
+            district: signupDistrict || 'Palakkad',
+            target_exam: signupTargetExam || 'Kerala PSC Surveyor Gr. II'
           }
         }
       });
@@ -135,11 +141,11 @@ export const AuthPage: React.FC = () => {
       // Save initial profile row to Supabase profiles table
       if (data.user?.id) {
         await SupabaseDb.updateUserProfile(data.user.id, {
-          name: name.trim() || 'Candidate',
-          email: email.trim(),
-          phone: phone.trim(),
-          district: district || 'Palakkad',
-          targetExam: targetExam || 'Kerala PSC Surveyor Gr. II',
+          name: signupName.trim() || 'Candidate',
+          email: signupEmail.trim(),
+          phone: signupPhone.trim(),
+          district: signupDistrict || 'Palakkad',
+          targetExam: signupTargetExam || 'Kerala PSC Surveyor Gr. II',
           role: 'student',
           subscriptionPlan: 'free'
         });
@@ -154,7 +160,7 @@ export const AuthPage: React.FC = () => {
       }
 
       // Only redirect when a real session exists
-      await registerWithCredentials(name, data.user?.email || email, phone, district, targetExam);
+      await registerWithCredentials(signupName, data.user?.email || signupEmail, signupPhone, signupDistrict, signupTargetExam);
       setActiveTab('dashboard');
       window.history.pushState({}, '', '/');
       showToast('Account created successfully! Welcome to the academy.', 'success');
@@ -309,7 +315,13 @@ export const AuthPage: React.FC = () => {
 
             {/* FORM 1: LOGIN MODE */}
             {mode === 'login' && (
-              <form onSubmit={handleLoginSubmit} className="space-y-4">
+              <form onSubmit={handleLoginSubmit} autoComplete="off" className="space-y-4">
+                {/* Decoy inputs to intercept aggressive browser autofill */}
+                <div style={{ position: 'absolute', opacity: 0, height: 0, width: 0, pointerEvents: 'none', zIndex: -1 }}>
+                  <input type="text" name="decoy_username" tabIndex={-1} autoComplete="off" />
+                  <input type="password" name="decoy_password" tabIndex={-1} autoComplete="off" />
+                </div>
+
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 mb-1.5">
                     Email / Username
@@ -317,9 +329,14 @@ export const AuthPage: React.FC = () => {
                   <div className="relative">
                     <input
                       type="text"
+                      name="survey_login_user"
+                      id="survey_login_user"
+                      autoComplete="new-password"
+                      readOnly
+                      onFocus={(e) => { e.currentTarget.readOnly = false; }}
                       required
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      value={loginEmail}
+                      onChange={(e) => setLoginEmail(e.target.value)}
                       placeholder="Enter your email ID or username"
                       className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-slate-900 placeholder:text-slate-400 placeholder:font-normal text-sm outline-none transition bg-white"
                     />
@@ -333,9 +350,14 @@ export const AuthPage: React.FC = () => {
                   <div className="relative">
                     <input
                       type={showPassword ? 'text' : 'password'}
+                      name="survey_login_pass"
+                      id="survey_login_pass"
+                      autoComplete="new-password"
+                      readOnly
+                      onFocus={(e) => { e.currentTarget.readOnly = false; }}
                       required
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
+                      value={loginPassword}
+                      onChange={(e) => setLoginPassword(e.target.value)}
                       placeholder="Enter your password"
                       className="w-full pl-3.5 pr-10 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-slate-900 placeholder:text-slate-400 placeholder:font-normal text-sm outline-none transition bg-white"
                     />
@@ -409,16 +431,27 @@ export const AuthPage: React.FC = () => {
 
             {/* FORM 2: SIGN UP / REGISTER MODE */}
             {mode === 'signup' && (
-              <form onSubmit={handleSignupSubmit} className="space-y-3.5">
+              <form onSubmit={handleSignupSubmit} autoComplete="off" className="space-y-3.5">
+                {/* Decoy inputs to intercept aggressive browser autofill */}
+                <div style={{ position: 'absolute', opacity: 0, height: 0, width: 0, pointerEvents: 'none', zIndex: -1 }}>
+                  <input type="text" name="decoy_reg_username" tabIndex={-1} autoComplete="off" />
+                  <input type="password" name="decoy_reg_password" tabIndex={-1} autoComplete="off" />
+                </div>
+
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 mb-1">
                     Candidate Full Name *
                   </label>
                   <input
                     type="text"
+                    name="survey_reg_name"
+                    id="survey_reg_name"
+                    autoComplete="off"
+                    readOnly
+                    onFocus={(e) => { e.currentTarget.readOnly = false; }}
                     required
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    value={signupName}
+                    onChange={(e) => setSignupName(e.target.value)}
                     placeholder="Enter your full name"
                     className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-slate-900 placeholder:text-slate-400 placeholder:font-normal text-sm outline-none transition bg-white"
                   />
@@ -431,9 +464,14 @@ export const AuthPage: React.FC = () => {
                     </label>
                     <input
                       type="email"
+                      name="survey_reg_email"
+                      id="survey_reg_email"
+                      autoComplete="new-password"
+                      readOnly
+                      onFocus={(e) => { e.currentTarget.readOnly = false; }}
                       required
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      value={signupEmail}
+                      onChange={(e) => setSignupEmail(e.target.value)}
                       placeholder="Enter your email ID"
                       className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-slate-900 placeholder:text-slate-400 placeholder:font-normal text-sm outline-none transition bg-white"
                     />
@@ -444,9 +482,14 @@ export const AuthPage: React.FC = () => {
                     </label>
                     <input
                       type="tel"
+                      name="survey_reg_phone"
+                      id="survey_reg_phone"
+                      autoComplete="off"
+                      readOnly
+                      onFocus={(e) => { e.currentTarget.readOnly = false; }}
                       required
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
+                      value={signupPhone}
+                      onChange={(e) => setSignupPhone(e.target.value)}
                       placeholder="Enter 10-digit mobile number"
                       className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-slate-900 placeholder:text-slate-400 placeholder:font-normal text-sm outline-none transition bg-white"
                     />
@@ -459,8 +502,8 @@ export const AuthPage: React.FC = () => {
                       District (Kerala)
                     </label>
                     <select
-                      value={district}
-                      onChange={(e) => setDistrict(e.target.value)}
+                      value={signupDistrict}
+                      onChange={(e) => setSignupDistrict(e.target.value)}
                       className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-slate-900 text-sm outline-none transition bg-white"
                     >
                       {keralaDistricts.map((d) => (
@@ -473,8 +516,8 @@ export const AuthPage: React.FC = () => {
                       Target PSC Exam
                     </label>
                     <select
-                      value={targetExam}
-                      onChange={(e) => setTargetExam(e.target.value)}
+                      value={signupTargetExam}
+                      onChange={(e) => setSignupTargetExam(e.target.value)}
                       className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-slate-900 text-sm outline-none transition bg-white"
                     >
                       <option value="Kerala PSC Surveyor Gr. II">Surveyor Gr. II</option>
@@ -492,9 +535,14 @@ export const AuthPage: React.FC = () => {
                   <div className="relative">
                     <input
                       type={showPassword ? 'text' : 'password'}
+                      name="survey_reg_pass"
+                      id="survey_reg_pass"
+                      autoComplete="new-password"
+                      readOnly
+                      onFocus={(e) => { e.currentTarget.readOnly = false; }}
                       required
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
+                      value={signupPassword}
+                      onChange={(e) => setSignupPassword(e.target.value)}
                       placeholder="Create a password (min. 6 characters)"
                       className="w-full pl-3.5 pr-10 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-slate-900 placeholder:text-slate-400 placeholder:font-normal text-sm outline-none transition bg-white"
                     />
