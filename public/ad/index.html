@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SurveyRank Academy - YouTube Video Ad with Natural Voiceover</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <script src="audio_tracks.js"></script>
+  <style>
+    @keyframes pulse-red {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 15px rgba(239, 68, 68, 0.4); }
+      50% { transform: scale(1.08); box-shadow: 0 0 30px rgba(239, 68, 68, 0.8); }
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    @keyframes wave-bar {
+      0%, 100% { height: 4px; }
+      50% { height: 16px; }
+    }
+    .animate-shimmer {
+      background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,215,0,0.4) 50%, rgba(255,255,255,0) 100%);
+      background-size: 200% 100%;
+      animation: shimmer 2.5s infinite;
+    }
+    .reticle-crosshair {
+      background: radial-gradient(circle, transparent 40%, rgba(16, 185, 129, 0.2) 41%, transparent 42%),
+                  linear-gradient(to right, transparent 49.5%, rgba(16, 185, 129, 0.7) 49.5%, rgba(16, 185, 129, 0.7) 50.5%, transparent 50.5%),
+                  linear-gradient(to bottom, transparent 49.5%, rgba(16, 185, 129, 0.7) 49.5%, rgba(16, 185, 129, 0.7) 50.5%, transparent 50.5%);
+    }
+    .wave-bar-1 { animation: wave-bar 0.8s ease-in-out infinite; }
+    .wave-bar-2 { animation: wave-bar 0.6s ease-in-out infinite 0.15s; }
+    .wave-bar-3 { animation: wave-bar 0.9s ease-in-out infinite 0.3s; }
+    .wave-bar-4 { animation: wave-bar 0.7s ease-in-out infinite 0.1s; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen p-3 md:p-6 flex flex-col items-center justify-center font-sans antialiased selection:bg-emerald-500 selection:text-white">
+
+  <!-- Persistent Master Audio Player -->
+  <audio id="voicePlayer" preload="auto"></audio>
+
+  <!-- Main Container -->
+  <div class="w-full max-w-5xl space-y-4">
+    
+    <!-- Header Controls & Branding -->
+    <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-900/90 border border-slate-800 px-5 py-3 rounded-2xl backdrop-blur-md">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-emerald-500 text-slate-950 font-black flex items-center justify-center text-lg shadow-md shadow-emerald-500/30">
+          SR
+        </div>
+        <div>
+          <h1 class="text-sm md:text-base font-extrabold text-white tracking-wide flex items-center gap-2">
+            SurveyRank Academy • YouTube Ad with Natural Voiceover
+            <span class="text-[10px] bg-red-600 text-white font-bold px-2 py-0.5 rounded-full uppercase tracking-wider animate-pulse">Neural Audio</span>
+          </h1>
+          <p class="text-xs text-slate-400">8-Panel Storyboard • Malayalam & Indian English Human Voice</p>
+        </div>
+      </div>
+
+      <!-- Quick Audio & Language Controls -->
+      <div class="flex items-center gap-2">
+        <div id="audioStatusBadge" class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 border border-slate-700 text-emerald-400">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+          <span id="audioStatusText">Audio: Ready</span>
+        </div>
+
+        <button id="langBtn" class="px-3.5 py-1.5 rounded-xl text-xs font-bold border border-emerald-500/50 bg-emerald-950/60 hover:bg-emerald-900/80 text-emerald-300 transition flex items-center gap-1.5 shadow-sm">
+          <span>🗣️</span> <span id="langLabel">Malayalam (മലയാളം)</span>
+        </button>
+
+        <button id="testAudioBtn" class="px-3 py-1.5 rounded-xl text-xs font-bold border border-slate-700 bg-slate-800 hover:bg-slate-700 text-amber-300 transition flex items-center gap-1">
+          <span>🔊</span> <span>Test Voice</span>
+        </button>
+
+        <button id="voiceToggle" class="px-3 py-1.5 rounded-xl text-xs font-bold border border-slate-700 bg-slate-800 hover:bg-slate-700 text-white transition flex items-center gap-1.5">
+          <span id="voiceIcon">🔊</span> <span id="voiceLabel">Voice: ON</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- YouTube Player Viewport (16:9 Cinematic Container) -->
+    <div class="relative w-full aspect-video bg-black rounded-3xl overflow-hidden shadow-2xl shadow-emerald-950/40 border border-slate-800 select-none group">
+      
+      <!-- Video Scene Render Canvas / DOM Layers -->
+      <div id="videoScreen" class="absolute inset-0 w-full h-full flex items-center justify-center overflow-hidden transition-all duration-700">
+        <!-- Dynamic scene content injected here via JS -->
+      </div>
+
+      <!-- YouTube Ad Overlay Badges (Exact UI Match) -->
+      <div class="absolute top-4 left-4 flex items-center gap-2 z-30 pointer-events-none">
+        <span class="bg-amber-400 text-black text-[11px] font-black px-2 py-0.5 rounded uppercase tracking-wider shadow">Ad</span>
+        <span class="bg-black/60 backdrop-blur-md text-white text-xs px-2.5 py-0.5 rounded-full font-semibold border border-white/10">
+          <span id="sceneTimeTicker">0:00</span> / 0:45
+        </span>
+        <span id="panelBadge" class="bg-emerald-600/90 text-white text-xs px-3 py-0.5 rounded-full font-bold uppercase tracking-wider shadow backdrop-blur-sm">
+          Scene 1 • THE HOOK
+        </span>
+      </div>
+
+      <!-- YouTube Skip Ad Countdown Button -->
+      <div class="absolute bottom-20 right-4 z-30">
+        <div id="skipAdBox" class="bg-black/80 hover:bg-black text-white text-xs px-4 py-2 rounded-xl font-bold border border-white/20 backdrop-blur-md transition flex items-center gap-2 shadow-lg cursor-pointer">
+          <span id="skipText">Skip Ad in 5s</span>
+          <span class="text-emerald-400">▶|</span>
+        </div>
+      </div>
+
+      <!-- Synchronized Subtitle / Natural Voiceover Banner -->
+      <div class="absolute bottom-4 left-4 right-4 sm:right-36 z-30 pointer-events-none">
+        <div class="bg-slate-950/95 border border-slate-700/80 backdrop-blur-md px-4 py-2.5 rounded-2xl max-w-2xl shadow-xl">
+          <div class="flex items-center justify-between gap-2 mb-1">
+            <div class="text-[11px] font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-2">
+              <div id="voiceWave" class="flex items-center gap-0.5 h-3 opacity-30 transition-opacity">
+                <span class="w-1 bg-emerald-400 rounded-full wave-bar-1"></span>
+                <span class="w-1 bg-emerald-400 rounded-full wave-bar-2"></span>
+                <span class="w-1 bg-emerald-400 rounded-full wave-bar-3"></span>
+                <span class="w-1 bg-emerald-400 rounded-full wave-bar-4"></span>
+              </div>
+              <span id="voSpeaker">Course Director Joseph Josey (Natural Voice)</span>
+            </div>
+            <span id="audioPlayingIndicator" class="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded font-mono">Audio Ready</span>
+          </div>
+          <p id="voText" class="text-xs sm:text-sm font-semibold text-white leading-snug">
+            "Surveyor Grade II പരീക്ഷയിൽ ആദ്യ അവസരത്തിൽ തന്നെ മികച്ച Rank നേടണോ?"
+          </p>
+          <p id="voTranslation" class="text-[11px] text-slate-400 italic mt-0.5">
+            "Want to secure a top statewide rank in Kerala PSC Surveyor Grade II in your first attempt?"
+          </p>
+        </div>
+      </div>
+
+      <!-- Player Timeline Scrubber / Progress Bar -->
+      <div class="absolute bottom-0 left-0 right-0 h-1.5 bg-white/20 z-40 cursor-pointer">
+        <div id="progressBar" class="h-full bg-emerald-500 w-0 transition-all duration-100 ease-linear shadow-[0_0_8px_#10b981]"></div>
+      </div>
+
+      <!-- First Play Click Overlay to unlock Audio Autoplay -->
+      <div id="unmuteOverlay" class="absolute inset-0 bg-slate-950/85 backdrop-blur-sm z-50 flex flex-col items-center justify-center p-6 cursor-pointer group">
+        <div class="w-20 h-20 rounded-full bg-emerald-500 group-hover:bg-emerald-400 text-slate-950 flex items-center justify-center text-4xl shadow-[0_0_50px_rgba(16,185,129,0.7)] transform group-hover:scale-110 transition active:scale-95 mb-4">
+          ▶
+        </div>
+        <h2 class="text-xl md:text-3xl font-black text-white text-center">Click to Play Video Ad with Voice</h2>
+        <p class="text-xs sm:text-sm text-emerald-400 mt-2 font-bold flex items-center gap-1.5">
+          <span>🔊</span> Natural Malayalam & Indian English Neural Voiceover
+        </p>
+        <div class="mt-4 px-4 py-1.5 rounded-full bg-slate-800/80 border border-slate-700 text-[11px] text-slate-300">
+          Unlocks audio playback in all browsers
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Scene Quick-Jump Buttons (1 to 8 matching the Storyboard) -->
+    <div class="bg-slate-900/90 border border-slate-800 p-3 rounded-2xl">
+      <div class="flex items-center justify-between gap-2 mb-2 px-1">
+        <span class="text-xs font-bold text-slate-300 uppercase tracking-wider">Storyboard Scene Selector:</span>
+        <div class="flex items-center gap-2">
+          <button id="playPauseBtn" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold transition flex items-center gap-1">
+            <span id="playIcon">⏸️</span> <span id="playLabel">Pause</span>
+          </button>
+          <button id="restartBtn" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-bold transition">
+            ↺ Replay
+          </button>
+        </div>
+      </div>
+
+      <!-- 8 Storyboard Buttons -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-1.5">
+        <button onclick="jumpToScene(0)" class="scene-btn p-2 rounded-xl border border-slate-700 bg-slate-800 hover:border-emerald-500 text-left transition text-[11px]" data-scene="0">
+          <div class="font-extrabold text-emerald-400">1. HOOK</div>
+          <div class="text-slate-400 truncate">Theodolite Eyepiece</div>
+        </button>
+        <button onclick="jumpToScene(1)" class="scene-btn p-2 rounded-xl border border-slate-700 bg-slate-800 hover:border-emerald-500 text-left transition text-[11px]" data-scene="1">
+          <div class="font-extrabold text-emerald-400">2. AGITATION</div>
+          <div class="text-slate-400 truncate">-0.33 Penalty Fear</div>
+        </button>
+        <button onclick="jumpToScene(2)" class="scene-btn p-2 rounded-xl border border-slate-700 bg-slate-800 hover:border-emerald-500 text-left transition text-[11px]" data-scene="2">
+          <div class="font-extrabold text-emerald-400">3. WALKTHROUGH</div>
+          <div class="text-slate-400 truncate">Website Portal</div>
+        </button>
+        <button onclick="jumpToScene(3)" class="scene-btn p-2 rounded-xl border border-slate-700 bg-slate-800 hover:border-emerald-500 text-left transition text-[11px]" data-scene="3">
+          <div class="font-extrabold text-emerald-400">4. MOCK TEST</div>
+          <div class="text-slate-400 truncate">87 MCQ Master Series</div>
+        </button>
+        <button onclick="jumpToScene(4)" class="scene-btn p-2 rounded-xl border border-slate-700 bg-slate-800 hover:border-emerald-500 text-left transition text-[11px]" data-scene="4">
+          <div class="font-extrabold text-emerald-400">5. LEADERBOARD</div>
+          <div class="text-slate-400 truncate">Statewide Live Rank</div>
+        </button>
+        <button onclick="jumpToScene(5)" class="scene-btn p-2 rounded-xl border border-slate-700 bg-slate-800 hover:border-emerald-500 text-left transition text-[11px]" data-scene="5">
+          <div class="font-extrabold text-emerald-400">6. FREE PDF</div>
+          <div class="text-slate-400 truncate">Formula Sheets</div>
+        </button>
+        <button onclick="jumpToScene(6)" class="scene-btn p-2 rounded-xl border border-slate-700 bg-slate-800 hover:border-emerald-500 text-left transition text-[11px]" data-scene="6">
+          <div class="font-extrabold text-emerald-400">7. PROOF</div>
+          <div class="text-slate-400 truncate">Field Surveyor Pride</div>
+        </button>
+        <button onclick="jumpToScene(7)" class="scene-btn p-2 rounded-xl border border-slate-700 bg-slate-800 hover:border-emerald-500 text-left transition text-[11px]" data-scene="7">
+          <div class="font-extrabold text-emerald-400">8. CTA</div>
+          <div class="text-slate-400 truncate">Enroll & Win</div>
+        </button>
+      </div>
+    </div>
+
+    <!-- YouTube Companion Card (Right under the ad) -->
+    <div class="bg-gradient-to-r from-emerald-950/80 via-slate-900 to-slate-900 border border-emerald-500/40 p-4 rounded-2xl flex flex-wrap items-center justify-between gap-4 shadow-lg">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-xl bg-emerald-500 text-slate-950 font-black flex items-center justify-center text-xl shadow-lg shadow-emerald-500/30">
+          🎓
+        </div>
+        <div>
+          <div class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Free Enrollment Open</div>
+          <div class="text-sm font-black text-white">SurveyRank Kerala PSC Surveyor Grade II & Overseer Master Course</div>
+          <div class="text-xs text-slate-400">Free 87 MCQ Master Series • Solved PYQs • District-Wise Rankings</div>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <a id="downloadAudioBtn" href="audio/scene_0_ml.mp3" download class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-xl text-xs uppercase tracking-wider transition flex items-center gap-1.5 border border-slate-700">
+          <span>⬇</span> Download MP3
+        </a>
+        <a href="https://surveyrank.com" target="_blank" class="px-6 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold rounded-xl text-xs uppercase tracking-wider shadow-lg shadow-emerald-500/20 transition transform active:scale-95 flex items-center gap-2">
+          <span>Enroll Free Now</span>
+          <span>→</span>
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Audio Player Engine
+    const voicePlayer = document.getElementById('voicePlayer');
+    let voiceoverEnabled = true;
+    let isMalayalam = true;
+
+    // Set up voicePlayer event listeners
+    voicePlayer.onplaying = () => {
+      const wave = document.getElementById('voiceWave');
+      const indicator = document.getElementById('audioPlayingIndicator');
+      const statusText = document.getElementById('audioStatusText');
+      if (wave) wave.style.opacity = '1';
+      if (indicator) indicator.textContent = '🔊 Speaking';
+      if (statusText) statusText.textContent = `Audio: Playing (Scene ${currentSceneIdx + 1})`;
+    };
+
+    voicePlayer.onended = () => {
+      const wave = document.getElementById('voiceWave');
+      const indicator = document.getElementById('audioPlayingIndicator');
+      const statusText = document.getElementById('audioStatusText');
+      if (wave) wave.style.opacity = '0.3';
+      if (indicator) indicator.textContent = 'Audio Ready';
+      if (statusText) statusText.textContent = 'Audio: Idle';
+    };
+
+    voicePlayer.onerror = (e) => {
+      console.warn("Audio element error on current source, trying fallback data URI:", e);
+      const langKey = isMalayalam ? 'ml' : 'en';
+      // Fallback to base64 data URI if relative path had an issue
+      if (window.AUDIO_TRACKS && window.AUDIO_TRACKS[langKey] && window.AUDIO_TRACKS[langKey][currentSceneIdx]) {
+        if (voicePlayer.src !== window.AUDIO_TRACKS[langKey][currentSceneIdx]) {
+          voicePlayer.src = window.AUDIO_TRACKS[langKey][currentSceneIdx];
+          voicePlayer.play().catch(err => console.log("Fallback play notice:", err));
+        }
+      }
+    };
+
+    function playSceneVoiceover(sceneIdx) {
+      if (!voiceoverEnabled) return;
+      
+      const langKey = isMalayalam ? 'ml' : 'en';
+      
+      // Determine primary source: first check relative MP3 path, then embedded base64 data URI
+      let primarySrc = `audio/scene_${sceneIdx}_${langKey}.mp3`;
+      if (window.AUDIO_TRACKS && window.AUDIO_TRACKS[langKey] && window.AUDIO_TRACKS[langKey][sceneIdx]) {
+        // Base64 data URI is embedded and 100% self-contained
+        primarySrc = window.AUDIO_TRACKS[langKey][sceneIdx];
+      }
+
+      // Update download button link
+      const downloadBtn = document.getElementById('downloadAudioBtn');
+      if (downloadBtn) {
+        downloadBtn.href = `audio/scene_${sceneIdx}_${langKey}.mp3`;
+        downloadBtn.download = `surveyrank_scene_${sceneIdx + 1}_${langKey}.mp3`;
+      }
+
+      try {
+        voicePlayer.pause();
+        voicePlayer.src = primarySrc;
+        voicePlayer.currentTime = 0;
+        voicePlayer.volume = 1.0;
+        
+        const playPromise = voicePlayer.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(e => {
+            console.log("Audio play request handled:", e);
+            // Fallback to relative file path if base64 failed
+            if (voicePlayer.src !== `audio/scene_${sceneIdx}_${langKey}.mp3`) {
+              voicePlayer.src = `audio/scene_${sceneIdx}_${langKey}.mp3`;
+              voicePlayer.play().catch(err => console.log("Second fallback notice:", err));
+            }
+          });
+        }
+      } catch (err) {
+        console.warn("Audio exception:", err);
+      }
+    }
+
+    // 8 Storyboard Scenes definition
+    const SCENES = [
+      {
+        id: 0,
+        name: "1 • THE HOOK",
+        duration: 5.5,
+        vo_ml: "സർവേയർ ഗ്രേഡ് ടു പരീക്ഷയിൽ ആദ്യ അവസരത്തിൽ തന്നെ മികച്ച റാങ്ക് നേടാൻ ആഗ്രഹിക്കുന്നുണ്ടോ? വെറും മനഃപാഠം കൊണ്ട് മാത്രം ഇനി പിഎസ്സി പരീക്ഷകൾ ജയിക്കാനാവില്ല!",
+        vo_en: "Looking to secure a top statewide rank in Kerala PSC Surveyor Grade II on your very first attempt? Rote memorization is no longer enough!",
+        html: `
+          <div class="relative w-full h-full bg-gradient-to-br from-emerald-950 via-slate-900 to-black flex items-center justify-center">
+            <!-- Modern Theodolite Barrel & Optics -->
+            <div class="relative w-80 h-80 rounded-full border-8 border-emerald-500/80 p-2 shadow-[0_0_60px_rgba(16,185,129,0.5)] flex items-center justify-center bg-slate-950">
+              <!-- Crosshair Grid Overlay -->
+              <div class="absolute inset-0 rounded-full reticle-crosshair pointer-events-none"></div>
+              
+              <!-- Looking Eye Graphic -->
+              <div class="w-48 h-48 rounded-full overflow-hidden border-4 border-emerald-400/60 relative flex items-center justify-center bg-emerald-950">
+                <div class="w-24 h-24 rounded-full bg-amber-900/80 border-4 border-amber-500 flex items-center justify-center shadow-inner animate-pulse">
+                  <div class="w-10 h-10 rounded-full bg-black flex items-center justify-center">
+                    <div class="w-3 h-3 rounded-full bg-white"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Dial Tick Marks -->
+              <div class="absolute inset-2 border-2 border-dashed border-emerald-500/40 rounded-full animate-spin" style="animation-duration: 40s;"></div>
+            </div>
+
+            <!-- Overlaid Punchy Text -->
+            <div class="absolute bottom-20 text-center px-4">
+              <span class="inline-block bg-emerald-500 text-black font-black px-4 py-1.5 rounded-full text-sm uppercase tracking-widest shadow-xl">
+                TARGET: KERALA PSC SURVEYOR GR. II
+              </span>
+              <h2 class="text-2xl md:text-3xl font-black text-white mt-2 drop-shadow-md">
+                Precision Matters. Stop Guessing.
+              </h2>
+            </div>
+          </div>
+        `
+      },
+      {
+        id: 1,
+        name: "2 • AGITATION",
+        duration: 5.5,
+        vo_ml: "തിയോഡലൈറ്റ് കണക്കുകൂട്ടലുകൾ, ആർ എൽ കോണ്ടൂറിങ്, ഓട്ടോകാഡ് കുറുക്കുവഴികൾ... നെഗറ്റീവ് മാർക്കിങ് പേടിച്ച് മാർക്ക് നഷ്ടപ്പെടാറുണ്ടോ?",
+        vo_en: "Theodolite angles, RL Contouring, and AutoCAD shortcuts... Are you losing vital marks to the minus point three three penalty?",
+        html: `
+          <div class="relative w-full h-full bg-gradient-to-tr from-red-950/60 via-slate-950 to-slate-900 flex items-center justify-center p-6">
+            <div class="max-w-md w-full bg-slate-900/90 border border-red-500/40 rounded-3xl p-6 shadow-2xl relative">
+              
+              <!-- Floating Pulsing -0.33 Penalty Badge -->
+              <div class="absolute -top-6 -right-4 bg-red-600 text-white font-black text-xl px-5 py-2.5 rounded-2xl shadow-xl flex items-center gap-2" style="animation: pulse-red 1.2s infinite ease-in-out;">
+                <span>👎</span>
+                <span>-0.33</span>
+                <span class="text-xs bg-red-950/60 px-1.5 py-0.5 rounded font-bold">PENALTY</span>
+              </div>
+
+              <div class="space-y-3">
+                <div class="flex items-center gap-2 text-xs font-bold text-red-400 uppercase tracking-wide">
+                  <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
+                  Common PSC Aspirant Pitfall
+                </div>
+                <h3 class="text-xl font-black text-white leading-snug">
+                  "One wrong formula calculation pushes you 500 ranks down the list!"
+                </h3>
+                
+                <!-- Mock Exam Question with Negative Marking Alert -->
+                <div class="bg-black/60 border border-slate-800 rounded-xl p-3 text-xs space-y-2">
+                  <div class="text-slate-300 font-medium">Q. In a transit theodolite, the telescope can be rotated by 180° in:</div>
+                  <div class="grid grid-cols-2 gap-2 text-[11px]">
+                    <div class="p-2 rounded bg-red-950/80 border border-red-600 text-red-300 font-bold flex justify-between">
+                      <span>Horizontal plane</span> <span>✖ (-0.33)</span>
+                    </div>
+                    <div class="p-2 rounded bg-emerald-950/60 border border-emerald-600 text-emerald-300 font-bold flex justify-between">
+                      <span>Vertical plane</span> <span>✔ (+1.00)</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="text-xs text-amber-400 font-semibold text-center">
+                  ⚠️ Levelling • Theodolite • Tachometry • AutoCAD
+                </div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      {
+        id: 2,
+        name: "3 • PRODUCT WALKTHROUGH",
+        duration: 5.5,
+        vo_ml: "ഇതാ സർവേ റാങ്ക് കേരള പിഎസ്സി അക്കാദമി! കോഴ്സ് ഡയറക്ടർ ജോസഫ് ജോസി ഒരുക്കുന്ന സമ്പൂർണ്ണ ഓൺലൈൻ ലേണിംഗ് പ്ലാറ്റ്‌ഫോം.",
+        vo_en: "Introducing SurveyRank Academy! A complete online preparation platform mentored by Course Director Joseph Josey.",
+        html: `
+          <div class="relative w-full h-full bg-gradient-to-b from-slate-900 to-slate-950 flex flex-col items-center justify-center p-6">
+            <!-- Sleek Monitor Display Mockup -->
+            <div class="w-full max-w-xl bg-slate-950 border-4 border-slate-700 rounded-2xl overflow-hidden shadow-2xl relative">
+              <!-- Browser Chrome Bar -->
+              <div class="bg-slate-900 px-4 py-2 border-b border-slate-800 flex items-center justify-between text-xs">
+                <div class="flex items-center gap-1.5">
+                  <div class="w-2.5 h-2.5 rounded-full bg-red-500"></div>
+                  <div class="w-2.5 h-2.5 rounded-full bg-amber-500"></div>
+                  <div class="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
+                </div>
+                <div class="bg-slate-800 text-slate-300 px-4 py-0.5 rounded-md font-mono text-[11px]">
+                  https://surveyrank.com/dashboard
+                </div>
+                <div class="text-slate-500 text-[10px]">🔒 SSL Secured</div>
+              </div>
+
+              <!-- Portal Hero Card -->
+              <div class="p-5 bg-gradient-to-br from-slate-900 via-emerald-950/40 to-slate-950 text-left space-y-3">
+                <div class="inline-flex items-center gap-2 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-3 py-1 rounded-full text-xs font-bold">
+                  <span>★</span> Kerala PSC Technical Exams 2026
+                </div>
+                <h3 class="text-xl md:text-2xl font-black text-white leading-tight">
+                  Master Kerala PSC Survey Exams with Expert Notes & Mock Tests
+                </h3>
+                <p class="text-xs text-slate-300">
+                  Comprehensive 10-module syllabus, timed mock test series, solved PYQs, and direct doubt forum with Joseph Josey.
+                </p>
+                <div class="flex gap-2 pt-1">
+                  <span class="px-3 py-1 bg-emerald-600 text-white rounded-lg text-xs font-bold shadow">Explore 10 Modules</span>
+                  <span class="px-3 py-1 bg-slate-800 text-slate-300 rounded-lg text-xs font-bold">Free Formula Sheets</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="mt-3 text-xs text-emerald-400 font-bold uppercase tracking-wider">
+              ✦ Designed Strictly on Current Kerala PSC Syllabus
+            </div>
+          </div>
+        `
+      },
+      {
+        id: 3,
+        name: "4 • MOCK TEST SIMULATION",
+        duration: 5.5,
+        vo_ml: "യഥാർത്ഥ പിഎസ്സി ടൈമറും നെഗറ്റീവ് മാർക്കിംഗും ഉള്ള എൺപത്തിയേഴ് എം സി ക്യു മാസ്റ്റർ സീരീസിലൂടെ പരിശീലിക്കൂ!",
+        vo_en: "Practice under real exam pressure with countdown timers and negative marking on the 87 MCQ Master Series!",
+        html: `
+          <div class="relative w-full h-full bg-gradient-to-tr from-slate-950 via-emerald-950/60 to-slate-900 flex items-center justify-center p-6">
+            <div class="max-w-lg w-full bg-slate-900 border border-emerald-500/40 rounded-3xl p-5 shadow-2xl space-y-4">
+              
+              <!-- Mock Header -->
+              <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div>
+                  <span class="text-[10px] bg-amber-400 text-black font-black px-2 py-0.5 rounded">OFFICIAL PSC PATTERN</span>
+                  <h4 class="text-sm font-extrabold text-white mt-1">Kerala PSC Surveyor Gr. II 87 MCQ Master Series</h4>
+                </div>
+                <div class="text-right">
+                  <div class="text-xs text-slate-400">Time Left</div>
+                  <div class="text-base font-mono font-black text-amber-400">42:18</div>
+                </div>
+              </div>
+
+              <!-- Question & Instant Choice -->
+              <div class="bg-black/40 border border-slate-800 p-3.5 rounded-2xl space-y-2 text-xs">
+                <div class="font-bold text-slate-200">
+                  Q. 14: If the fore bearing of a line AB is 45°30', its back bearing is:
+                </div>
+                <div class="space-y-1.5 font-medium">
+                  <div class="p-2 rounded-xl bg-slate-800/80 border border-slate-700 text-slate-300 flex justify-between">
+                    <span>A) 135°30'</span>
+                  </div>
+                  <div class="p-2 rounded-xl bg-emerald-600/30 border-2 border-emerald-500 text-emerald-200 font-bold flex justify-between items-center">
+                    <span>B) 225°30' (BB = FB + 180°)</span>
+                    <span class="text-xs bg-emerald-500 text-black px-1.5 py-0.2 rounded font-black">SELECTED</span>
+                  </div>
+                  <div class="p-2 rounded-xl bg-slate-800/80 border border-slate-700 text-slate-300">
+                    <span>C) 215°30'</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between text-xs text-slate-400">
+                <span>Total: 87 Questions</span>
+                <span class="text-emerald-400 font-bold">Negative Marking: -0.33 per wrong answer</span>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      {
+        id: 4,
+        name: "5 • LEADERBOARD",
+        duration: 5.5,
+        vo_ml: "പതിനാല് ജില്ലകളിലെയും മികച്ച ഉദ്യോഗാർത്ഥികളുമായി മത്സരിക്കാൻ തത്സമയ സ്റ്റേറ്റ്‌വൈഡ് റാങ്കിംഗ്!",
+        vo_en: "Compete with thousands of aspirants across all 14 Kerala districts on the live statewide leaderboard!",
+        html: `
+          <div class="relative w-full h-full bg-gradient-to-br from-slate-900 to-black flex items-center justify-center p-6">
+            <div class="max-w-xl w-full bg-slate-900/90 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl">
+              
+              <!-- Leaderboard Bar -->
+              <div class="bg-slate-800/90 px-5 py-3 border-b border-slate-700 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="text-lg">🏆</span>
+                  <span class="font-extrabold text-white text-xs sm:text-sm">Statewide Dynamic Leaderboard</span>
+                </div>
+                <div class="text-[11px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-2.5 py-0.5 rounded-full font-bold">
+                  All 14 Kerala Districts
+                </div>
+              </div>
+
+              <!-- Top Ranks List -->
+              <div class="divide-y divide-slate-800 text-xs">
+                <!-- Rank 1 -->
+                <div class="px-5 py-2.5 flex items-center justify-between bg-amber-500/10 border-l-4 border-amber-400">
+                  <div class="flex items-center gap-3">
+                    <span class="w-6 h-6 rounded-full bg-amber-400 text-black font-black flex items-center justify-center text-xs shadow">1</span>
+                    <div>
+                      <div class="font-black text-white">Muhammed Nihal N</div>
+                      <div class="text-[10px] text-slate-400">District: Malappuram</div>
+                    </div>
+                  </div>
+                  <div class="text-right">
+                    <div class="font-black text-emerald-400 text-sm">79.34 / 87</div>
+                    <div class="text-[10px] text-slate-400">Accuracy: 93.4%</div>
+                  </div>
+                </div>
+
+                <!-- Rank 2 -->
+                <div class="px-5 py-2.5 flex items-center justify-between bg-slate-800/40 border-l-4 border-slate-400">
+                  <div class="flex items-center gap-3">
+                    <span class="w-6 h-6 rounded-full bg-slate-300 text-black font-black flex items-center justify-center text-xs">2</span>
+                    <div>
+                      <div class="font-bold text-white">Pranav K P</div>
+                      <div class="text-[10px] text-slate-400">District: Kollam</div>
+                    </div>
+                  </div>
+                  <div class="text-right">
+                    <div class="font-black text-emerald-400 text-sm">78.34 / 87</div>
+                    <div class="text-[10px] text-slate-400">Accuracy: 91.8%</div>
+                  </div>
+                </div>
+
+                <!-- Rank 3 -->
+                <div class="px-5 py-2.5 flex items-center justify-between bg-amber-900/20 border-l-4 border-amber-600">
+                  <div class="flex items-center gap-3">
+                    <span class="w-6 h-6 rounded-full bg-amber-700 text-white font-black flex items-center justify-center text-xs">3</span>
+                    <div>
+                      <div class="font-bold text-white">Arun R S</div>
+                      <div class="text-[10px] text-slate-400">District: Kottayam</div>
+                    </div>
+                  </div>
+                  <div class="text-right">
+                    <div class="font-black text-emerald-400 text-sm">76.34 / 87</div>
+                    <div class="text-[10px] text-slate-400">Accuracy: 89.2%</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-black/40 px-5 py-2 text-center text-[11px] text-slate-400">
+                ⚡ Instant rank recalculation with Kerala PSC tie-breaking rules
+              </div>
+            </div>
+          </div>
+        `
+      },
+      {
+        id: 5,
+        name: "6 • FREE RESOURCES",
+        duration: 5.5,
+        vo_ml: "ഓരോ മൊഡ്യൂളിന്റെയും സൂത്രവാക്യങ്ങൾ, സർവേ നോട്ടുകൾ, സോൾവ്ഡ് ചോദ്യപേപ്പറുകൾ എല്ലാം സൗജന്യമായി ഡൗൺലോഡ് ചെയ്യാം!",
+        vo_en: "Download chapter-wise formula sheets, revision notes, and solved previous question papers completely free!",
+        html: `
+          <div class="relative w-full h-full bg-gradient-to-tr from-emerald-950 via-slate-950 to-slate-900 flex flex-col items-center justify-center p-6 text-center">
+            <!-- Glowing Neon Phone & Document Graphic -->
+            <div class="relative flex items-center justify-center gap-6 mb-4">
+              
+              <!-- PDF Card 1 -->
+              <div class="w-32 bg-slate-900 border-2 border-emerald-500 rounded-2xl p-3 shadow-xl transform -rotate-6 transition hover:rotate-0">
+                <div class="w-8 h-8 rounded-lg bg-red-600 text-white font-black flex items-center justify-center text-xs mb-2">
+                  PDF
+                </div>
+                <div class="font-bold text-white text-xs">Formula Handbook</div>
+                <div class="text-[10px] text-emerald-400 mt-1">✓ 100% Free</div>
+              </div>
+
+              <!-- PDF Card 2 (Center highlight) -->
+              <div class="w-36 bg-slate-900 border-2 border-emerald-400 rounded-2xl p-4 shadow-[0_0_30px_rgba(16,185,129,0.3)] transform scale-110 z-10">
+                <div class="w-8 h-8 rounded-lg bg-emerald-500 text-black font-black flex items-center justify-center text-xs mb-2">
+                  ⬇
+                </div>
+                <div class="font-black text-white text-xs">Survey Notes</div>
+                <div class="text-[10px] text-slate-300 mt-1">10 Modules Full Syllabus</div>
+                <div class="mt-2 bg-emerald-500 text-slate-950 text-[10px] font-extrabold py-0.5 rounded">
+                  DOWNLOADED
+                </div>
+              </div>
+
+              <!-- PDF Card 3 -->
+              <div class="w-32 bg-slate-900 border-2 border-emerald-500 rounded-2xl p-3 shadow-xl transform rotate-6 transition hover:rotate-0">
+                <div class="w-8 h-8 rounded-lg bg-amber-500 text-black font-black flex items-center justify-center text-xs mb-2">
+                  PYQ
+                </div>
+                <div class="font-bold text-white text-xs">Solved Papers</div>
+                <div class="text-[10px] text-emerald-400 mt-1">✓ 2014-2024</div>
+              </div>
+
+            </div>
+
+            <h3 class="text-2xl font-black text-white drop-shadow">
+              Free Downloadable PDF Notes & Formula Sheets
+            </h3>
+            <p class="text-xs text-slate-400 mt-1">
+              Save directly to your phone or laptop • Learn anytime, anywhere
+            </p>
+          </div>
+        `
+      },
+      {
+        id: 6,
+        name: "7 • SOCIAL PROOF & FIELD PRIDE",
+        duration: 5.5,
+        vo_ml: "സർവേയർ ആകാനുള്ള നിങ്ങളുടെ കഠിനാധ്വാനത്തിന് ശരിയായ ദിശാബോധം നൽകൂ. ലക്ഷ്യത്തിലേക്ക് ഒരു ചുവട് മുന്നോട്ട്!",
+        vo_en: "Give your hard work the right mentorship and direction. Your dream government surveyor career starts here!",
+        html: `
+          <div class="relative w-full h-full bg-gradient-to-r from-amber-950/80 via-slate-900 to-emerald-950/80 flex items-center justify-center p-6 text-center">
+            
+            <div class="max-w-md w-full bg-slate-900/80 border border-emerald-500/30 rounded-3xl p-6 backdrop-blur-md shadow-2xl space-y-3">
+              <!-- Badge -->
+              <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-amber-400 to-emerald-400 text-slate-950 font-black text-2xl flex items-center justify-center mx-auto shadow-lg">
+                👷‍♂️
+              </div>
+
+              <div class="text-xs font-bold text-amber-400 uppercase tracking-widest">
+                Government of Kerala • Land Revenue & Survey Dept.
+              </div>
+
+              <h3 class="text-xl md:text-2xl font-black text-white leading-tight">
+                "Be the Next Certified Surveyor Grade II Officer"
+              </h3>
+
+              <p class="text-xs text-slate-300 leading-relaxed">
+                Guided step-by-step by Course Director Joseph Josey (Survey & Land Records Specialist). Join over 1,500+ active Kerala aspirants.
+              </p>
+
+              <div class="grid grid-cols-3 gap-2 pt-2 text-center">
+                <div class="bg-black/50 p-2 rounded-xl border border-slate-800">
+                  <div class="font-black text-emerald-400 text-sm">10 Modules</div>
+                  <div class="text-[10px] text-slate-400">Complete Syllabus</div>
+                </div>
+                <div class="bg-black/50 p-2 rounded-xl border border-slate-800">
+                  <div class="font-black text-emerald-400 text-sm">300+ MCQs</div>
+                  <div class="text-[10px] text-slate-400">Timed Practice</div>
+                </div>
+                <div class="bg-black/50 p-2 rounded-xl border border-slate-800">
+                  <div class="font-black text-emerald-400 text-sm">14 Districts</div>
+                  <div class="text-[10px] text-slate-400">Live Rankings</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        `
+      },
+      {
+        id: 7,
+        name: "8 • FINAL CALL TO ACTION",
+        duration: 6,
+        vo_ml: "ഇന്നുതന്നെ സൗജന്യമായി ലോഗിൻ ചെയ്യൂ. നിങ്ങളുടെ പിഎസ്സി സർവേയർ സ്വപ്നം സ്വന്തമാക്കൂ! എൻറോൾ ചെയ്യാനായി താഴെ കാണുന്ന ലിങ്കിൽ ക്ലിക്ക് ചെയ്യൂ.",
+        vo_en: "Sign up for free today and claim your rank! Click the link below to visit SurveyRank Academy now.",
+        html: `
+          <div class="relative w-full h-full bg-gradient-to-br from-emerald-950 via-slate-950 to-black flex flex-col items-center justify-center p-6 text-center">
+            <!-- Animated Glowing Background Ribbons -->
+            <div class="absolute inset-0 animate-shimmer pointer-events-none opacity-40"></div>
+
+            <div class="relative z-10 space-y-4 max-w-lg">
+              
+              <!-- Academy Logo -->
+              <div class="inline-flex items-center gap-3 bg-slate-900/90 border border-emerald-500/50 px-5 py-2 rounded-full shadow-2xl">
+                <div class="w-7 h-7 rounded-lg bg-emerald-500 text-black font-black flex items-center justify-center text-sm">
+                  SR
+                </div>
+                <span class="text-base font-black text-white tracking-wide">SurveyRank Academy</span>
+              </div>
+
+              <h2 class="text-2xl sm:text-4xl font-black text-white leading-tight">
+                Start Your Kerala PSC Surveyor Preparation Today!
+              </h2>
+
+              <p class="text-xs sm:text-sm text-slate-300">
+                Free Formula Sheets • 87 MCQ Master Mock Test • 14-District Live Rankings
+              </p>
+
+              <!-- Glowing Main CTA Button -->
+              <div class="pt-2">
+                <a href="https://surveyrank.com" target="_blank" class="inline-block bg-gradient-to-r from-emerald-400 via-emerald-500 to-teal-500 text-slate-950 font-black text-base sm:text-lg px-8 py-3.5 rounded-2xl shadow-[0_0_40px_rgba(16,185,129,0.5)] transform hover:scale-105 active:scale-95 transition tracking-wide uppercase">
+                  WWW.SURVEYRANK.COM | ENROLL NOW →
+                </a>
+              </div>
+
+              <div class="text-[11px] text-emerald-400 font-bold tracking-wider pt-1">
+                ✦ No Credit Card Required • Instant Free Access ✦
+              </div>
+
+            </div>
+          </div>
+        `
+      }
+    ];
+
+    // State
+    let currentSceneIdx = 0;
+    let isPlaying = false;
+    let progressTimer = null;
+    let currentTime = 0;
+    const totalDuration = 45;
+
+    const videoScreen = document.getElementById('videoScreen');
+    const panelBadge = document.getElementById('panelBadge');
+    const sceneTimeTicker = document.getElementById('sceneTimeTicker');
+    const skipText = document.getElementById('skipText');
+    const voSpeaker = document.getElementById('voSpeaker');
+    const voText = document.getElementById('voText');
+    const voTranslation = document.getElementById('voTranslation');
+    const progressBar = document.getElementById('progressBar');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const playIcon = document.getElementById('playIcon');
+    const playLabel = document.getElementById('playLabel');
+    const langBtn = document.getElementById('langBtn');
+    const langLabel = document.getElementById('langLabel');
+    const testAudioBtn = document.getElementById('testAudioBtn');
+    const voiceToggle = document.getElementById('voiceToggle');
+    const unmuteOverlay = document.getElementById('unmuteOverlay');
+
+    function renderScene(idx) {
+      const scene = SCENES[idx];
+      videoScreen.innerHTML = scene.html;
+      panelBadge.textContent = scene.name;
+
+      if (isMalayalam) {
+        voSpeaker.textContent = "Course Director Joseph Josey (മലയാളം)";
+        voText.textContent = `"${scene.vo_ml}"`;
+        voTranslation.textContent = `"${scene.vo_en}"`;
+      } else {
+        voSpeaker.textContent = "Course Director Joseph Josey (Indian English)";
+        voText.textContent = `"${scene.vo_en}"`;
+        voTranslation.textContent = `"${scene.vo_ml}"`;
+      }
+
+      // Highlight active scene button
+      document.querySelectorAll('.scene-btn').forEach((b, i) => {
+        if (i === idx) {
+          b.classList.add('border-emerald-500', 'bg-emerald-950/70');
+          b.classList.remove('border-slate-700', 'bg-slate-800');
+        } else {
+          b.classList.remove('border-emerald-500', 'bg-emerald-950/70');
+          b.classList.add('border-slate-700', 'bg-slate-800');
+        }
+      });
+
+      // Play natural voiceover for this scene
+      if (isPlaying) {
+        playSceneVoiceover(idx);
+      }
+    }
+
+    function tick() {
+      currentTime += 0.2;
+      const progressPercent = Math.min(100, (currentTime / totalDuration) * 100);
+      progressBar.style.width = progressPercent + '%';
+
+      // Format time
+      const mins = Math.floor(currentTime / 60);
+      const secs = Math.floor(currentTime % 60);
+      sceneTimeTicker.textContent = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+
+      // Skip ad logic
+      if (currentTime < 5) {
+        skipText.textContent = `Skip Ad in ${Math.ceil(5 - currentTime)}s`;
+      } else {
+        skipText.textContent = 'Skip Ad ▶|';
+      }
+
+      // Scene boundary check
+      let accumulated = 0;
+      for (let i = 0; i < SCENES.length; i++) {
+        accumulated += SCENES[i].duration;
+        if (currentTime < accumulated) {
+          if (currentSceneIdx !== i) {
+            currentSceneIdx = i;
+            renderScene(i);
+          }
+          break;
+        }
+      }
+
+      // Ad Complete Loop
+      if (currentTime >= totalDuration) {
+        currentTime = 0;
+        currentSceneIdx = 0;
+        renderScene(0);
+      }
+    }
+
+    function startPlayback() {
+      isPlaying = true;
+      playIcon.textContent = '⏸️';
+      playLabel.textContent = 'Pause';
+      if (progressTimer) clearInterval(progressTimer);
+      progressTimer = setInterval(tick, 200);
+      playSceneVoiceover(currentSceneIdx);
+    }
+
+    function pausePlayback() {
+      isPlaying = false;
+      playIcon.textContent = '▶️';
+      playLabel.textContent = 'Play';
+      if (progressTimer) clearInterval(progressTimer);
+      voicePlayer.pause();
+      const wave = document.getElementById('voiceWave');
+      if (wave) wave.style.opacity = '0.3';
+    }
+
+    function jumpToScene(idx) {
+      currentSceneIdx = idx;
+      let targetTime = 0;
+      for (let i = 0; i < idx; i++) {
+        targetTime += SCENES[i].duration;
+      }
+      currentTime = targetTime;
+      renderScene(idx);
+      if (isPlaying) {
+        playSceneVoiceover(idx);
+      }
+    }
+
+    // Controls Event Listeners
+    playPauseBtn.addEventListener('click', () => {
+      if (isPlaying) {
+        pausePlayback();
+      } else {
+        startPlayback();
+      }
+    });
+
+    document.getElementById('restartBtn').addEventListener('click', () => {
+      jumpToScene(0);
+      startPlayback();
+    });
+
+    document.getElementById('skipAdBox').addEventListener('click', () => {
+      jumpToScene(7); // Jump directly to CTA
+    });
+
+    langBtn.addEventListener('click', () => {
+      isMalayalam = !isMalayalam;
+      langLabel.textContent = isMalayalam ? 'Malayalam (മലയാളം)' : 'Indian English (English)';
+      renderScene(currentSceneIdx);
+      if (isPlaying) {
+        playSceneVoiceover(currentSceneIdx);
+      }
+    });
+
+    testAudioBtn.addEventListener('click', () => {
+      // Force test current scene audio immediately on click
+      playSceneVoiceover(currentSceneIdx);
+    });
+
+    voiceToggle.addEventListener('click', () => {
+      voiceoverEnabled = !voiceoverEnabled;
+      document.getElementById('voiceIcon').textContent = voiceoverEnabled ? '🔊' : '🔇';
+      document.getElementById('voiceLabel').textContent = voiceoverEnabled ? 'Voice: ON' : 'Voice: OFF';
+      if (!voiceoverEnabled) {
+        voicePlayer.pause();
+      } else if (voiceoverEnabled && isPlaying) {
+        playSceneVoiceover(currentSceneIdx);
+      }
+    });
+
+    // Unmute overlay click handler (Unlocks audio in browser with explicit user gesture)
+    unmuteOverlay.addEventListener('click', () => {
+      unmuteOverlay.style.display = 'none';
+      
+      // Prime and unlock the persistent HTML5 audio element
+      voicePlayer.play().catch(() => {});
+      
+      renderScene(0);
+      startPlayback();
+    });
+
+    // Initial render
+    renderScene(0);
+  </script>
+</body>
+</html>
