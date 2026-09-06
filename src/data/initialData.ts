@@ -2,6 +2,7 @@ import { ClassModule, StudyNote, PYQPaper, MockTest, MockTestAttempt, Doubt, Use
 import { MOCK_TEST_87_QUESTIONS } from './survey87Questions';
 import { MOCK_TEST_THEODOLITE_30 } from './theodoliteQuestions';
 import { MOCK_TEST_LEVELLING_95 } from './levellingContouring95Questions';
+import { MOCK_TEST_LEVELLING_187 } from './levelling187Questions';
 import { INITIAL_BANK_QUESTIONS } from './bankQuestions';
 import { SIMULATED_STUDENTS, SIMULATED_ATTEMPTS } from './simulatedStudents';
 
@@ -482,6 +483,7 @@ export const INITIAL_PYQ_PAPERS: PYQPaper[] = [
 ];
 
 export const INITIAL_MOCK_TESTS: MockTest[] = [
+  MOCK_TEST_LEVELLING_187,
   MOCK_TEST_LEVELLING_95,
   MOCK_TEST_87_QUESTIONS,
   MOCK_TEST_THEODOLITE_30,
