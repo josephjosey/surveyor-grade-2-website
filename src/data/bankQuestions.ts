@@ -1,8 +1,10 @@
 import { COMPASS_SURVEY_163_QUESTIONS } from './compassSurvey163Questions';
 import { CHAIN_SURVEY_204_QUESTIONS } from './chainSurvey204Questions';
+import { LEVELLING_CONTOURING_95_QUESTIONS } from './levellingContouring95Questions';
 import { BankQuestion } from '../types';
 
 export const INITIAL_BANK_QUESTIONS: BankQuestion[] = [
+  ...LEVELLING_CONTOURING_95_QUESTIONS,
   ...COMPASS_SURVEY_163_QUESTIONS,
   ...CHAIN_SURVEY_204_QUESTIONS,
   // MODULE 1: BASIC ENGINEERING DRAWING (10 Marks)
