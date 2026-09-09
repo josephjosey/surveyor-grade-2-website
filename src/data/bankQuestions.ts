@@ -6,9 +6,11 @@ import { PLANE_TABLE_103_QUESTIONS } from './planeTable103Questions';
 import { THEODOLITE_146_QUESTIONS } from './theodolite146Questions';
 import { MODERN_INSTRUMENTS_75_QUESTIONS } from './modernInstruments75Questions';
 import { MODERN_INSTRUMENTS_85_QUESTIONS } from './modernInstruments85Questions';
+import { MINOR_INSTRUMENTS_31_QUESTIONS } from './minorInstruments31Questions';
 import { BankQuestion } from '../types';
 
 export const INITIAL_BANK_QUESTIONS: BankQuestion[] = [
+  ...MINOR_INSTRUMENTS_31_QUESTIONS,
   ...MODERN_INSTRUMENTS_85_QUESTIONS,
   ...MODERN_INSTRUMENTS_75_QUESTIONS,
   ...THEODOLITE_146_QUESTIONS,

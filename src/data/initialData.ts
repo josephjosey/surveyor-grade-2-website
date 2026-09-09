@@ -7,6 +7,7 @@ import { MOCK_TEST_PLANE_TABLE_103 } from './planeTable103Questions';
 import { MOCK_TEST_THEODOLITE_146 } from './theodolite146Questions';
 import { MOCK_TEST_MODERN_INSTRUMENTS_75 } from './modernInstruments75Questions';
 import { MOCK_TEST_MODERN_INSTRUMENTS_85 } from './modernInstruments85Questions';
+import { MOCK_TEST_MINOR_INSTRUMENTS_31 } from './minorInstruments31Questions';
 import { INITIAL_BANK_QUESTIONS } from './bankQuestions';
 import { SIMULATED_STUDENTS, SIMULATED_ATTEMPTS } from './simulatedStudents';
 
@@ -487,6 +488,7 @@ export const INITIAL_PYQ_PAPERS: PYQPaper[] = [
 ];
 
 export const INITIAL_MOCK_TESTS: MockTest[] = [
+  MOCK_TEST_MINOR_INSTRUMENTS_31,
   MOCK_TEST_MODERN_INSTRUMENTS_85,
   MOCK_TEST_MODERN_INSTRUMENTS_75,
   MOCK_TEST_THEODOLITE_146,
