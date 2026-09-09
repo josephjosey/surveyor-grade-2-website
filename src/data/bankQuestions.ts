@@ -3,9 +3,11 @@ import { CHAIN_SURVEY_204_QUESTIONS } from './chainSurvey204Questions';
 import { LEVELLING_CONTOURING_95_QUESTIONS } from './levellingContouring95Questions';
 import { LEVELLING_187_QUESTIONS } from './levelling187Questions';
 import { PLANE_TABLE_103_QUESTIONS } from './planeTable103Questions';
+import { THEODOLITE_146_QUESTIONS } from './theodolite146Questions';
 import { BankQuestion } from '../types';
 
 export const INITIAL_BANK_QUESTIONS: BankQuestion[] = [
+  ...THEODOLITE_146_QUESTIONS,
   ...PLANE_TABLE_103_QUESTIONS,
   ...LEVELLING_CONTOURING_95_QUESTIONS,
   ...LEVELLING_187_QUESTIONS,
