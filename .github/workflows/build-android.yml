@@ -9,6 +9,8 @@ jobs:
   build-android:
     name: Build APK & Play Store AAB
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout Source Code
@@ -51,11 +53,17 @@ jobs:
           cd android
           ./gradlew bundleRelease --no-daemon --stacktrace
 
+      - name: Prepare Named Binaries
+        run: |
+          mkdir -p build-output
+          cp android/app/build/outputs/apk/debug/app-debug.apk build-output/SurveyRankAcademy.apk
+          cp android/app/build/outputs/bundle/release/app-release.aab build-output/SurveyRankAcademy.aab
+
       - name: Upload Universal Installable APK (.apk)
         uses: actions/upload-artifact@v4
         with:
           name: SurveyRankAcademy-DirectInstall-APK
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          path: build-output/SurveyRankAcademy.apk
           if-no-files-found: error
           retention-days: 30
 
@@ -63,6 +71,24 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: SurveyRankAcademy-PlayStore-AAB
-          path: android/app/build/outputs/bundle/release/app-release.aab
+          path: build-output/SurveyRankAcademy.aab
           if-no-files-found: error
           retention-days: 30
+
+      - name: Publish Public GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: github.ref == 'refs/heads/main'
+        with:
+          tag_name: v1.0.0
+          name: "SurveyRank Academy Android App (APK & AAB)"
+          body: |
+            ### 📱 SurveyRank Academy Android App v1.0.0
+            
+            - **Direct APK Download**: Download [`SurveyRankAcademy.apk`](https://github.com/josephjosey/surveyor-grade-2-website/releases/download/v1.0.0/SurveyRankAcademy.apk) to install immediately on your Android phone!
+            - **Google Play Store Bundle**: [`SurveyRankAcademy.aab`](https://github.com/josephjosey/surveyor-grade-2-website/releases/download/v1.0.0/SurveyRankAcademy.aab) for Google Play Console submission.
+            - **Features**: 1,089+ Kerala PSC Survey & Land Records Questions, 11 Timed Mock Tests, and State Rank Leaderboards.
+          files: |
+            build-output/SurveyRankAcademy.apk
+            build-output/SurveyRankAcademy.aab
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
