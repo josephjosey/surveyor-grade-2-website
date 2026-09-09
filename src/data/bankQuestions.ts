@@ -4,9 +4,11 @@ import { LEVELLING_CONTOURING_95_QUESTIONS } from './levellingContouring95Questi
 import { LEVELLING_187_QUESTIONS } from './levelling187Questions';
 import { PLANE_TABLE_103_QUESTIONS } from './planeTable103Questions';
 import { THEODOLITE_146_QUESTIONS } from './theodolite146Questions';
+import { MODERN_INSTRUMENTS_75_QUESTIONS } from './modernInstruments75Questions';
 import { BankQuestion } from '../types';
 
 export const INITIAL_BANK_QUESTIONS: BankQuestion[] = [
+  ...MODERN_INSTRUMENTS_75_QUESTIONS,
   ...THEODOLITE_146_QUESTIONS,
   ...PLANE_TABLE_103_QUESTIONS,
   ...LEVELLING_CONTOURING_95_QUESTIONS,
