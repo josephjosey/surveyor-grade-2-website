@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@capacitor/android": "^6.1.2",
+    "@capacitor/app": "^6.0.0",
+    "@capacitor/browser": "^6.0.0",
     "@capacitor/core": "^6.1.2",
     "@supabase/supabase-js": "^2.112.4",
     "canvas-confetti": "^1.9.3",

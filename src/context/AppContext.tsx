@@ -28,6 +28,7 @@ import {
 import { fetchDatabase, saveDatabase } from '../services/api';
 import { supabase } from '../supabaseClient';
 import * as SupabaseDb from '../services/supabaseService';
+import { initiateGoogleLogin } from '../services/mobileAuth';
 import { deleteUserFile } from '../services/storageService';
 
 export type NavigationTab = 'home' | 'dashboard' | 'notes' | 'pyq' | 'mocktests' | 'doubts' | 'admin';
@@ -1035,15 +1036,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const loginWithGoogle = async () => {
     try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: `${window.location.origin}/`
-        }
-      });
-
-      if (error) {
-        showToast(error.message, 'error');
+      const result = await initiateGoogleLogin();
+      if (!result.success && result.error) {
+        showToast(result.error, 'error');
       }
     } catch (err: any) {
       showToast(err.message || 'Error initiating Google Sign-in', 'error');

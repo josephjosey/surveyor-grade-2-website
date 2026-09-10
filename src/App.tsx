@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AppProvider, useApp } from './context/AppContext';
 import { supabase } from './supabaseClient';
+import { setupDeepLinkListener } from './services/mobileAuth';
 import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
 import { LandingPage } from './components/pages/LandingPage';
@@ -27,9 +28,44 @@ const MainLayout: React.FC = () => {
     setIsAuthenticated
   } = useApp();
 
+  const [returnToAppUrl, setReturnToAppUrl] = useState<string | null>(null);
+
+  // 1. Listen for deep link redirects inside native mobile app (Capacitor)
+  useEffect(() => {
+    const cleanup = setupDeepLinkListener(() => {
+      setIsAuthenticated(true);
+    });
+    return cleanup;
+  }, [setIsAuthenticated]);
+
+  // 2. If opened in external mobile browser (Chrome) after OAuth redirect:
+  useEffect(() => {
+    const hash = window.location.hash;
+    const search = window.location.search;
+    const isOAuthCallback = hash.includes('access_token') || search.includes('code=');
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+    if (isOAuthCallback && isMobile) {
+      const appUrl = `com.surveyrank.academy://auth-callback${search}${hash}`;
+      setReturnToAppUrl(appUrl);
+
+      // Attempt automatic bounce to mobile app
+      const timer = setTimeout(() => {
+        window.location.href = appUrl;
+      }, 700);
+
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
   // Protect private pages with supabase.auth.getSession() — if no session, redirect to /login
   useEffect(() => {
     const protectPrivatePages = async () => {
+      // If we are currently processing an OAuth callback, don't prematurely redirect
+      if (window.location.hash.includes('access_token') || window.location.search.includes('code=')) {
+        return;
+      }
+
       try {
         const { data: { session } } = await supabase.auth.getSession();
         if (!session) {
@@ -105,10 +141,24 @@ const MainLayout: React.FC = () => {
     </div>
   );
 
+  const returnBanner = returnToAppUrl && (
+    <div className="bg-emerald-700 text-white px-4 py-3 text-center text-sm font-semibold sticky top-0 z-50 flex flex-wrap items-center justify-center gap-2.5 shadow-md">
+      <span>✅ Google Login Successful!</span>
+      <a
+        href={returnToAppUrl}
+        className="inline-flex items-center gap-1.5 bg-white text-emerald-900 font-bold px-3.5 py-1.5 rounded-lg text-xs hover:bg-emerald-50 transition shadow-xs active:scale-95"
+      >
+        <span>Tap here to Open Mobile App</span>
+        <span>📲</span>
+      </a>
+    </div>
+  );
+
   // If user is not authenticated, show the dedicated eLearning Login / Sign-up Gateway
   if (!isAuthenticated) {
     return (
       <>
+        {returnBanner}
         <AuthPage />
         {toastContainer}
       </>
@@ -117,6 +167,7 @@ const MainLayout: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900">
+      {returnBanner}
       <Navbar />
 
       <main className="flex-1">

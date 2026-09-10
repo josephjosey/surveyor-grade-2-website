@@ -178,20 +178,10 @@ export const AuthPage: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: `${window.location.origin}/`
-        }
-      });
-
-      if (error) {
-        setAuthError(error.message);
-        setIsLoading(false);
-        return;
-      }
+      await loginWithGoogle();
     } catch (err: any) {
       setAuthError(err.message || 'An error occurred during Google sign-in.');
+    } finally {
       setIsLoading(false);
     }
   };

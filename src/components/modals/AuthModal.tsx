@@ -27,7 +27,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   onClose,
   defaultRole = 'student'
 }) => {
-  const { setCurrentUser, setActiveTab, showToast, setIsEnrollmentModalOpen, loginWithCredentials } = useApp();
+  const { setCurrentUser, setActiveTab, showToast, setIsEnrollmentModalOpen, loginWithCredentials, loginWithGoogle } = useApp();
 
   const [authRole, setAuthRole] = useState<'student' | 'instructor'>(defaultRole);
 
@@ -43,21 +43,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   if (!isOpen) return null;
 
   const handleGoogleLogin = async () => {
-    try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: `${window.location.origin}/`
-        }
-      });
-
-      if (error) {
-        showToast(error.message, 'error');
-        return;
-      }
-    } catch (err: any) {
-      showToast(err.message || 'Error initiating Google Sign-in', 'error');
-    }
+    await loginWithGoogle();
   };
 
   const handleStudentLogin = async (e: React.FormEvent) => {
