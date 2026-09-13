@@ -145,6 +145,27 @@ export const safeSetItem = (key: string, val: any) => {
   }
 };
 
+// ============================================================================
+// DATASET VERSIONING & CACHE MIGRATION
+// Guarantees 100% data parity across Web, Android APK, and all browsers
+// ============================================================================
+const DATA_VERSION = '2026.09.14-v2';
+
+try {
+  const currentVersion = localStorage.getItem('survey_academy_data_version');
+  if (currentVersion !== DATA_VERSION) {
+    // Purge stale question, note, and test caches so Web and Mobile platforms have exact parity
+    localStorage.removeItem('survey_academy_bank_questions');
+    localStorage.removeItem('survey_academy_tests');
+    localStorage.removeItem('survey_academy_notes');
+    localStorage.removeItem('survey_academy_modules');
+    localStorage.removeItem('survey_academy_pyqs');
+    localStorage.setItem('survey_academy_data_version', DATA_VERSION);
+  }
+} catch (e) {
+  // localStorage might not be accessible in rare incognito environments
+}
+
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User>(() => {
     const saved = localStorage.getItem('survey_academy_user');
@@ -283,23 +304,35 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       try {
         const parsed = JSON.parse(saved) as MockTest[];
         const filtered = parsed.filter((t) => !deletedIds.has(t.id));
-        const existingIds = new Set(filtered.map((t) => t.id));
-        const missing = INITIAL_MOCK_TESTS.filter((t) => !existingIds.has(t.id) && !deletedIds.has(t.id));
-        const combined = [...filtered, ...missing];
-        const enriched = combined.map((t) => {
-          const initMatch = INITIAL_MOCK_TESTS.find((it) => it.id === t.id);
-          if (initMatch && (!t.questions || t.questions.length === 0)) {
-            return { ...initMatch, ...t, questions: initMatch.questions };
+        const savedMap = new Map(filtered.map((t) => [t.id, t]));
+
+        // 1. Authoritative initial tests in their canonical, stable order
+        const combined: MockTest[] = INITIAL_MOCK_TESTS
+          .filter((initTest) => !deletedIds.has(initTest.id))
+          .map((initTest) => {
+            const savedMatch = savedMap.get(initTest.id);
+            if (!savedMatch) return initTest;
+            return {
+              ...initTest,
+              attemptsCount: Math.max(initTest.attemptsCount || 0, savedMatch.attemptsCount || 0)
+            };
+          });
+
+        // 2. Any custom tests created by admin
+        for (const st of filtered) {
+          if (!INITIAL_MOCK_TESTS.some((init) => init.id === st.id)) {
+            combined.push(st);
           }
-          return t;
-        });
-        safeSetItem('survey_academy_tests', enriched);
-        return enriched;
+        }
+
+        safeSetItem('survey_academy_tests', combined);
+        return combined;
       } catch (e) {
         return INITIAL_MOCK_TESTS.filter((t) => !deletedIds.has(t.id));
       }
     }
     const initialClean = INITIAL_MOCK_TESTS.filter((t) => !deletedIds.has(t.id));
+    safeSetItem('survey_academy_tests', initialClean);
     return initialClean;
   });
 
@@ -433,33 +466,59 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           const deletedIds = getDeletedIds('survey_academy_deleted_notes');
           setStudyNotes((prev) => {
             const cleanNotes = notes.filter((n) => !deletedIds.has(n.id));
-            const existingIds = new Set(cleanNotes.map((n) => n.id));
-            const missing = INITIAL_STUDY_NOTES.filter((n) => !existingIds.has(n.id) && !deletedIds.has(n.id));
-            const combined = [...cleanNotes, ...missing];
-            safeSetItem('survey_academy_notes', combined);
-            return combined;
+            const cloudMap = new Map(cleanNotes.map((n) => [n.id, n]));
+
+            // 1. Authoritative initial notes in their canonical, stable order
+            const canonicalList: StudyNote[] = INITIAL_STUDY_NOTES
+              .filter((initNote) => !deletedIds.has(initNote.id))
+              .map((initNote) => {
+                const cloudMatch = cloudMap.get(initNote.id);
+                if (!cloudMatch) return initNote;
+                return {
+                  ...initNote,
+                  downloadsCount: Math.max(initNote.downloadsCount || 0, cloudMatch.downloadsCount || 0)
+                };
+              });
+
+            // 2. Custom admin-created notes from Supabase
+            for (const cn of cleanNotes) {
+              if (!INITIAL_STUDY_NOTES.some((init) => init.id === cn.id)) {
+                canonicalList.push(cn);
+              }
+            }
+
+            safeSetItem('survey_academy_notes', canonicalList);
+            return canonicalList;
           });
         }
         if (tests && tests.length > 0) {
           const deletedIds = getDeletedIds('survey_academy_deleted_tests');
           setMockTests((prev) => {
             const cleanTests = tests.filter((t) => !deletedIds.has(t.id));
-            const combined = [...cleanTests];
-            const existingIds = new Set(cleanTests.map((t) => t.id));
-            for (const initTest of INITIAL_MOCK_TESTS) {
-              if (!existingIds.has(initTest.id) && !deletedIds.has(initTest.id)) {
-                combined.push(initTest);
+            const cloudMap = new Map(cleanTests.map((t) => [t.id, t]));
+
+            // 1. Authoritative initial tests in their canonical, stable order
+            const canonicalList: MockTest[] = INITIAL_MOCK_TESTS
+              .filter((initTest) => !deletedIds.has(initTest.id))
+              .map((initTest) => {
+                const cloudMatch = cloudMap.get(initTest.id);
+                if (!cloudMatch) return initTest;
+                return {
+                  ...initTest,
+                  // Keep initial metadata authoritative, only update dynamic counters if higher
+                  attemptsCount: Math.max(initTest.attemptsCount || 0, cloudMatch.attemptsCount || 0)
+                };
+              });
+
+            // 2. Custom admin-created tests from Supabase
+            for (const ct of cleanTests) {
+              if (!INITIAL_MOCK_TESTS.some((init) => init.id === ct.id)) {
+                canonicalList.push(ct);
               }
             }
-            const enriched = combined.map((t) => {
-              const initMatch = INITIAL_MOCK_TESTS.find((it) => it.id === t.id);
-              if (initMatch && (!t.questions || t.questions.length === 0)) {
-                return { ...initMatch, ...t, questions: initMatch.questions };
-              }
-              return t;
-            });
-            safeSetItem('survey_academy_tests', enriched);
-            return enriched;
+
+            safeSetItem('survey_academy_tests', canonicalList);
+            return canonicalList;
           });
         } else {
           const deletedIds = getDeletedIds('survey_academy_deleted_tests');
@@ -479,13 +538,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
               }
             }
             for (const item of prev) {
-              if (!existingIds.has(item.id)) {
-                const isSimulated = item.id?.startsWith('att-sim-') || item.userId?.startsWith('std-sim-');
-                const isCurrentUser = currentUser && item.userId === currentUser.id;
-                if (isSimulated || isCurrentUser) {
-                  combined.push(item);
-                  existingIds.add(item.id);
-                }
+              if (!existingIds.has(item.id) && !isDummyCandidate(item.userName, item.id)) {
+                combined.push(item);
+                existingIds.add(item.id);
               }
             }
             safeSetItem('survey_academy_attempts', combined);
@@ -554,12 +609,30 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
               const freshNotes = await SupabaseDb.fetchStudyNotes();
               if (freshNotes && freshNotes.length > 0) {
                 const deletedIds = getDeletedIds('survey_academy_deleted_notes');
-                const cleanNotes = freshNotes.filter((n) => !deletedIds.has(n.id));
-                const existingIds = new Set(cleanNotes.map((n) => n.id));
-                const missing = INITIAL_STUDY_NOTES.filter((n) => !existingIds.has(n.id) && !deletedIds.has(n.id));
-                const combined = [...cleanNotes, ...missing];
-                setStudyNotes(combined);
-                safeSetItem('survey_academy_notes', combined);
+                setStudyNotes((prev) => {
+                  const cleanNotes = freshNotes.filter((n) => !deletedIds.has(n.id));
+                  const cloudMap = new Map(cleanNotes.map((n) => [n.id, n]));
+
+                  const canonicalList: StudyNote[] = INITIAL_STUDY_NOTES
+                    .filter((initNote) => !deletedIds.has(initNote.id))
+                    .map((initNote) => {
+                      const cloudMatch = cloudMap.get(initNote.id);
+                      if (!cloudMatch) return initNote;
+                      return {
+                        ...initNote,
+                        downloadsCount: Math.max(initNote.downloadsCount || 0, cloudMatch.downloadsCount || 0)
+                      };
+                    });
+
+                  for (const cn of cleanNotes) {
+                    if (!INITIAL_STUDY_NOTES.some((init) => init.id === cn.id)) {
+                      canonicalList.push(cn);
+                    }
+                  }
+
+                  safeSetItem('survey_academy_notes', canonicalList);
+                  return canonicalList;
+                });
               }
             }
           } catch (e) {
@@ -584,7 +657,30 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
               const freshTests = await SupabaseDb.fetchMockTests();
               if (freshTests && freshTests.length > 0) {
                 const deletedIds = getDeletedIds('survey_academy_deleted_tests');
-                setMockTests(freshTests.filter((t) => !deletedIds.has(t.id)));
+                setMockTests((prev) => {
+                  const cleanTests = freshTests.filter((t) => !deletedIds.has(t.id));
+                  const cloudMap = new Map(cleanTests.map((t) => [t.id, t]));
+
+                  const canonicalList: MockTest[] = INITIAL_MOCK_TESTS
+                    .filter((initTest) => !deletedIds.has(initTest.id))
+                    .map((initTest) => {
+                      const cloudMatch = cloudMap.get(initTest.id);
+                      if (!cloudMatch) return initTest;
+                      return {
+                        ...initTest,
+                        attemptsCount: Math.max(initTest.attemptsCount || 0, cloudMatch.attemptsCount || 0)
+                      };
+                    });
+
+                  for (const ct of cleanTests) {
+                    if (!INITIAL_MOCK_TESTS.some((init) => init.id === ct.id)) {
+                      canonicalList.push(ct);
+                    }
+                  }
+
+                  safeSetItem('survey_academy_tests', canonicalList);
+                  return canonicalList;
+                });
               }
             }
           } catch (e) {
@@ -635,13 +731,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
                   }
                 }
                 for (const item of prev) {
-                  if (!existingIds.has(item.id)) {
-                    const isSimulated = item.id?.startsWith('att-sim-') || item.userId?.startsWith('std-sim-');
-                    const isCurrentUser = currentUser && item.userId === currentUser.id;
-                    if (isSimulated || isCurrentUser) {
-                      combined.push(item);
-                      existingIds.add(item.id);
-                    }
+                  if (!existingIds.has(item.id) && !isDummyCandidate(item.userName, item.id)) {
+                    combined.push(item);
+                    existingIds.add(item.id);
                   }
                 }
                 safeSetItem('survey_academy_attempts', combined);
@@ -757,9 +849,18 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           (isInstructorEmail
             ? 'Instructor & Course Director (Kerala PSC Survey & KWA)'
             : 'Kerala PSC Surveyor Gr. II & KWA Overseer'),
-        completedClassIds: profile?.completedClassIds || savedUser.completedClassIds || [],
-        bookmarkedClassIds: profile?.bookmarkedClassIds || savedUser.bookmarkedClassIds || [],
-        savedPYQIds: profile?.savedPYQIds || savedUser.savedPYQIds || [],
+        completedClassIds: Array.from(new Set([
+          ...(Array.isArray(profile?.completedClassIds) ? profile.completedClassIds : []),
+          ...(Array.isArray(savedUser.completedClassIds) ? savedUser.completedClassIds : [])
+        ])),
+        bookmarkedClassIds: Array.from(new Set([
+          ...(Array.isArray(profile?.bookmarkedClassIds) ? profile.bookmarkedClassIds : []),
+          ...(Array.isArray(savedUser.bookmarkedClassIds) ? savedUser.bookmarkedClassIds : [])
+        ])),
+        savedPYQIds: Array.from(new Set([
+          ...(Array.isArray(profile?.savedPYQIds) ? profile.savedPYQIds : []),
+          ...(Array.isArray(savedUser.savedPYQIds) ? savedUser.savedPYQIds : [])
+        ])),
         streakDays: profile?.streakDays || savedUser.streakDays || 1,
         subscriptionPlan: (profile?.subscriptionPlan as any) || savedUser.subscriptionPlan || (isInstructorEmail ? 'master' : 'free'),
         stateRank: profile?.stateRank || savedUser.stateRank,

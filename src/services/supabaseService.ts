@@ -9,6 +9,7 @@ import {
   Doubt,
   DoubtAnswer
 } from '../types';
+import { INITIAL_MOCK_TESTS } from '../data/initialData';
 
 // ============================================================================
 // 1. PROFILES (USER DATA)
@@ -348,23 +349,20 @@ export async function saveTestAttempt(attempt: MockTestAttempt, userId?: string)
     const isUUID = candidateUid && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(candidateUid);
     const finalUserId = isUUID ? candidateUid : (sessionUser?.id || null);
 
-    // Ensure mock_test record exists to satisfy foreign key constraint
+    // Ensure mock_test record exists with accurate metadata to satisfy foreign key constraint
     try {
-      const isTheodolite = attempt.testId === 'mock-theodolite-mcq-30';
-      const isMaster87 = attempt.testId === 'mock-kpsc-master-87';
-      await supabase.from('mock_tests').upsert({
-        id: attempt.testId,
-        title: isTheodolite
-          ? 'Theodolite MCQ'
-          : isMaster87 
-          ? 'Kerala PSC Surveyor Grade II & Overseer - 87 MCQ Master Test Series' 
-          : 'All-Kerala Survey & Land Records State-Level Ranked Grand Exam',
-        category: 'All-Kerala State Ranked Exam',
-        duration_minutes: isTheodolite ? 30 : isMaster87 ? 75 : 45,
-        total_questions: isTheodolite ? 30 : isMaster87 ? 87 : 10,
-        total_marks: isTheodolite ? 30 : isMaster87 ? 87 : 10,
-        is_ranked_exam: true
-      });
+      const match = INITIAL_MOCK_TESTS.find((m) => m.id === attempt.testId);
+      if (match) {
+        await supabase.from('mock_tests').upsert({
+          id: match.id,
+          title: match.title,
+          category: match.category,
+          duration_minutes: match.durationMinutes,
+          total_questions: match.totalQuestions,
+          total_marks: match.totalMarks,
+          is_ranked_exam: !!match.isRankedExam
+        });
+      }
     } catch (e) {
       // ignore
     }

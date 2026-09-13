@@ -72,6 +72,7 @@ export const MockTestsPage: React.FC = () => {
   // Active selected Ranked Exam
   const activeRankedExam =
     rankedExams.find((t) => t.id === selectedRankedExamId) ||
+    rankedExams.find((t) => t.id === 'mock-kpsc-master-87') ||
     rankedExams[0] ||
     mockTests[0];
 

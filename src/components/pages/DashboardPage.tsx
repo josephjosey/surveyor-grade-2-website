@@ -47,7 +47,11 @@ export const DashboardPage: React.FC = () => {
   } = useApp();
 
   const primaryRankedTest = useMemo(() => {
-    return mockTests.find((t) => t.id === 'mock-kpsc-master-87' || t.isRankedExam || t.id === 'mock-state-rank-1') || mockTests[0];
+    return (
+      mockTests.find((t) => t.id === 'mock-kpsc-master-87') ||
+      mockTests.find((t) => t.isRankedExam || t.id === 'mock-state-rank-1') ||
+      mockTests[0]
+    );
   }, [mockTests]);
 
   const userRankInfo = useMemo(() => {

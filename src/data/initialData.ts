@@ -274,6 +274,35 @@ export const INITIAL_STUDY_NOTES: StudyNote[] = [
     uploadedAt: '2026-08-20'
   },
   {
+    id: 'note-6',
+    moduleId: 'mod-6',
+    title: 'Kerala Survey & Boundaries Act 1961 & Land Records (FMB, Thandaper)',
+    titleMalayalam: 'കേരള സർവേ & അതിരടയാള നിയമം 1961 - സുപ്രധാന വകുപ്പുകൾ',
+    description: 'Direct high-scoring session on Section 6 (Notification), Section 9 (Notice to record boundaries), Section 13 (Completion of survey), FMB ladder reading, and survey stones specifications.',
+    readTime: '35 mins read',
+    thumbnail: 'https://images.unsplash.com/photo-1450133064473-71024230f91b?auto=format&fit=crop&w=800&q=80',
+    pdfNotesUrl: '/sample-notes.pdf',
+    pdfNotesTitle: 'Kerala_Survey_Boundaries_Act_1961_Key_Sections.pdf',
+    pdfSize: '3.7 MB PDF',
+    chapterOverview: [
+      'Section 6: Government notification regarding commencement of survey',
+      'Section 9: Notice requiring attendance and clearing of boundaries by landholders',
+      'Section 10: Determination of disputed boundaries',
+      'Section 13: Official notification of completion of survey',
+      'Field Measurement Book (FMB): G-line, F-line, offset ladder & subdivision lines'
+    ],
+    takeaways: [
+      'Section 6: Notification regarding commencement of survey',
+      'Section 9: Notice to registered owners to clear boundaries',
+      'Section 13: Final notification on completion of survey',
+      'FMB contains G-line, F-line, offset ladder, and sub-division measurements'
+    ],
+    order: 7,
+    isFreePreview: true,
+    downloadsCount: 2450,
+    uploadedAt: '2026-08-22'
+  },
+  {
     id: 'note-7',
     moduleId: 'mod-7',
     title: 'Modern Survey Instruments (Total Station, GPS & DGPS)',
@@ -294,7 +323,7 @@ export const INITIAL_STUDY_NOTES: StudyNote[] = [
       'Prism constant correction is typically -30mm or 0mm',
       'CORS (Continuously Operating Reference Station) gives centimetre-level real-time accuracy'
     ],
-    order: 7,
+    order: 8,
     isFreePreview: true,
     downloadsCount: 1250,
     uploadedAt: '2026-08-22'
@@ -320,7 +349,7 @@ export const INITIAL_STUDY_NOTES: StudyNote[] = [
       'Shrunk Scale = Original Scale x Shrinkage Factor',
       'Standard Cad format extension: .DWG, exchange format: .DXF'
     ],
-    order: 8,
+    order: 9,
     isFreePreview: true,
     downloadsCount: 980,
     uploadedAt: '2026-08-23'
