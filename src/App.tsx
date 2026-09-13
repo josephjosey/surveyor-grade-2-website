@@ -4,17 +4,27 @@ import { supabase } from './supabaseClient';
 import { setupDeepLinkListener } from './services/mobileAuth';
 import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
-import { LandingPage } from './components/pages/LandingPage';
-import { DashboardPage } from './components/pages/DashboardPage';
-import { ClassesPage } from './components/pages/ClassesPage';
-import { PYQPage } from './components/pages/PYQPage';
-import { MockTestsPage } from './components/pages/MockTestsPage';
-import { DoubtsForumPage } from './components/pages/DoubtsForumPage';
-import { AdminPortalPage } from './components/pages/AdminPortalPage';
 import { EnrollmentModal } from './components/modals/EnrollmentModal';
 import { AuthModal } from './components/modals/AuthModal';
-import { AuthPage } from './components/pages/AuthPage';
 import { CheckCircle, AlertCircle, Info, X } from 'lucide-react';
+
+const LandingPage = React.lazy(() => import('./components/pages/LandingPage').then((m) => ({ default: m.LandingPage })));
+const DashboardPage = React.lazy(() => import('./components/pages/DashboardPage').then((m) => ({ default: m.DashboardPage })));
+const ClassesPage = React.lazy(() => import('./components/pages/ClassesPage').then((m) => ({ default: m.ClassesPage })));
+const PYQPage = React.lazy(() => import('./components/pages/PYQPage').then((m) => ({ default: m.PYQPage })));
+const MockTestsPage = React.lazy(() => import('./components/pages/MockTestsPage').then((m) => ({ default: m.MockTestsPage })));
+const DoubtsForumPage = React.lazy(() => import('./components/pages/DoubtsForumPage').then((m) => ({ default: m.DoubtsForumPage })));
+const AdminPortalPage = React.lazy(() => import('./components/pages/AdminPortalPage').then((m) => ({ default: m.AdminPortalPage })));
+const AuthPage = React.lazy(() => import('./components/pages/AuthPage').then((m) => ({ default: m.AuthPage })));
+
+const PageLoadingFallback: React.FC = () => (
+  <div className="flex items-center justify-center min-h-[50vh] py-16">
+    <div className="flex flex-col items-center gap-3">
+      <div className="w-8 h-8 border-3 border-emerald-600/30 border-t-emerald-600 rounded-full animate-spin" />
+      <span className="text-[11px] font-bold text-slate-500 tracking-wider uppercase">Loading section...</span>
+    </div>
+  </div>
+);
 
 const MainLayout: React.FC = () => {
   const {
@@ -159,7 +169,9 @@ const MainLayout: React.FC = () => {
     return (
       <>
         {returnBanner}
-        <AuthPage />
+        <React.Suspense fallback={<PageLoadingFallback />}>
+          <AuthPage />
+        </React.Suspense>
         {toastContainer}
       </>
     );
@@ -171,13 +183,15 @@ const MainLayout: React.FC = () => {
       <Navbar />
 
       <main className="flex-1">
-        {activeTab === 'home' && <LandingPage />}
-        {activeTab === 'dashboard' && <DashboardPage />}
-        {(activeTab === 'notes' || (activeTab as any) === 'classes') && <ClassesPage />}
-        {activeTab === 'pyq' && <PYQPage />}
-        {activeTab === 'mocktests' && <MockTestsPage />}
-        {activeTab === 'doubts' && <DoubtsForumPage />}
-        {activeTab === 'admin' && <AdminPortalPage />}
+        <React.Suspense fallback={<PageLoadingFallback />}>
+          {activeTab === 'home' && <LandingPage />}
+          {activeTab === 'dashboard' && <DashboardPage />}
+          {(activeTab === 'notes' || (activeTab as any) === 'classes') && <ClassesPage />}
+          {activeTab === 'pyq' && <PYQPage />}
+          {activeTab === 'mocktests' && <MockTestsPage />}
+          {activeTab === 'doubts' && <DoubtsForumPage />}
+          {activeTab === 'admin' && <AdminPortalPage />}
+        </React.Suspense>
       </main>
 
       <Footer />

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import {
   User,
   UserRole,
@@ -814,9 +814,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     };
   }, []);
 
-  // 2. Persistent Disk Sync: Auto-save all changes to data/database.json on disk
+  // 2. Persistent Disk Sync: Auto-save all changes to data/database.json on disk (development only)
   useEffect(() => {
-    if (!isDiskLoaded) return;
+    if (!isDiskLoaded || !import.meta.env.DEV) return;
     const timer = setTimeout(() => {
       saveDatabase({
         modules,
@@ -831,37 +831,58 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return () => clearTimeout(timer);
   }, [modules, studyNotes, pyqPapers, mockTests, testAttempts, doubts, students, isDiskLoaded]);
 
-  // 3. LocalStorage cache sync
+  // 3. LocalStorage cache sync (debounced to avoid blocking main thread)
   useEffect(() => {
     safeSetItem('survey_academy_user', currentUser);
   }, [currentUser]);
 
   useEffect(() => {
-    safeSetItem('survey_academy_modules', modules);
+    const timer = setTimeout(() => {
+      safeSetItem('survey_academy_modules', modules);
+    }, 150);
+    return () => clearTimeout(timer);
   }, [modules]);
 
   useEffect(() => {
-    safeSetItem('survey_academy_notes', studyNotes);
+    const timer = setTimeout(() => {
+      safeSetItem('survey_academy_notes', studyNotes);
+    }, 150);
+    return () => clearTimeout(timer);
   }, [studyNotes]);
 
   useEffect(() => {
-    safeSetItem('survey_academy_pyqs', pyqPapers);
+    const timer = setTimeout(() => {
+      safeSetItem('survey_academy_pyqs', pyqPapers);
+    }, 150);
+    return () => clearTimeout(timer);
   }, [pyqPapers]);
 
   useEffect(() => {
-    safeSetItem('survey_academy_tests', mockTests);
+    const timer = setTimeout(() => {
+      safeSetItem('survey_academy_tests', mockTests);
+    }, 150);
+    return () => clearTimeout(timer);
   }, [mockTests]);
 
   useEffect(() => {
-    safeSetItem('survey_academy_attempts', testAttempts);
+    const timer = setTimeout(() => {
+      safeSetItem('survey_academy_attempts', testAttempts);
+    }, 150);
+    return () => clearTimeout(timer);
   }, [testAttempts]);
 
   useEffect(() => {
-    safeSetItem('survey_academy_doubts', doubts);
+    const timer = setTimeout(() => {
+      safeSetItem('survey_academy_doubts', doubts);
+    }, 150);
+    return () => clearTimeout(timer);
   }, [doubts]);
 
   useEffect(() => {
-    safeSetItem('survey_academy_students', students);
+    const timer = setTimeout(() => {
+      safeSetItem('survey_academy_students', students);
+    }, 150);
+    return () => clearTimeout(timer);
   }, [students]);
 
   // Export Full JSON Backup
@@ -1293,7 +1314,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return newAttempt;
   };
 
-  const getRankedLeaderboard = (testId: string): MockTestAttempt[] => {
+  const leaderboardCacheRef = useRef<Map<string, { attemptsRef: MockTestAttempt[]; result: MockTestAttempt[] }>>(new Map());
+
+  const getRankedLeaderboard = useCallback((testId: string): MockTestAttempt[] => {
+    const cached = leaderboardCacheRef.current.get(testId);
+    if (cached && cached.attemptsRef === testAttempts) {
+      return cached.result;
+    }
+
     // Strictly filter attempts ONLY for this specific test
     const filtered = testAttempts.filter((a) => a.testId === testId);
     
@@ -1334,7 +1362,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     });
 
     const total = sorted.length;
-    return sorted.map((att, idx) => {
+    const computedLeaderboard = sorted.map((att, idx) => {
       const rank = idx + 1;
       const percentile = total > 1 ? Number((((total - rank) / (total - 1)) * 100).toFixed(1)) : 100;
       return {
@@ -1343,7 +1371,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         percentile
       };
     });
-  };
+
+    leaderboardCacheRef.current.set(testId, {
+      attemptsRef: testAttempts,
+      result: computedLeaderboard
+    });
+
+    return computedLeaderboard;
+  }, [testAttempts]);
 
   const hasUserAttemptedTest = (testId: string, userId?: string): boolean => {
     const uid = userId || currentUser.id;

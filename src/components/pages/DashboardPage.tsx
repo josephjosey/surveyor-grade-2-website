@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useApp } from '../../context/AppContext';
 import {
   BookOpen,
@@ -46,26 +46,42 @@ export const DashboardPage: React.FC = () => {
     showToast
   } = useApp();
 
-  const primaryRankedTest = mockTests.find((t) => t.id === 'mock-kpsc-master-87' || t.isRankedExam || t.id === 'mock-state-rank-1') || mockTests[0];
-  const userRankInfo = getUserRankInfo();
+  const primaryRankedTest = useMemo(() => {
+    return mockTests.find((t) => t.id === 'mock-kpsc-master-87' || t.isRankedExam || t.id === 'mock-state-rank-1') || mockTests[0];
+  }, [mockTests]);
+
+  const userRankInfo = useMemo(() => {
+    return getUserRankInfo();
+  }, [getUserRankInfo, testAttempts, currentUser.id]);
 
   // Dynamically calculate completed notes that actually exist in the current active studyNotes array
-  const validCompletedNotes = studyNotes.filter((n) => currentUser.completedClassIds?.includes(n.id));
+  const validCompletedNotes = useMemo(() => {
+    return studyNotes.filter((n) => currentUser.completedClassIds?.includes(n.id));
+  }, [studyNotes, currentUser.completedClassIds]);
+
   const completedCount = validCompletedNotes.length;
   const totalNotes = studyNotes.length;
   const progressPercent = totalNotes > 0 ? Math.min(100, Math.round((completedCount / totalNotes) * 100)) : 0;
 
   // Next unread study note to continue
-  const nextNote = studyNotes.find((n) => !currentUser.completedClassIds?.includes(n.id)) || studyNotes[0];
+  const nextNote = useMemo(() => {
+    return studyNotes.find((n) => !currentUser.completedClassIds?.includes(n.id)) || studyNotes[0];
+  }, [studyNotes, currentUser.completedClassIds]);
 
   // User's attempts
-  const userAttempts = testAttempts.filter((a) => a.userId === currentUser.id);
+  const userAttempts = useMemo(() => {
+    return testAttempts.filter((a) => a.userId === currentUser.id);
+  }, [testAttempts, currentUser.id]);
 
   // User's doubts
-  const userDoubts = doubts.filter((d) => d.userId === currentUser.id);
+  const userDoubts = useMemo(() => {
+    return doubts.filter((d) => d.userId === currentUser.id);
+  }, [doubts, currentUser.id]);
 
   // Bookmarked notes
-  const bookmarkedNotes = studyNotes.filter((n) => currentUser.bookmarkedClassIds.includes(n.id));
+  const bookmarkedNotes = useMemo(() => {
+    return studyNotes.filter((n) => currentUser.bookmarkedClassIds.includes(n.id));
+  }, [studyNotes, currentUser.bookmarkedClassIds]);
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editName, setEditName] = useState(currentUser.name);

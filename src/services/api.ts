@@ -22,6 +22,7 @@ export interface DatabaseState {
 }
 
 export async function fetchDatabase(): Promise<DatabaseState | null> {
+  if (!import.meta.env.DEV) return null;
   try {
     const res = await fetch('/api/database');
     if (!res.ok) return null;
@@ -37,6 +38,7 @@ export async function fetchDatabase(): Promise<DatabaseState | null> {
 }
 
 export async function saveDatabase(data: DatabaseState): Promise<boolean> {
+  if (!import.meta.env.DEV) return false;
   try {
     const res = await fetch('/api/database', {
       method: 'POST',

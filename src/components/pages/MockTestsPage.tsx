@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useApp } from '../../context/AppContext';
 import {
   CheckSquare,
@@ -80,7 +80,9 @@ export const MockTestsPage: React.FC = () => {
   const fullLeaderboard = activeRankedExam ? getRankedLeaderboard(activeRankedExam.id) : [];
 
   // Practice tests (excluding the ranked exams)
-  const practiceTests = mockTests.filter((t) => !t.isRankedExam && t.id !== 'mock-state-rank-1');
+  const practiceTests = useMemo(() => {
+    return mockTests.filter((t) => !t.isRankedExam && t.id !== 'mock-state-rank-1');
+  }, [mockTests]);
 
   // Auto-select if selectedMockTestId is passed
   useEffect(() => {
@@ -98,23 +100,24 @@ export const MockTestsPage: React.FC = () => {
     }
   }, [selectedMockTestId, mockTests]);
 
-  // Exam Countdown Timer
+  const handleSubmitExamRef = useRef<() => void>(() => {});
+
+  // Exam Countdown Timer (runs continuously without per-second interval recreation churn)
   useEffect(() => {
-    let interval: any = null;
-    if (isExamRunning && timeLeftSeconds > 0) {
-      interval = setInterval(() => {
-        setTimeLeftSeconds((prev) => {
-          if (prev <= 1) {
-            clearInterval(interval);
-            handleAutoSubmit();
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    }
+    if (!isExamRunning) return;
+    const interval = setInterval(() => {
+      setTimeLeftSeconds((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          showToast('Time is up! Exam auto-submitted.', 'warning');
+          handleSubmitExamRef.current();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
     return () => clearInterval(interval);
-  }, [isExamRunning, timeLeftSeconds]);
+  }, [isExamRunning, showToast]);
 
   const handleStartExam = (test: MockTest) => {
     const isAlreadyAttempted = hasUserAttemptedTest(test.id);
@@ -223,20 +226,24 @@ export const MockTestsPage: React.FC = () => {
     }
   };
 
+  handleSubmitExamRef.current = handleSubmitExam;
+
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
-  // Filtered Leaderboard
-  const filteredLeaderboard = fullLeaderboard.filter((entry) => {
-    const matchesDistrict = selectedDistrictFilter === 'all' || entry.district?.toLowerCase() === selectedDistrictFilter.toLowerCase();
-    const matchesSearch =
-      entry.userName.toLowerCase().includes(leaderboardSearch.toLowerCase()) ||
-      (entry.district && entry.district.toLowerCase().includes(leaderboardSearch.toLowerCase()));
-    return matchesDistrict && matchesSearch;
-  });
+  // Filtered Leaderboard (memoized to avoid re-filtering on unrelated state updates)
+  const filteredLeaderboard = useMemo(() => {
+    return fullLeaderboard.filter((entry) => {
+      const matchesDistrict = selectedDistrictFilter === 'all' || entry.district?.toLowerCase() === selectedDistrictFilter.toLowerCase();
+      const matchesSearch =
+        entry.userName.toLowerCase().includes(leaderboardSearch.toLowerCase()) ||
+        (entry.district && entry.district.toLowerCase().includes(leaderboardSearch.toLowerCase()));
+      return matchesDistrict && matchesSearch;
+    });
+  }, [fullLeaderboard, selectedDistrictFilter, leaderboardSearch]);
 
   const districtsList = [
     'All Kerala (Statewide)',

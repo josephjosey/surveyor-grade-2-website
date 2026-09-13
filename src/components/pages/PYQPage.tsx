@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { useApp } from '../../context/AppContext';
 import {
   FileCheck,
@@ -25,6 +25,121 @@ import {
   BarChart2
 } from 'lucide-react';
 import { BankQuestion, PYQPaper } from '../../types';
+
+interface InteractiveQuestionCardProps {
+  q: BankQuestion;
+  idx: number;
+  selectedOpt: number | undefined;
+  onSelectOption: (qId: string, optIdx: number) => void;
+}
+
+const InteractiveQuestionCard = React.memo<InteractiveQuestionCardProps>(({
+  q,
+  idx,
+  selectedOpt,
+  onSelectOption
+}) => {
+  const isAnswered = selectedOpt !== undefined;
+  const isCorrect = selectedOpt === q.correctOptionIndex;
+
+  return (
+    <div
+      className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4 text-left transition hover:border-slate-300"
+    >
+      {/* Question Badge and Meta */}
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <span className="w-7 h-7 rounded-xl bg-slate-900 text-white font-black text-xs flex items-center justify-center">
+            {idx + 1}
+          </span>
+          {q.type === 'pyq' ? (
+            <span className="px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800 text-[10px] font-black uppercase tracking-wider border border-blue-200">
+              🌟 PYQ: {q.examName || 'Kerala PSC'} ({q.year || 'Past Paper'})
+            </span>
+          ) : (
+            <span className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 text-[10px] font-bold uppercase tracking-wider border border-slate-200">
+              Syllabus MCQ
+            </span>
+          )}
+        </div>
+        {q.topic && (
+          <span className="text-[11px] text-slate-500 font-semibold hidden sm:inline">
+            Topic: {q.topic}
+          </span>
+        )}
+      </div>
+
+      {/* Question Text */}
+      <p className="font-extrabold text-slate-900 text-sm sm:text-base leading-relaxed">
+        {q.question}
+      </p>
+
+      {/* Options Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+        {q.options.map((opt, optIdx) => {
+          const isThisSelected = selectedOpt === optIdx;
+          const isThisCorrect = optIdx === q.correctOptionIndex;
+
+          let optClasses = 'border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-800';
+
+          if (isAnswered) {
+            if (isThisCorrect) {
+              optClasses = 'border-emerald-500 bg-emerald-50 text-emerald-950 font-bold ring-2 ring-emerald-500/40';
+            } else if (isThisSelected) {
+              optClasses = 'border-red-500 bg-red-50 text-red-950 font-bold';
+            } else {
+              optClasses = 'border-slate-200 bg-slate-50/60 text-slate-400 opacity-60';
+            }
+          }
+
+          return (
+            <button
+              key={optIdx}
+              onClick={() => onSelectOption(q.id, optIdx)}
+              className={`p-3.5 rounded-xl border text-left text-xs sm:text-sm font-medium transition flex items-start gap-3 ${optClasses}`}
+            >
+              <span className={`w-5 h-5 rounded-lg flex items-center justify-center font-bold text-xs shrink-0 ${
+                isAnswered && isThisCorrect
+                  ? 'bg-emerald-600 text-white'
+                  : isAnswered && isThisSelected
+                  ? 'bg-red-600 text-white'
+                  : 'bg-white border border-slate-300 text-slate-700'
+              }`}>
+                {String.fromCharCode(65 + optIdx)}
+              </span>
+              <span className="leading-snug">{opt}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Explanation Box (Revealed on click) */}
+      {isAnswered && (
+        <div className="mt-3 p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2 text-xs">
+          <div className="flex items-center gap-2">
+            {isCorrect ? (
+              <span className="text-emerald-700 font-extrabold flex items-center gap-1">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600" /> Correct Answer: Option {String.fromCharCode(65 + q.correctOptionIndex)}
+              </span>
+            ) : (
+              <span className="text-red-600 font-extrabold flex items-center gap-1">
+                <XCircle className="w-4 h-4 text-red-500" /> Incorrect. Correct Answer: Option {String.fromCharCode(65 + q.correctOptionIndex)}
+              </span>
+            )}
+          </div>
+          <p className="text-slate-700 leading-relaxed font-medium">
+            <strong>Explanation:</strong> {q.explanation}
+          </p>
+          {q.rankerTip && (
+            <div className="pt-1 text-amber-900 bg-amber-50 p-2.5 rounded-lg border border-amber-200">
+              <strong>Exam Tip:</strong> {q.rankerTip}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+});
 
 export const PYQPage: React.FC = () => {
   const {
@@ -83,10 +198,10 @@ export const PYQPage: React.FC = () => {
   const mcqCountForModule = currentModuleQuestions.filter((q) => q.type === 'mcq').length;
 
   // Handler for interactive practice
-  const handleSelectInteractiveOption = (qId: string, optIdx: number) => {
+  const handleSelectInteractiveOption = useCallback((qId: string, optIdx: number) => {
     setInteractiveAnswers((prev) => ({ ...prev, [qId]: optIdx }));
     setShowExplanation((prev) => ({ ...prev, [qId]: true }));
-  };
+  }, []);
 
   // Handler to start timed module test
   const handleStartModuleTest = () => {
@@ -359,110 +474,15 @@ export const PYQPage: React.FC = () => {
                     </p>
                   </div>
                 ) : (
-                  filteredQuestions.map((q, idx) => {
-                    const selectedOpt = interactiveAnswers[q.id];
-                    const isAnswered = selectedOpt !== undefined;
-                    const isCorrect = selectedOpt === q.correctOptionIndex;
-
-                    return (
-                      <div
-                        key={q.id}
-                        className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4 text-left transition hover:border-slate-300"
-                      >
-                        {/* Question Badge and Meta */}
-                        <div className="flex items-center justify-between gap-2">
-                          <div className="flex items-center gap-2">
-                            <span className="w-7 h-7 rounded-xl bg-slate-900 text-white font-black text-xs flex items-center justify-center">
-                              {idx + 1}
-                            </span>
-                            {q.type === 'pyq' ? (
-                              <span className="px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800 text-[10px] font-black uppercase tracking-wider border border-blue-200">
-                                🌟 PYQ: {q.examName || 'Kerala PSC'} ({q.year || 'Past Paper'})
-                              </span>
-                            ) : (
-                              <span className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 text-[10px] font-bold uppercase tracking-wider border border-slate-200">
-                                Syllabus MCQ
-                              </span>
-                            )}
-                          </div>
-                          {q.topic && (
-                            <span className="text-[11px] text-slate-500 font-semibold hidden sm:inline">
-                              Topic: {q.topic}
-                            </span>
-                          )}
-                        </div>
-
-                        {/* Question Text */}
-                        <p className="font-extrabold text-slate-900 text-sm sm:text-base leading-relaxed">
-                          {q.question}
-                        </p>
-
-                        {/* Options Grid */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                          {q.options.map((opt, optIdx) => {
-                            const isThisSelected = selectedOpt === optIdx;
-                            const isThisCorrect = optIdx === q.correctOptionIndex;
-
-                            let optClasses = 'border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-800';
-
-                            if (isAnswered) {
-                              if (isThisCorrect) {
-                                optClasses = 'border-emerald-500 bg-emerald-50 text-emerald-950 font-bold ring-2 ring-emerald-500/40';
-                              } else if (isThisSelected) {
-                                optClasses = 'border-red-500 bg-red-50 text-red-950 font-bold';
-                              } else {
-                                optClasses = 'border-slate-200 bg-slate-50/60 text-slate-400 opacity-60';
-                              }
-                            }
-
-                            return (
-                              <button
-                                key={optIdx}
-                                onClick={() => handleSelectInteractiveOption(q.id, optIdx)}
-                                className={`p-3.5 rounded-xl border text-left text-xs sm:text-sm font-medium transition flex items-start gap-3 ${optClasses}`}
-                              >
-                                <span className={`w-5 h-5 rounded-lg flex items-center justify-center font-bold text-xs shrink-0 ${
-                                  isAnswered && isThisCorrect
-                                    ? 'bg-emerald-600 text-white'
-                                    : isAnswered && isThisSelected
-                                    ? 'bg-red-600 text-white'
-                                    : 'bg-white border border-slate-300 text-slate-700'
-                                }`}>
-                                  {String.fromCharCode(65 + optIdx)}
-                                </span>
-                                <span className="leading-snug">{opt}</span>
-                              </button>
-                            );
-                          })}
-                        </div>
-
-                        {/* Explanation Box (Revealed on click) */}
-                        {isAnswered && (
-                          <div className="mt-3 p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2 text-xs">
-                            <div className="flex items-center gap-2">
-                              {isCorrect ? (
-                                <span className="text-emerald-700 font-extrabold flex items-center gap-1">
-                                  <CheckCircle2 className="w-4 h-4 text-emerald-600" /> Correct Answer: Option {String.fromCharCode(65 + q.correctOptionIndex)}
-                                </span>
-                              ) : (
-                                <span className="text-red-600 font-extrabold flex items-center gap-1">
-                                  <XCircle className="w-4 h-4 text-red-500" /> Incorrect. Correct Answer: Option {String.fromCharCode(65 + q.correctOptionIndex)}
-                                </span>
-                              )}
-                            </div>
-                            <p className="text-slate-700 leading-relaxed font-medium">
-                              <strong>Explanation:</strong> {q.explanation}
-                            </p>
-                            {q.rankerTip && (
-                              <div className="pt-1 text-amber-900 bg-amber-50 p-2.5 rounded-lg border border-amber-200">
-                                <strong>Exam Tip:</strong> {q.rankerTip}
-                              </div>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })
+                  filteredQuestions.map((q, idx) => (
+                    <InteractiveQuestionCard
+                      key={q.id}
+                      q={q}
+                      idx={idx}
+                      selectedOpt={interactiveAnswers[q.id]}
+                      onSelectOption={handleSelectInteractiveOption}
+                    />
+                  ))
                 )}
               </div>
             </div>
