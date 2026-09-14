@@ -103,8 +103,8 @@ export const ClassesPage: React.FC = () => {
   };
 
   return (
-    <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6 animate-fadeIn ${
-      isFullscreen ? 'fixed inset-0 z-50 bg-slate-900 overflow-y-auto p-4 sm:p-8 max-w-none' : ''
+    <div className={`max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 py-4 sm:py-8 space-y-6 animate-fadeIn ${
+      isFullscreen ? 'fixed inset-0 z-50 bg-slate-950 overflow-hidden p-0 max-w-none' : ''
     }`}>
       {/* Hidden file input for fast PDF loading */}
       <input
@@ -229,113 +229,119 @@ export const ClassesPage: React.FC = () => {
         {/* Left Study Notes Area */}
         <div className={`${isFullscreen ? 'w-full' : 'lg:col-span-8'} space-y-5`}>
           {activeNote ? (
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden space-y-5 p-5 sm:p-6">
+            <div className={`bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden space-y-5 ${
+              isFullscreen ? 'p-0 border-0 rounded-none' : 'p-3 sm:p-6'
+            }`}>
               
               {/* Note Header & Action Buttons */}
-              <div className="space-y-3 border-b border-slate-100 pb-5">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="text-[11px] font-bold uppercase tracking-wider bg-brand-100 text-brand-800 px-2.5 py-0.5 rounded-full">
-                      {modules.find((m) => m.id === activeNote.moduleId)?.title || 'Survey Module'}
+              {!isFullscreen && (
+                <div className="space-y-3 border-b border-slate-100 pb-5">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[11px] font-bold uppercase tracking-wider bg-brand-100 text-brand-800 px-2.5 py-0.5 rounded-full">
+                        {modules.find((m) => m.id === activeNote.moduleId)?.title || 'Survey Module'}
+                      </span>
+                      <span className="text-xs text-slate-500 flex items-center gap-1 font-medium">
+                        <Clock className="w-3.5 h-3.5" /> {activeNote.readTime}
+                      </span>
+                    </div>
+
+                    <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200 flex items-center gap-1">
+                      <Shield className="w-3.5 h-3.5 text-emerald-600" />
+                      Protected View Mode
                     </span>
-                    <span className="text-xs text-slate-500 flex items-center gap-1 font-medium">
-                      <Clock className="w-3.5 h-3.5" /> {activeNote.readTime}
-                    </span>
                   </div>
 
-                  <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200 flex items-center gap-1">
-                    <Shield className="w-3.5 h-3.5 text-emerald-600" />
-                    Protected View Mode
-                  </span>
-                </div>
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                      <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 leading-tight">
+                        {activeNote.title}
+                      </h2>
+                      {activeNote.titleMalayalam && (
+                        <p className="text-sm font-semibold text-brand-700 ml-text pt-0.5">
+                          {activeNote.titleMalayalam}
+                        </p>
+                      )}
+                    </div>
+                  </div>
 
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                  <div>
-                    <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 leading-tight">
-                      {activeNote.title}
-                    </h2>
-                    {activeNote.titleMalayalam && (
-                      <p className="text-sm font-semibold text-brand-700 ml-text pt-0.5">
-                        {activeNote.titleMalayalam}
-                      </p>
-                    )}
+                  {/* Actions Toolbar */}
+                  <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => toggleCompleteNote(activeNote.id)}
+                        className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold transition ${
+                          isCompleted
+                            ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                            : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-300'
+                        }`}
+                      >
+                        <CheckCircle className={`w-4 h-4 ${isCompleted ? 'text-emerald-600' : 'text-slate-400'}`} />
+                        <span>{isCompleted ? 'Completed ✓' : 'Mark as Read'}</span>
+                      </button>
+
+                      <button
+                        onClick={() => toggleBookmarkNote(activeNote.id)}
+                        className={`p-2 rounded-xl border text-xs transition ${
+                          isBookmarked
+                            ? 'bg-amber-50 text-amber-600 border-amber-300'
+                            : 'bg-slate-100 text-slate-600 hover:bg-slate-200 border-slate-300'
+                        }`}
+                        title={isBookmarked ? 'Saved to bookmarks' : 'Bookmark this note'}
+                      >
+                        <Bookmark className={`w-4 h-4 ${isBookmarked ? 'fill-amber-500' : ''}`} />
+                      </button>
+
+                      <button
+                        onClick={() => setIsDoubtModalOpen(true)}
+                        className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-purple-50 text-purple-700 hover:bg-purple-100 border border-purple-200 rounded-xl text-xs font-semibold transition"
+                      >
+                        <HelpCircle className="w-4 h-4 text-purple-600" />
+                        <span>Ask Doubt</span>
+                      </button>
+                    </div>
                   </div>
                 </div>
-
-                {/* Actions Toolbar */}
-                <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => toggleCompleteNote(activeNote.id)}
-                      className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold transition ${
-                        isCompleted
-                          ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
-                          : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-300'
-                      }`}
-                    >
-                      <CheckCircle className={`w-4 h-4 ${isCompleted ? 'text-emerald-600' : 'text-slate-400'}`} />
-                      <span>{isCompleted ? 'Completed ✓' : 'Mark as Read'}</span>
-                    </button>
-
-                    <button
-                      onClick={() => toggleBookmarkNote(activeNote.id)}
-                      className={`p-2 rounded-xl border text-xs transition ${
-                        isBookmarked
-                          ? 'bg-amber-50 text-amber-600 border-amber-300'
-                          : 'bg-slate-100 text-slate-600 hover:bg-slate-200 border-slate-300'
-                      }`}
-                      title={isBookmarked ? 'Saved to bookmarks' : 'Bookmark this note'}
-                    >
-                      <Bookmark className={`w-4 h-4 ${isBookmarked ? 'fill-amber-500' : ''}`} />
-                    </button>
-
-                    <button
-                      onClick={() => setIsDoubtModalOpen(true)}
-                      className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-purple-50 text-purple-700 hover:bg-purple-100 border border-purple-200 rounded-xl text-xs font-semibold transition"
-                    >
-                      <HelpCircle className="w-4 h-4 text-purple-600" />
-                      <span>Ask Doubt</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
+              )}
 
               {/* Sub-tabs: Document Reader / Formulas / Doubts */}
-              <div className="flex items-center gap-5 border-b border-slate-200 text-xs font-bold">
-                <button
-                  onClick={() => setActiveTab('document')}
-                  className={`pb-2.5 transition relative flex items-center gap-1.5 ${
-                    activeTab === 'document'
-                      ? 'text-brand-700 border-b-2 border-brand-600 font-extrabold'
-                      : 'text-slate-500 hover:text-slate-800'
-                  }`}
-                >
-                  <FileText className="w-4 h-4 text-brand-600" />
-                  <span>Interactive Study Document Book</span>
-                </button>
-                <button
-                  onClick={() => setActiveTab('formulas')}
-                  className={`pb-2.5 transition relative flex items-center gap-1.5 ${
-                    activeTab === 'formulas'
-                      ? 'text-brand-700 border-b-2 border-brand-600 font-extrabold'
-                      : 'text-slate-500 hover:text-slate-800'
-                  }`}
-                >
-                  <Zap className="w-4 h-4 text-amber-500" />
-                  <span>Formula Vault ({activeNote.takeaways.length})</span>
-                </button>
-                <button
-                  onClick={() => setActiveTab('doubts')}
-                  className={`pb-2.5 transition relative flex items-center gap-1.5 ${
-                    activeTab === 'doubts'
-                      ? 'text-brand-700 border-b-2 border-brand-600 font-extrabold'
-                      : 'text-slate-500 hover:text-slate-800'
-                  }`}
-                >
-                  <HelpCircle className="w-4 h-4" />
-                  <span>Discussion & Doubts ({relatedDoubts.length})</span>
-                </button>
-              </div>
+              {!isFullscreen && (
+                <div className="flex items-center gap-3 sm:gap-5 border-b border-slate-200 text-xs font-bold overflow-x-auto no-scrollbar whitespace-nowrap">
+                  <button
+                    onClick={() => setActiveTab('document')}
+                    className={`pb-2.5 transition relative flex items-center gap-1.5 flex-shrink-0 ${
+                      activeTab === 'document'
+                        ? 'text-brand-700 border-b-2 border-brand-600 font-extrabold'
+                        : 'text-slate-500 hover:text-slate-800'
+                    }`}
+                  >
+                    <FileText className="w-4 h-4 text-brand-600" />
+                    <span>Interactive Document</span>
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('formulas')}
+                    className={`pb-2.5 transition relative flex items-center gap-1.5 flex-shrink-0 ${
+                      activeTab === 'formulas'
+                        ? 'text-brand-700 border-b-2 border-brand-600 font-extrabold'
+                        : 'text-slate-500 hover:text-slate-800'
+                    }`}
+                  >
+                    <Zap className="w-4 h-4 text-amber-500" />
+                    <span>Formula Vault ({activeNote.takeaways.length})</span>
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('doubts')}
+                    className={`pb-2.5 transition relative flex items-center gap-1.5 flex-shrink-0 ${
+                      activeTab === 'doubts'
+                        ? 'text-brand-700 border-b-2 border-brand-600 font-extrabold'
+                        : 'text-slate-500 hover:text-slate-800'
+                    }`}
+                  >
+                    <HelpCircle className="w-4 h-4" />
+                    <span>Doubts ({relatedDoubts.length})</span>
+                  </button>
+                </div>
+              )}
 
               {/* TAB 1: PDF DOCUMENT VIEWER OR LOCKED MASTER PREVIEW */}
               {activeTab === 'document' && (
