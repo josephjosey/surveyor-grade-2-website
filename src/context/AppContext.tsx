@@ -149,7 +149,7 @@ export const safeSetItem = (key: string, val: any) => {
 // DATASET VERSIONING & CACHE MIGRATION
 // Guarantees 100% data parity across Web, Android APK, and all browsers
 // ============================================================================
-const DATA_VERSION = '2026.09.18-v1';
+const DATA_VERSION = '2026.09.18-v2';
 
 try {
   const currentVersion = localStorage.getItem('survey_academy_data_version');

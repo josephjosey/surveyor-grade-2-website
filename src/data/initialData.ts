@@ -1,6 +1,6 @@
 import { ClassModule, StudyNote, PYQPaper, MockTest, MockTestAttempt, Doubt, User, BankQuestion } from '../types';
 import { MOCK_TEST_87_QUESTIONS } from './survey87Questions';
-import { MOCK_TEST_THEODOLITE_30 } from './theodoliteQuestions';
+import { MOCK_TEST_THEODOLITE_30, THEODOLITE_30_QUESTIONS } from './theodoliteQuestions';
 import { MOCK_TEST_LEVELLING_95 } from './levellingContouring95Questions';
 import { MOCK_TEST_LEVELLING_187 } from './levelling187Questions';
 import { MOCK_TEST_PLANE_TABLE_103 } from './planeTable103Questions';
@@ -535,6 +535,28 @@ export const INITIAL_PYQ_PAPERS: PYQPaper[] = [
       explanation: q.explanation,
       rankerTip: q.rankerTip,
       topic: q.topic || 'Chain Surveying'
+    }))
+  },
+  {
+    id: 'pyq-theodolite-30',
+    title: 'Kerala PSC Theodolite Survey Official Solved PYQ & Practice Paper (30 Questions)',
+    examName: 'Surveyor Grade II / Theodolite Special',
+    examCode: 'Cat. No: 284/2022 - Theodolite Series',
+    year: 2024,
+    department: 'Survey and Land Records Department',
+    totalQuestions: 30,
+    pdfUrl: 'https://example.com/pyq/theodolite_30_solved.pdf',
+    answerKeyUrl: 'https://example.com/pyq/theodolite_30_answer_key.pdf',
+    isSolved: true,
+    questions: THEODOLITE_30_QUESTIONS.map((q, idx) => ({
+      id: q.id,
+      questionNumber: idx + 1,
+      question: q.question,
+      options: q.options,
+      correctOptionIndex: q.correctOptionIndex,
+      explanation: q.explanation,
+      rankerTip: q.rankerTip,
+      topic: q.topic || 'Theodolite Survey'
     }))
   }
 ];
