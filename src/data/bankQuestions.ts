@@ -1,3 +1,4 @@
+import { CHAIN_SURVEY_25_QUESTIONS } from './chainSurvey25Questions';
 import { COMPASS_SURVEY_163_QUESTIONS } from './compassSurvey163Questions';
 import { CHAIN_SURVEY_204_QUESTIONS } from './chainSurvey204Questions';
 import { LEVELLING_CONTOURING_95_QUESTIONS } from './levellingContouring95Questions';
@@ -10,6 +11,7 @@ import { MINOR_INSTRUMENTS_31_QUESTIONS } from './minorInstruments31Questions';
 import { BankQuestion } from '../types';
 
 export const INITIAL_BANK_QUESTIONS: BankQuestion[] = [
+  ...CHAIN_SURVEY_25_QUESTIONS,
   ...MINOR_INSTRUMENTS_31_QUESTIONS,
   ...MODERN_INSTRUMENTS_85_QUESTIONS,
   ...MODERN_INSTRUMENTS_75_QUESTIONS,

@@ -8,6 +8,7 @@ import { MOCK_TEST_THEODOLITE_146 } from './theodolite146Questions';
 import { MOCK_TEST_MODERN_INSTRUMENTS_75 } from './modernInstruments75Questions';
 import { MOCK_TEST_MODERN_INSTRUMENTS_85 } from './modernInstruments85Questions';
 import { MOCK_TEST_MINOR_INSTRUMENTS_31 } from './minorInstruments31Questions';
+import { MOCK_TEST_CHAIN_SURVEY_25, CHAIN_SURVEY_25_QUESTIONS } from './chainSurvey25Questions';
 import { INITIAL_BANK_QUESTIONS } from './bankQuestions';
 import { SIMULATED_STUDENTS, SIMULATED_ATTEMPTS } from './simulatedStudents';
 
@@ -513,10 +514,33 @@ export const INITIAL_PYQ_PAPERS: PYQPaper[] = [
         topic: 'Total Station & Modern Tech'
       }
     ]
+  },
+  {
+    id: 'pyq-chain-25',
+    title: 'Kerala PSC Chain Surveying Official Solved PYQ & Practice Paper (25 Questions)',
+    examName: 'Surveyor Grade II / Chain Survey Special',
+    examCode: 'Cat. No: 284/2022 - Chain Series',
+    year: 2024,
+    department: 'Survey and Land Records Department',
+    totalQuestions: 25,
+    pdfUrl: 'https://example.com/pyq/chain_survey_25_solved.pdf',
+    answerKeyUrl: 'https://example.com/pyq/chain_survey_25_answer_key.pdf',
+    isSolved: true,
+    questions: CHAIN_SURVEY_25_QUESTIONS.map((q, idx) => ({
+      id: q.id,
+      questionNumber: idx + 1,
+      question: q.question,
+      options: q.options,
+      correctOptionIndex: q.correctOptionIndex,
+      explanation: q.explanation,
+      rankerTip: q.rankerTip,
+      topic: q.topic || 'Chain Surveying'
+    }))
   }
 ];
 
 export const INITIAL_MOCK_TESTS: MockTest[] = [
+  MOCK_TEST_CHAIN_SURVEY_25,
   MOCK_TEST_MINOR_INSTRUMENTS_31,
   MOCK_TEST_MODERN_INSTRUMENTS_85,
   MOCK_TEST_MODERN_INSTRUMENTS_75,
