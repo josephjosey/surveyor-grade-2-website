@@ -1,3 +1,4 @@
+import { PLANE_TABLE_12_QUESTIONS } from './planeTable12Questions';
 import { MODERN_SURVEY_44_QUESTIONS } from './modernSurvey44Questions';
 import { THEODOLITE_30_QUESTIONS } from './theodoliteQuestions';
 import { CHAIN_SURVEY_25_QUESTIONS } from './chainSurvey25Questions';
@@ -13,6 +14,7 @@ import { MINOR_INSTRUMENTS_31_QUESTIONS } from './minorInstruments31Questions';
 import { BankQuestion } from '../types';
 
 export const INITIAL_BANK_QUESTIONS: BankQuestion[] = [
+  ...PLANE_TABLE_12_QUESTIONS,
   ...MODERN_SURVEY_44_QUESTIONS,
   ...THEODOLITE_30_QUESTIONS,
   ...CHAIN_SURVEY_25_QUESTIONS,
