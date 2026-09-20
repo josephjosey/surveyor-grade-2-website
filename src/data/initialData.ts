@@ -14,6 +14,8 @@ import { MOCK_TEST_PLANE_TABLE_12, PLANE_TABLE_12_QUESTIONS } from './planeTable
 import { MOCK_TEST_COMPASS_25, COMPASS_SURVEY_25_QUESTIONS } from './compassSurvey25Questions';
 import { MOCK_TEST_LEVELLING_15, LEVELLING_15_QUESTIONS } from './levelling15Questions';
 import { MOCK_TEST_AUTOCAD_50, AUTOCAD_50_QUESTIONS } from './autocad50Questions';
+import { MOCK_TEST_BUILDING_MATERIALS_50, BUILDING_MATERIALS_50_QUESTIONS } from './buildingMaterials50Questions';
+import { MOCK_TEST_WORKSHOP_CALCULATION_10, WORKSHOP_CALCULATION_10_QUESTIONS } from './workshopCalculation10Questions';
 import { INITIAL_BANK_QUESTIONS } from './bankQuestions';
 import { SIMULATED_STUDENTS, SIMULATED_ATTEMPTS } from './simulatedStudents';
 
@@ -673,10 +675,56 @@ export const INITIAL_PYQ_PAPERS: PYQPaper[] = [
       rankerTip: q.rankerTip,
       topic: q.topic || 'AutoCAD'
     }))
+  },
+  {
+    id: 'pyq-bmc-50',
+    title: 'Kerala PSC Building Materials & Construction Official Solved PYQ & Practice Paper (50 Questions)',
+    examName: 'Overseer Grade II / Surveyor Gr. II - Building Materials',
+    examCode: 'Cat. No: 411/2022 - BMC Series',
+    year: 2024,
+    department: 'Public Works Department / Survey & Land Records',
+    totalQuestions: 50,
+    pdfUrl: 'https://example.com/pyq/bmc_50_solved.pdf',
+    answerKeyUrl: 'https://example.com/pyq/bmc_50_answer_key.pdf',
+    isSolved: true,
+    questions: BUILDING_MATERIALS_50_QUESTIONS.map((q, idx) => ({
+      id: q.id,
+      questionNumber: idx + 1,
+      question: q.question,
+      options: q.options,
+      correctOptionIndex: q.correctOptionIndex,
+      explanation: q.explanation,
+      rankerTip: q.rankerTip,
+      topic: q.topic || 'Building Materials and Construction'
+    }))
+  },
+  {
+    id: 'pyq-wcs-10',
+    title: 'Kerala PSC Workshop Calculation & Science Official Solved PYQ & Practice Paper (10 Questions)',
+    examName: 'Surveyor Grade II / Workshop Calculation Special',
+    examCode: 'Cat. No: 284/2022 - WCS Series',
+    year: 2024,
+    department: 'Industrial Training / Survey and Land Records Department',
+    totalQuestions: 10,
+    pdfUrl: 'https://example.com/pyq/wcs_10_solved.pdf',
+    answerKeyUrl: 'https://example.com/pyq/wcs_10_answer_key.pdf',
+    isSolved: true,
+    questions: WORKSHOP_CALCULATION_10_QUESTIONS.map((q, idx) => ({
+      id: q.id,
+      questionNumber: idx + 1,
+      question: q.question,
+      options: q.options,
+      correctOptionIndex: q.correctOptionIndex,
+      explanation: q.explanation,
+      rankerTip: q.rankerTip,
+      topic: q.topic || 'Workshop Calculation and Science'
+    }))
   }
 ];
 
 export const INITIAL_MOCK_TESTS: MockTest[] = [
+  MOCK_TEST_BUILDING_MATERIALS_50,
+  MOCK_TEST_WORKSHOP_CALCULATION_10,
   MOCK_TEST_AUTOCAD_50,
   MOCK_TEST_LEVELLING_15,
   MOCK_TEST_COMPASS_25,

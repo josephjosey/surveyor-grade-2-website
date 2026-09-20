@@ -1,3 +1,5 @@
+import { BUILDING_MATERIALS_50_QUESTIONS } from './buildingMaterials50Questions';
+import { WORKSHOP_CALCULATION_10_QUESTIONS } from './workshopCalculation10Questions';
 import { AUTOCAD_50_QUESTIONS } from './autocad50Questions';
 import { LEVELLING_15_QUESTIONS } from './levelling15Questions';
 import { COMPASS_SURVEY_25_QUESTIONS } from './compassSurvey25Questions';
@@ -17,6 +19,8 @@ import { MINOR_INSTRUMENTS_31_QUESTIONS } from './minorInstruments31Questions';
 import { BankQuestion } from '../types';
 
 export const INITIAL_BANK_QUESTIONS: BankQuestion[] = [
+  ...BUILDING_MATERIALS_50_QUESTIONS,
+  ...WORKSHOP_CALCULATION_10_QUESTIONS,
   ...AUTOCAD_50_QUESTIONS,
   ...LEVELLING_15_QUESTIONS,
   ...COMPASS_SURVEY_25_QUESTIONS,
