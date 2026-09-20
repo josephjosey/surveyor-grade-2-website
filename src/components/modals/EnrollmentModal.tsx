@@ -79,7 +79,14 @@ const COURSE_PLANS: CoursePlan[] = [
 ];
 
 export const EnrollmentModal: React.FC = () => {
-  const { isEnrollmentModalOpen, setIsEnrollmentModalOpen, enrollStudent, showToast, currentUser } = useApp();
+  const {
+    isEnrollmentModalOpen,
+    setIsEnrollmentModalOpen,
+    enrollStudent,
+    showToast,
+    currentUser,
+    enrollmentPreselectedPlan
+  } = useApp();
 
   // Multi-step: 1 = Details, 2 = Plan & Payment, 3 = Payment Success
   const [step, setStep] = useState<1 | 2 | 3>(1);
@@ -90,7 +97,13 @@ export const EnrollmentModal: React.FC = () => {
   const [phone, setPhone] = useState(currentUser?.phone || '+91 98471 23456');
   const [district, setDistrict] = useState(currentUser?.district || 'Palakkad');
   const [targetExam, setTargetExam] = useState(currentUser?.targetExam || 'Kerala PSC Surveyor Gr. II & Land Records');
-  const [selectedPlanId, setSelectedPlanId] = useState<string>('plan-master');
+  const [selectedPlanId, setSelectedPlanId] = useState<string>(enrollmentPreselectedPlan || 'plan-master');
+
+  React.useEffect(() => {
+    if (enrollmentPreselectedPlan) {
+      setSelectedPlanId(enrollmentPreselectedPlan);
+    }
+  }, [enrollmentPreselectedPlan, isEnrollmentModalOpen]);
 
   React.useEffect(() => {
     if (currentUser) {

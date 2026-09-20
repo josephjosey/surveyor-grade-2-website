@@ -57,6 +57,10 @@ interface AppContextType {
   students: User[];
   isEnrollmentModalOpen: boolean;
   setIsEnrollmentModalOpen: (open: boolean) => void;
+  enrollmentPreselectedPlan: string;
+  setEnrollmentPreselectedPlan: (planId: string) => void;
+  openEnrollmentModal: (planId?: string) => void;
+  hasCourseAccess: boolean;
   isAuthModalOpen: boolean;
   setIsAuthModalOpen: (open: boolean) => void;
   authDefaultRole: 'student' | 'instructor';
@@ -374,6 +378,20 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   });
 
   const [isEnrollmentModalOpen, setIsEnrollmentModalOpen] = useState<boolean>(false);
+  const [enrollmentPreselectedPlan, setEnrollmentPreselectedPlan] = useState<string>('plan-master');
+
+  const openEnrollmentModal = useCallback((planId: string = 'plan-master') => {
+    setEnrollmentPreselectedPlan(planId);
+    setIsEnrollmentModalOpen(true);
+  }, []);
+
+  const hasCourseAccess = useMemo(() => {
+    return (
+      currentUser.role === 'instructor' ||
+      (!!currentUser.subscriptionPlan && currentUser.subscriptionPlan !== 'free')
+    );
+  }, [currentUser.role, currentUser.subscriptionPlan]);
+
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
   const [authDefaultRole, setAuthDefaultRole] = useState<'student' | 'instructor'>('student');
   const [selectedNoteId, setSelectedNoteId] = useState<string | null>('note-1');
@@ -1152,7 +1170,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     safeSetItem('survey_academy_user', loggedInUser);
     setStudents((prev) => [loggedInUser, ...prev.filter((s) => s.id !== loggedInUser.id)]);
     setIsAuthenticated(true);
-    setActiveTab('dashboard');
+    const userHasCourseAccess =
+      loggedInUser.role === 'instructor' ||
+      (!!loggedInUser.subscriptionPlan && loggedInUser.subscriptionPlan !== 'free');
+    setActiveTab(userHasCourseAccess ? 'dashboard' : 'home');
     showToast(`Welcome back, ${loggedInUser.name}!`, 'success');
   };
 
@@ -1203,12 +1224,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       return updated;
     });
     setIsAuthenticated(true);
-    setActiveTab('dashboard');
+    setActiveTab('home');
 
     if (sessionUser?.id) {
       await SupabaseDb.updateUserProfile(sessionUser.id, newUser);
     }
-    showToast(`Account created successfully for ${newUser.name}! Free access enabled.`, 'success');
+    showToast(`Account created successfully for ${newUser.name}! Free preview enabled.`, 'success');
   };
 
   const loginInstructor = (pin: string): boolean => {
@@ -1927,6 +1948,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         students,
         isEnrollmentModalOpen,
         setIsEnrollmentModalOpen,
+        enrollmentPreselectedPlan,
+        setEnrollmentPreselectedPlan,
+        openEnrollmentModal,
+        hasCourseAccess,
         isAuthModalOpen,
         setIsAuthModalOpen,
         authDefaultRole,

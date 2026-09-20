@@ -13,7 +13,8 @@ import {
   LayoutDashboard,
   LogOut,
   CheckCircle,
-  Crown
+  Crown,
+  Lock
 } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
@@ -23,6 +24,9 @@ export const Navbar: React.FC = () => {
     activeTab,
     setActiveTab,
     setIsEnrollmentModalOpen,
+    openEnrollmentModal,
+    hasCourseAccess,
+    showToast,
     logoutUser
   } = useApp();
 
@@ -51,6 +55,15 @@ export const Navbar: React.FC = () => {
   const currentNavItems = role === 'instructor' ? instructorNavItems : studentNavItems;
 
   const handleNavClick = (tabId: NavigationTab) => {
+    if (!hasCourseAccess && tabId !== 'home') {
+      openEnrollmentModal('plan-master');
+      showToast(
+        '🔒 Course Purchase Required: Purchase the course to unlock Study Notes, Mock Tests, and Question Bank.',
+        'warning'
+      );
+      setMobileMenuOpen(false);
+      return;
+    }
     setActiveTab(tabId);
     setMobileMenuOpen(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -89,20 +102,28 @@ export const Navbar: React.FC = () => {
             {currentNavItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
+              const isLocked = !hasCourseAccess && item.id !== 'home';
+
               return (
                 <button
                   key={item.id}
                   onClick={() => handleNavClick(item.id)}
+                  title={isLocked ? `🔒 Purchase course to unlock ${item.label}` : undefined}
                   className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs xl:text-sm font-semibold transition whitespace-nowrap ${
                     isActive
                       ? role === 'instructor' && item.id === 'admin'
                         ? 'bg-purple-900 text-white shadow-sm'
                         : 'bg-slate-900 text-white shadow-sm'
+                      : isLocked
+                      ? 'text-slate-500 hover:text-amber-700 hover:bg-amber-50/60'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                   }`}
                 >
                   <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-slate-400'}`} />
                   <span>{item.label}</span>
+                  {isLocked && (
+                    <Lock className="w-3 h-3 text-amber-500 shrink-0 ml-0.5" />
+                  )}
                 </button>
               );
             })}
@@ -110,15 +131,15 @@ export const Navbar: React.FC = () => {
 
           {/* Right Profile & Action Section */}
           <div className="hidden sm:flex items-center gap-3 shrink-0">
-            {/* Upgrade Plan (Students on free plan only) */}
+            {/* Upgrade / Purchase Plan Option */}
             {role !== 'instructor' && (
-              currentUser.subscriptionPlan === 'free' ? (
+              !hasCourseAccess ? (
                 <button
-                  onClick={() => setIsEnrollmentModalOpen(true)}
-                  className="inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 text-xs font-black px-3.5 py-2 rounded-xl shadow-xs transition active:scale-95 shrink-0"
+                  onClick={() => openEnrollmentModal('plan-master')}
+                  className="inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-500 via-amber-600 to-emerald-600 hover:from-amber-600 hover:to-emerald-700 text-slate-950 text-xs font-black px-3.5 py-2 rounded-xl shadow-sm hover:shadow-amber-500/20 transition active:scale-95 shrink-0"
                 >
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span>Upgrade</span>
+                  <Crown className="w-3.5 h-3.5 text-slate-950" />
+                  <span>Purchase Course (₹1,999)</span>
                 </button>
               ) : (
                 <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold px-2.5 py-1 rounded-lg shrink-0">
@@ -130,9 +151,15 @@ export const Navbar: React.FC = () => {
 
             {/* Profile Info */}
             <div
-              onClick={() => handleNavClick(role === 'instructor' ? 'admin' : 'dashboard')}
+              onClick={() => {
+                if (!hasCourseAccess) {
+                  openEnrollmentModal('plan-master');
+                } else {
+                  handleNavClick(role === 'instructor' ? 'admin' : 'dashboard');
+                }
+              }}
               className="flex items-center gap-2.5 pl-2 py-1 cursor-pointer group rounded-xl hover:bg-slate-50 transition border-l border-slate-200"
-              title="View Profile"
+              title={!hasCourseAccess ? 'Click to Purchase Course' : 'View Dashboard'}
             >
               <img
                 src={currentUser.avatar}
@@ -146,7 +173,7 @@ export const Navbar: React.FC = () => {
                 <div className="text-[10px] text-slate-500 font-medium">
                   {role === 'instructor' ? (
                     'Faculty Admin'
-                  ) : currentUser.stateRank ? (
+                  ) : currentUser.stateRank && hasCourseAccess ? (
                     <span className="text-amber-700 font-extrabold inline-flex items-center gap-0.5">
                       <Crown className="w-2.5 h-2.5 text-amber-500" /> Rank #{currentUser.stateRank}
                     </span>
@@ -155,7 +182,7 @@ export const Navbar: React.FC = () => {
                   ) : currentUser.subscriptionPlan === 'mock_only' ? (
                     'Mock Plan'
                   ) : (
-                    'Free Tier'
+                    <span className="text-amber-600 font-bold">Free Preview</span>
                   )}
                 </div>
               </div>
@@ -187,19 +214,54 @@ export const Navbar: React.FC = () => {
       {/* Mobile Dropdown Menu */}
       {mobileMenuOpen && (
         <div className="lg:hidden bg-white border-b border-slate-200 px-4 pt-2 pb-4 space-y-1 shadow-xl animate-fadeIn">
+          
+          {/* Free User Upgrade Banner on Mobile */}
+          {!hasCourseAccess && (
+            <div className="p-3 bg-gradient-to-br from-amber-500/15 via-brand-500/10 to-emerald-500/10 border border-amber-400/40 rounded-2xl space-y-2 mb-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-black text-amber-950 flex items-center gap-1">
+                  <Crown className="w-3.5 h-3.5 text-amber-600" /> Free Preview Mode
+                </span>
+                <span className="text-[10px] bg-amber-400/40 text-amber-950 font-black px-1.5 py-0.5 rounded">60% OFF</span>
+              </div>
+              <p className="text-[11px] text-slate-700 leading-tight">
+                Purchase course to unlock all 10 modules, 1,430+ PYQs & 21 Mock Tests.
+              </p>
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  openEnrollmentModal('plan-master');
+                }}
+                className="w-full py-2 bg-gradient-to-r from-amber-500 to-emerald-600 text-slate-950 text-xs font-black rounded-xl shadow-xs flex items-center justify-center gap-1.5 active:scale-95 transition"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-slate-950" />
+                <span>Purchase Course — ₹1,999</span>
+              </button>
+            </div>
+          )}
+
           {currentNavItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
+            const isLocked = !hasCourseAccess && item.id !== 'home';
+
             return (
               <button
                 key={item.id}
                 onClick={() => handleNavClick(item.id)}
-                className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-semibold transition ${
-                  isActive ? 'bg-slate-900 text-white font-bold' : 'text-slate-700 hover:bg-slate-100'
+                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold transition ${
+                  isActive ? 'bg-slate-900 text-white font-bold' : isLocked ? 'text-slate-600 hover:bg-amber-50/50' : 'text-slate-700 hover:bg-slate-100'
                 }`}
               >
-                <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-slate-400'}`} />
-                <span>{item.label}</span>
+                <div className="flex items-center gap-2.5">
+                  <Icon className={`w-4 h-4 ${isActive ? 'text-white' : isLocked ? 'text-slate-400' : 'text-slate-400'}`} />
+                  <span>{item.label}</span>
+                </div>
+                {isLocked && (
+                  <span className="text-[10px] font-extrabold uppercase tracking-wide bg-amber-100 text-amber-800 border border-amber-300 px-1.5 py-0.5 rounded flex items-center gap-1">
+                    <Lock className="w-2.5 h-2.5 text-amber-600" /> Locked
+                  </span>
+                )}
               </button>
             );
           })}
@@ -214,7 +276,7 @@ export const Navbar: React.FC = () => {
               <div className="text-left">
                 <div className="text-xs font-bold text-slate-900">{currentUser.name}</div>
                 <div className="text-[10px] text-slate-500">
-                  {role === 'instructor' ? 'Course Instructor' : 'Enrolled Student'}
+                  {role === 'instructor' ? 'Course Instructor' : hasCourseAccess ? 'Enrolled Student' : 'Free Preview'}
                 </div>
               </div>
             </div>

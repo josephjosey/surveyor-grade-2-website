@@ -6,6 +6,7 @@ import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
 import { EnrollmentModal } from './components/modals/EnrollmentModal';
 import { AuthModal } from './components/modals/AuthModal';
+import { CourseAccessPaywall } from './components/common/CourseAccessPaywall';
 import { CheckCircle, AlertCircle, Info, X } from 'lucide-react';
 
 const LandingPage = React.lazy(() => import('./components/pages/LandingPage').then((m) => ({ default: m.LandingPage })));
@@ -35,7 +36,8 @@ const MainLayout: React.FC = () => {
     setIsAuthModalOpen,
     authDefaultRole,
     isAuthenticated,
-    setIsAuthenticated
+    setIsAuthenticated,
+    hasCourseAccess
   } = useApp();
 
   const [returnToAppUrl, setReturnToAppUrl] = useState<string | null>(null);
@@ -184,13 +186,19 @@ const MainLayout: React.FC = () => {
 
       <main className="flex-1">
         <React.Suspense fallback={<PageLoadingFallback />}>
-          {activeTab === 'home' && <LandingPage />}
-          {activeTab === 'dashboard' && <DashboardPage />}
-          {(activeTab === 'notes' || (activeTab as any) === 'classes') && <ClassesPage />}
-          {activeTab === 'pyq' && <PYQPage />}
-          {activeTab === 'mocktests' && <MockTestsPage />}
-          {activeTab === 'doubts' && <DoubtsForumPage />}
-          {activeTab === 'admin' && <AdminPortalPage />}
+          {!hasCourseAccess && activeTab !== 'home' ? (
+            <CourseAccessPaywall />
+          ) : (
+            <>
+              {activeTab === 'home' && <LandingPage />}
+              {activeTab === 'dashboard' && <DashboardPage />}
+              {(activeTab === 'notes' || (activeTab as any) === 'classes') && <ClassesPage />}
+              {activeTab === 'pyq' && <PYQPage />}
+              {activeTab === 'mocktests' && <MockTestsPage />}
+              {activeTab === 'doubts' && <DoubtsForumPage />}
+              {activeTab === 'admin' && <AdminPortalPage />}
+            </>
+          )}
         </React.Suspense>
       </main>
 

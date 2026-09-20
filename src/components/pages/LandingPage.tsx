@@ -1,5 +1,5 @@
 import React from 'react';
-import { useApp } from '../../context/AppContext';
+import { useApp, NavigationTab } from '../../context/AppContext';
 import {
   Award,
   Sparkles,
@@ -17,13 +17,19 @@ import {
   Compass,
   FileText,
   Zap,
-  Eye
+  Eye,
+  Lock,
+  Crown,
+  Flame
 } from 'lucide-react';
 
 export const LandingPage: React.FC = () => {
   const {
     setActiveTab,
     setIsEnrollmentModalOpen,
+    openEnrollmentModal,
+    hasCourseAccess,
+    showToast,
     setSelectedNoteId,
     modules,
     studyNotes,
@@ -32,12 +38,56 @@ export const LandingPage: React.FC = () => {
   } = useApp();
 
   const handleOpenNote = (noteId: string) => {
+    if (!hasCourseAccess) {
+      openEnrollmentModal('plan-master');
+      showToast(
+        '🔒 Course Purchase Required: Purchase the Master Course to unlock all Handwritten Notes and Formulas.',
+        'warning'
+      );
+      return;
+    }
     setSelectedNoteId(noteId);
     setActiveTab('notes');
   };
 
+  const handleGuardedNav = (tab: NavigationTab, sectionName: string) => {
+    if (!hasCourseAccess) {
+      openEnrollmentModal('plan-master');
+      showToast(
+        `🔒 Course Purchase Required: Purchase the course to access ${sectionName}.`,
+        'warning'
+      );
+      return;
+    }
+    setActiveTab(tab);
+  };
+
   return (
     <div className="space-y-16 pb-16 animate-fadeIn">
+      {/* Free User Upgrade Alert Banner */}
+      {!hasCourseAccess && (
+        <div className="bg-gradient-to-r from-amber-500 via-amber-600 to-emerald-600 text-slate-950 font-bold px-4 py-3 shadow-md border-b border-amber-400/50">
+          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+            <div className="flex items-center justify-center sm:justify-start gap-2.5 flex-wrap">
+              <span className="bg-slate-950 text-amber-300 text-xs px-2.5 py-1 rounded-full uppercase tracking-wider font-extrabold flex items-center gap-1 shadow-xs">
+                <Crown className="w-3.5 h-3.5 text-amber-400" /> Free Preview
+              </span>
+              <span className="text-xs sm:text-sm text-slate-950 font-black">
+                Unlock all 10 Syllabus Modules, 1,430+ Solved PYQs & 21 Mock Tests with Statewide Rank Predictor!
+              </span>
+            </div>
+            <button
+              onClick={() => openEnrollmentModal('plan-master')}
+              className="inline-flex items-center gap-1.5 bg-slate-950 hover:bg-slate-900 text-amber-400 font-extrabold px-4 py-2 rounded-xl text-xs transition shadow-md active:scale-95 whitespace-nowrap"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              <span>Purchase Course (₹1,999)</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-b from-brand-950 via-slate-900 to-navy-950 text-white pt-12 pb-20 px-4 sm:px-6 lg:px-8 border-b border-slate-800">
         {/* Background glow effects */}
@@ -81,11 +131,11 @@ export const LandingPage: React.FC = () => {
               {/* CTAs */}
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
                 <button
-                  onClick={() => setIsEnrollmentModalOpen(true)}
+                  onClick={() => openEnrollmentModal('plan-master')}
                   className="inline-flex items-center justify-center gap-2.5 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-bold text-sm sm:text-base px-7 py-3.5 rounded-xl shadow-lg hover:shadow-brand-500/25 transition-all transform hover:-translate-y-0.5"
                 >
                   <Sparkles className="w-5 h-5 text-amber-300" />
-                  <span>Enroll in Master Course</span>
+                  <span>Enroll in Master Course (₹1,999)</span>
                 </button>
 
                 <button
@@ -93,7 +143,7 @@ export const LandingPage: React.FC = () => {
                   className="inline-flex items-center justify-center gap-2 bg-slate-800/90 hover:bg-slate-700 text-white font-semibold text-sm px-6 py-3.5 rounded-xl border border-slate-700 transition"
                 >
                   <BookOpen className="w-4 h-4 text-brand-400" />
-                  <span>Read Free Sample Notes</span>
+                  <span>Read Study Notes Online</span>
                 </button>
               </div>
 
@@ -228,11 +278,18 @@ export const LandingPage: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {/* Pillar 1 */}
           <div
-            onClick={() => setActiveTab('notes')}
-            className="bg-white rounded-2xl p-6 border border-slate-200 hover:border-brand-500 hover:shadow-lg transition-all cursor-pointer group text-left space-y-4"
+            onClick={() => handleGuardedNav('notes', 'Handwritten Study Notes')}
+            className="bg-white rounded-2xl p-6 border border-slate-200 hover:border-brand-500 hover:shadow-lg transition-all cursor-pointer group text-left space-y-4 relative"
           >
-            <div className="w-12 h-12 rounded-xl bg-brand-100 text-brand-700 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <BookOpen className="w-6 h-6" />
+            <div className="flex items-center justify-between">
+              <div className="w-12 h-12 rounded-xl bg-brand-100 text-brand-700 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <BookOpen className="w-6 h-6" />
+              </div>
+              {!hasCourseAccess && (
+                <span className="text-[10px] font-extrabold uppercase tracking-wide bg-amber-100 text-amber-900 border border-amber-300 px-2 py-0.5 rounded-full flex items-center gap-1">
+                  <Lock className="w-2.5 h-2.5 text-amber-600" /> Enrolled Only
+                </span>
+              )}
             </div>
             <div className="space-y-1.5">
               <h3 className="font-bold text-slate-900 text-base group-hover:text-brand-600 transition-colors">
@@ -249,11 +306,18 @@ export const LandingPage: React.FC = () => {
 
           {/* Pillar 2 */}
           <div
-            onClick={() => setActiveTab('pyq')}
-            className="bg-white rounded-2xl p-6 border border-slate-200 hover:border-brand-500 hover:shadow-lg transition-all cursor-pointer group text-left space-y-4"
+            onClick={() => handleGuardedNav('pyq', 'Solved PYQ Question Bank')}
+            className="bg-white rounded-2xl p-6 border border-slate-200 hover:border-brand-500 hover:shadow-lg transition-all cursor-pointer group text-left space-y-4 relative"
           >
-            <div className="w-12 h-12 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <FileCheck className="w-6 h-6" />
+            <div className="flex items-center justify-between">
+              <div className="w-12 h-12 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <FileCheck className="w-6 h-6" />
+              </div>
+              {!hasCourseAccess && (
+                <span className="text-[10px] font-extrabold uppercase tracking-wide bg-amber-100 text-amber-900 border border-amber-300 px-2 py-0.5 rounded-full flex items-center gap-1">
+                  <Lock className="w-2.5 h-2.5 text-amber-600" /> Enrolled Only
+                </span>
+              )}
             </div>
             <div className="space-y-1.5">
               <h3 className="font-bold text-slate-900 text-base group-hover:text-brand-600 transition-colors">
@@ -270,11 +334,18 @@ export const LandingPage: React.FC = () => {
 
           {/* Pillar 3 */}
           <div
-            onClick={() => setActiveTab('mocktests')}
-            className="bg-white rounded-2xl p-6 border border-slate-200 hover:border-brand-500 hover:shadow-lg transition-all cursor-pointer group text-left space-y-4"
+            onClick={() => handleGuardedNav('mocktests', 'Kerala PSC Mock Engine')}
+            className="bg-white rounded-2xl p-6 border border-slate-200 hover:border-brand-500 hover:shadow-lg transition-all cursor-pointer group text-left space-y-4 relative"
           >
-            <div className="w-12 h-12 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <CheckSquare className="w-6 h-6" />
+            <div className="flex items-center justify-between">
+              <div className="w-12 h-12 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <CheckSquare className="w-6 h-6" />
+              </div>
+              {!hasCourseAccess && (
+                <span className="text-[10px] font-extrabold uppercase tracking-wide bg-amber-100 text-amber-900 border border-amber-300 px-2 py-0.5 rounded-full flex items-center gap-1">
+                  <Lock className="w-2.5 h-2.5 text-amber-600" /> Enrolled Only
+                </span>
+              )}
             </div>
             <div className="space-y-1.5">
               <h3 className="font-bold text-slate-900 text-base group-hover:text-brand-600 transition-colors">
@@ -291,11 +362,18 @@ export const LandingPage: React.FC = () => {
 
           {/* Pillar 4 */}
           <div
-            onClick={() => setActiveTab('doubts')}
-            className="bg-white rounded-2xl p-6 border border-slate-200 hover:border-brand-500 hover:shadow-lg transition-all cursor-pointer group text-left space-y-4"
+            onClick={() => handleGuardedNav('doubts', '1-on-1 Doubt Clearance')}
+            className="bg-white rounded-2xl p-6 border border-slate-200 hover:border-brand-500 hover:shadow-lg transition-all cursor-pointer group text-left space-y-4 relative"
           >
-            <div className="w-12 h-12 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <HelpCircle className="w-6 h-6" />
+            <div className="flex items-center justify-between">
+              <div className="w-12 h-12 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <HelpCircle className="w-6 h-6" />
+              </div>
+              {!hasCourseAccess && (
+                <span className="text-[10px] font-extrabold uppercase tracking-wide bg-amber-100 text-amber-900 border border-amber-300 px-2 py-0.5 rounded-full flex items-center gap-1">
+                  <Lock className="w-2.5 h-2.5 text-amber-600" /> Enrolled Only
+                </span>
+              )}
             </div>
             <div className="space-y-1.5">
               <h3 className="font-bold text-slate-900 text-base group-hover:text-brand-600 transition-colors">
@@ -328,7 +406,7 @@ export const LandingPage: React.FC = () => {
               </p>
             </div>
             <button
-              onClick={() => setActiveTab('pyq')}
+              onClick={() => handleGuardedNav('pyq', '10 Syllabus Portions')}
               className="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold rounded-xl transition self-start md:self-auto"
             >
               View All 10 Syllabus Portions
@@ -340,8 +418,18 @@ export const LandingPage: React.FC = () => {
             {modules.map((mod) => (
               <div
                 key={mod.id}
-                onClick={() => setActiveTab('pyq')}
-                className="bg-slate-800/80 hover:bg-slate-800 p-5 rounded-2xl border border-slate-700/80 hover:border-brand-500 transition cursor-pointer space-y-3 group flex flex-col justify-between"
+                onClick={() => {
+                  if (!hasCourseAccess) {
+                    openEnrollmentModal('plan-master');
+                    showToast(
+                      `🔒 Course Purchase Required: Purchase the course to access Module ${mod.order} (${mod.title}) notes and questions.`,
+                      'warning'
+                    );
+                    return;
+                  }
+                  setActiveTab('pyq');
+                }}
+                className="bg-slate-800/80 hover:bg-slate-800 p-5 rounded-2xl border border-slate-700/80 hover:border-brand-500 transition cursor-pointer space-y-3 group flex flex-col justify-between relative"
               >
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
@@ -363,8 +451,12 @@ export const LandingPage: React.FC = () => {
                 </div>
 
                 <div className="pt-2 border-t border-slate-700/50 flex items-center justify-between text-[11px] text-brand-400 font-semibold">
-                  <span>Practice Questions</span>
-                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                  <span>{hasCourseAccess ? 'Practice Questions' : 'Unlock Module'}</span>
+                  {!hasCourseAccess ? (
+                    <Lock className="w-3 h-3 text-amber-400" />
+                  ) : (
+                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                  )}
                 </div>
               </div>
             ))}
@@ -432,6 +524,178 @@ export const LandingPage: React.FC = () => {
         </div>
       </section>
 
+      {/* Course Plans & Pricing Showcase */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center max-w-2xl mx-auto space-y-3 mb-12">
+          <span className="text-xs font-black uppercase tracking-wider text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 inline-flex items-center gap-1">
+            <Sparkles className="w-3.5 h-3.5 text-amber-500" /> Affordable Selection Guarantee
+          </span>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
+            Course Packages & Enrollment Options
+          </h2>
+          <p className="text-slate-600 text-xs sm:text-sm">
+            Free users have preview access only. Choose your plan below for instant, permanent unlocking of all notes, question bank, and Kerala PSC mock tests.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
+          {/* Plan 1: Complete Master Course (Recommended) */}
+          <div className="bg-gradient-to-b from-slate-900 to-navy-950 text-white rounded-3xl p-7 sm:p-8 border-2 border-amber-400 shadow-2xl relative flex flex-col justify-between space-y-6 transform lg:-translate-y-2">
+            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 text-[11px] font-black uppercase tracking-wider px-4 py-1 rounded-full shadow-md flex items-center gap-1">
+              <Crown className="w-3.5 h-3.5" /> Most Popular • Full Access
+            </div>
+
+            <div className="space-y-4 pt-2 text-left">
+              <div>
+                <h3 className="text-xl font-extrabold text-white">Complete Master Course</h3>
+                <p className="text-xs text-slate-300 pt-1">
+                  Complete preparation package with 10 syllabus modules, handwritten notes, PYQ bank & 21 mock tests.
+                </p>
+              </div>
+
+              <div className="flex items-baseline gap-2 pt-2 border-t border-slate-800">
+                <span className="text-3xl sm:text-4xl font-black text-amber-300">₹1,999</span>
+                <span className="text-sm line-through text-slate-400 font-bold">₹4,999</span>
+                <span className="text-[11px] font-extrabold text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800">
+                  60% OFF
+                </span>
+              </div>
+
+              <ul className="space-y-2.5 text-xs text-slate-200">
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span>All 10 Kerala PSC Syllabus Modules</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span>Concise Handwritten PDF Notes & Formula Sheets</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span>1,430+ Solved PYQs with Revised PSC Keys</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span>21 Mock Tests (-0.33 Negative Marking)</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span>Direct 1-on-1 Doubt Solver with Joseph Josey</span>
+                </li>
+              </ul>
+            </div>
+
+            <button
+              onClick={() => openEnrollmentModal('plan-master')}
+              className="w-full py-3.5 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-950 font-black text-sm rounded-xl shadow-lg transition transform active:scale-95 flex items-center justify-center gap-2"
+            >
+              <Sparkles className="w-4 h-4" />
+              <span>Purchase Master Course — ₹1,999</span>
+            </button>
+          </div>
+
+          {/* Plan 2: Mock Test Series Only */}
+          <div className="bg-white rounded-3xl p-7 border border-slate-200 shadow-md flex flex-col justify-between space-y-6 hover:shadow-xl transition">
+            <div className="space-y-4 text-left">
+              <div>
+                <span className="text-[10px] font-black uppercase tracking-wider text-amber-700 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200">
+                  Exam Simulation
+                </span>
+                <h3 className="text-xl font-bold text-slate-900 mt-2">Mock Test Series Only</h3>
+                <p className="text-xs text-slate-500 pt-1">
+                  Full-length and module-wise timed tests with real Kerala PSC -0.33 marking and rank prediction.
+                </p>
+              </div>
+
+              <div className="flex items-baseline gap-2 pt-2 border-t border-slate-100">
+                <span className="text-3xl font-black text-slate-900">₹499</span>
+                <span className="text-sm line-through text-slate-400 font-bold">₹1,499</span>
+                <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">
+                  66% OFF
+                </span>
+              </div>
+
+              <ul className="space-y-2.5 text-xs text-slate-600">
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>21 Full-Length & Module-Wise Mock Tests</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>Real -0.33 Negative Marking System</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>Statewide Live Leaderboard & Rank</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>Official Verified Explanations & Keys</span>
+                </li>
+              </ul>
+            </div>
+
+            <button
+              onClick={() => openEnrollmentModal('plan-mock')}
+              className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm rounded-xl transition flex items-center justify-center gap-2"
+            >
+              <CheckSquare className="w-4 h-4 text-amber-400" />
+              <span>Buy Mock Series — ₹499</span>
+            </button>
+          </div>
+
+          {/* Plan 3: Crash Course */}
+          <div className="bg-white rounded-3xl p-7 border border-slate-200 shadow-md flex flex-col justify-between space-y-6 hover:shadow-xl transition">
+            <div className="space-y-4 text-left">
+              <div>
+                <span className="text-[10px] font-black uppercase tracking-wider text-brand-700 bg-brand-50 px-2.5 py-1 rounded-full border border-brand-200">
+                  Fast Track
+                </span>
+                <h3 className="text-xl font-bold text-slate-900 mt-2">Survey Fast-Track Crash</h3>
+                <p className="text-xs text-slate-500 pt-1">
+                  High-yield numerical formulas, Total Station/GPS notes, and Kerala Survey & Boundaries Act 1961.
+                </p>
+              </div>
+
+              <div className="flex items-baseline gap-2 pt-2 border-t border-slate-100">
+                <span className="text-3xl font-black text-slate-900">₹999</span>
+                <span className="text-sm line-through text-slate-400 font-bold">₹2,499</span>
+                <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">
+                  60% OFF
+                </span>
+              </div>
+
+              <ul className="space-y-2.5 text-xs text-slate-600">
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>Total Station, GPS & Resurvey Special</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>Kerala Survey & Boundaries Act 1961</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>Formula Revision & Shortcut Tricks</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>5 Model Practice Papers</span>
+                </li>
+              </ul>
+            </div>
+
+            <button
+              onClick={() => openEnrollmentModal('plan-crash')}
+              className="w-full py-3 bg-brand-700 hover:bg-brand-800 text-white font-bold text-sm rounded-xl transition flex items-center justify-center gap-2"
+            >
+              <Zap className="w-4 h-4 text-amber-400" />
+              <span>Buy Crash Course — ₹999</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Final Enrollment Banner */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div className="bg-gradient-to-r from-brand-900 via-slate-900 to-navy-900 rounded-3xl p-8 sm:p-12 text-white shadow-2xl space-y-6 border border-brand-800/80">
@@ -450,18 +714,18 @@ export const LandingPage: React.FC = () => {
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <button
-              onClick={() => setIsEnrollmentModalOpen(true)}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gradient-to-r from-brand-500 to-emerald-500 hover:from-brand-600 hover:to-emerald-600 text-white font-bold text-sm px-8 py-3.5 rounded-xl shadow-lg transition"
+              onClick={() => openEnrollmentModal('plan-master')}
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 via-brand-500 to-emerald-500 hover:from-amber-600 hover:to-emerald-600 text-slate-950 font-black text-sm px-8 py-3.5 rounded-xl shadow-lg transition"
             >
-              <Sparkles className="w-4 h-4 text-amber-300" />
-              <span>Enroll Now / Demo Login</span>
+              <Sparkles className="w-4 h-4 text-slate-950" />
+              <span>Purchase Master Course (₹1,999)</span>
             </button>
             <button
-              onClick={() => setActiveTab('mocktests')}
+              onClick={() => handleGuardedNav('mocktests', 'Mock Tests')}
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-sm px-6 py-3.5 rounded-xl border border-slate-700 transition"
             >
               <CheckSquare className="w-4 h-4 text-amber-400" />
-              <span>Try a Free Mock Test</span>
+              <span>Explore Mock Tests</span>
             </button>
           </div>
         </div>
