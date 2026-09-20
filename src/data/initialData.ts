@@ -13,6 +13,7 @@ import { MOCK_TEST_MODERN_SURVEY_44, MODERN_SURVEY_44_QUESTIONS } from './modern
 import { MOCK_TEST_PLANE_TABLE_12, PLANE_TABLE_12_QUESTIONS } from './planeTable12Questions';
 import { MOCK_TEST_COMPASS_25, COMPASS_SURVEY_25_QUESTIONS } from './compassSurvey25Questions';
 import { MOCK_TEST_LEVELLING_15, LEVELLING_15_QUESTIONS } from './levelling15Questions';
+import { MOCK_TEST_AUTOCAD_50, AUTOCAD_50_QUESTIONS } from './autocad50Questions';
 import { INITIAL_BANK_QUESTIONS } from './bankQuestions';
 import { SIMULATED_STUDENTS, SIMULATED_ATTEMPTS } from './simulatedStudents';
 
@@ -650,10 +651,33 @@ export const INITIAL_PYQ_PAPERS: PYQPaper[] = [
       rankerTip: q.rankerTip,
       topic: q.topic || 'Levelling Survey'
     }))
+  },
+  {
+    id: 'pyq-autocad-50',
+    title: 'Kerala PSC AutoCAD Official Solved PYQ & Practice Paper (50 Questions)',
+    examName: 'Surveyor Grade II / AutoCAD Special',
+    examCode: 'Cat. No: 284/2022 - AutoCAD Series',
+    year: 2024,
+    department: 'Survey and Land Records Department',
+    totalQuestions: 50,
+    pdfUrl: 'https://example.com/pyq/autocad_50_solved.pdf',
+    answerKeyUrl: 'https://example.com/pyq/autocad_50_answer_key.pdf',
+    isSolved: true,
+    questions: AUTOCAD_50_QUESTIONS.map((q, idx) => ({
+      id: q.id,
+      questionNumber: idx + 1,
+      question: q.question,
+      options: q.options,
+      correctOptionIndex: q.correctOptionIndex,
+      explanation: q.explanation,
+      rankerTip: q.rankerTip,
+      topic: q.topic || 'AutoCAD'
+    }))
   }
 ];
 
 export const INITIAL_MOCK_TESTS: MockTest[] = [
+  MOCK_TEST_AUTOCAD_50,
   MOCK_TEST_LEVELLING_15,
   MOCK_TEST_COMPASS_25,
   MOCK_TEST_PLANE_TABLE_12,
