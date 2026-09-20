@@ -17,9 +17,11 @@ import { THEODOLITE_146_QUESTIONS } from './theodolite146Questions';
 import { MODERN_INSTRUMENTS_75_QUESTIONS } from './modernInstruments75Questions';
 import { MODERN_INSTRUMENTS_85_QUESTIONS } from './modernInstruments85Questions';
 import { MINOR_INSTRUMENTS_31_QUESTIONS } from './minorInstruments31Questions';
+import { PYQ_PAPER_063_2024_QUESTIONS } from './pyqPaper063_2024';
 import { BankQuestion } from '../types';
 
 export const INITIAL_BANK_QUESTIONS: BankQuestion[] = [
+  ...PYQ_PAPER_063_2024_QUESTIONS,
   ...BASIC_ENGINEERING_DRAWING_50_QUESTIONS,
   ...BUILDING_MATERIALS_50_QUESTIONS,
   ...WORKSHOP_CALCULATION_10_QUESTIONS,
