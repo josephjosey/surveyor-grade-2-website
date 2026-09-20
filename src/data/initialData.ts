@@ -16,6 +16,7 @@ import { MOCK_TEST_LEVELLING_15, LEVELLING_15_QUESTIONS } from './levelling15Que
 import { MOCK_TEST_AUTOCAD_50, AUTOCAD_50_QUESTIONS } from './autocad50Questions';
 import { MOCK_TEST_BUILDING_MATERIALS_50, BUILDING_MATERIALS_50_QUESTIONS } from './buildingMaterials50Questions';
 import { MOCK_TEST_WORKSHOP_CALCULATION_10, WORKSHOP_CALCULATION_10_QUESTIONS } from './workshopCalculation10Questions';
+import { MOCK_TEST_BASIC_ENGINEERING_DRAWING_50, BASIC_ENGINEERING_DRAWING_50_QUESTIONS } from './basicEngineeringDrawing50Questions';
 import { INITIAL_BANK_QUESTIONS } from './bankQuestions';
 import { SIMULATED_STUDENTS, SIMULATED_ATTEMPTS } from './simulatedStudents';
 
@@ -719,10 +720,33 @@ export const INITIAL_PYQ_PAPERS: PYQPaper[] = [
       rankerTip: q.rankerTip,
       topic: q.topic || 'Workshop Calculation and Science'
     }))
+  },
+  {
+    id: 'pyq-bed-50',
+    title: 'Kerala PSC Basic Engineering Drawing Official Solved PYQ & Practice Paper (50 Questions)',
+    examName: 'Surveyor Grade II / Draftsman Gr. II - Basic Engineering Drawing',
+    examCode: 'Cat. No: 284/2022 - BED Series',
+    year: 2024,
+    department: 'Survey and Land Records Department / PWD',
+    totalQuestions: 50,
+    pdfUrl: 'https://example.com/pyq/bed_50_solved.pdf',
+    answerKeyUrl: 'https://example.com/pyq/bed_50_answer_key.pdf',
+    isSolved: true,
+    questions: BASIC_ENGINEERING_DRAWING_50_QUESTIONS.map((q, idx) => ({
+      id: q.id,
+      questionNumber: idx + 1,
+      question: q.question,
+      options: q.options,
+      correctOptionIndex: q.correctOptionIndex,
+      explanation: q.explanation,
+      rankerTip: q.rankerTip,
+      topic: q.topic || 'Basic Engineering Drawing'
+    }))
   }
 ];
 
 export const INITIAL_MOCK_TESTS: MockTest[] = [
+  MOCK_TEST_BASIC_ENGINEERING_DRAWING_50,
   MOCK_TEST_BUILDING_MATERIALS_50,
   MOCK_TEST_WORKSHOP_CALCULATION_10,
   MOCK_TEST_AUTOCAD_50,

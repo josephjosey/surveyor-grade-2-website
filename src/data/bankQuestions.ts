@@ -1,3 +1,4 @@
+import { BASIC_ENGINEERING_DRAWING_50_QUESTIONS } from './basicEngineeringDrawing50Questions';
 import { BUILDING_MATERIALS_50_QUESTIONS } from './buildingMaterials50Questions';
 import { WORKSHOP_CALCULATION_10_QUESTIONS } from './workshopCalculation10Questions';
 import { AUTOCAD_50_QUESTIONS } from './autocad50Questions';
@@ -19,6 +20,7 @@ import { MINOR_INSTRUMENTS_31_QUESTIONS } from './minorInstruments31Questions';
 import { BankQuestion } from '../types';
 
 export const INITIAL_BANK_QUESTIONS: BankQuestion[] = [
+  ...BASIC_ENGINEERING_DRAWING_50_QUESTIONS,
   ...BUILDING_MATERIALS_50_QUESTIONS,
   ...WORKSHOP_CALCULATION_10_QUESTIONS,
   ...AUTOCAD_50_QUESTIONS,
