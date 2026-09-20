@@ -43,7 +43,9 @@ export const MockTestsPage: React.FC = () => {
     getRankedLeaderboard,
     hasUserAttemptedTest,
     getUserRankInfo,
-    showToast
+    showToast,
+    hasCourseAccess,
+    openEnrollmentModal
   } = useApp();
 
   // Navigation tab inside Mock Test Page
@@ -69,9 +71,10 @@ export const MockTestsPage: React.FC = () => {
   const rankedExams = mockTests.filter((t) => t.isRankedExam || t.id === 'mock-state-rank-1');
   const [selectedRankedExamId, setSelectedRankedExamId] = useState<string>('');
 
-  // Active selected Ranked Exam
+  // Active selected Ranked Exam (Default to 100-Mark Grand Exam so everyone immediately accesses it)
   const activeRankedExam =
     rankedExams.find((t) => t.id === selectedRankedExamId) ||
+    rankedExams.find((t) => t.id === 'mock-kpsc-grand-100') ||
     rankedExams.find((t) => t.id === 'mock-kpsc-master-87') ||
     rankedExams[0] ||
     mockTests[0];
@@ -121,6 +124,17 @@ export const MockTestsPage: React.FC = () => {
   }, [isExamRunning, showToast]);
 
   const handleStartExam = (test: MockTest) => {
+    // Free Preview Access: 100-Mark Grand Exam is open to all candidates.
+    // Other specialized subject/module-wise tests require course enrollment.
+    if (!hasCourseAccess && test.id !== 'mock-kpsc-grand-100') {
+      openEnrollmentModal('plan-mock');
+      showToast(
+        '🔒 Course Purchase Required: This specialized mock test is part of the Mock Test Series. The 100-Mark Full Syllabus Grand Exam is free for everyone to write!',
+        'warning'
+      );
+      return;
+    }
+
     const isAlreadyAttempted = hasUserAttemptedTest(test.id);
 
     if (test.isRankedExam && !isAlreadyAttempted) {
@@ -759,6 +773,43 @@ export const MockTestsPage: React.FC = () => {
   // -------------------------------------------------------------
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-fadeIn">
+      {/* Free User Open Access Banner */}
+      {!hasCourseAccess && (
+        <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-brand-700 text-white p-4 sm:p-5 rounded-3xl shadow-lg border border-emerald-400/40 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-3.5">
+            <span className="p-3 rounded-2xl bg-white/20 text-white shrink-0">
+              <Sparkles className="w-6 h-6 text-amber-300" />
+            </span>
+            <div className="space-y-1 text-left">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="bg-amber-400 text-slate-950 text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full shadow-xs">
+                  ⭐ Open For Everyone
+                </span>
+                <span className="font-extrabold text-sm sm:text-base text-white">
+                  100-Mark Full Syllabus Grand Model Exam
+                </span>
+              </div>
+              <p className="text-xs text-emerald-100 leading-relaxed">
+                All candidates can write this complete 100-mark mock test free with official -0.33 negative marking and Statewide Rank list! To unlock all 21+ subject & module-wise tests, enroll in the Mock Series or Master Course.
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => {
+              setSelectedRankedExamId('mock-kpsc-grand-100');
+              const grandTest = rankedExams.find((t) => t.id === 'mock-kpsc-grand-100');
+              if (grandTest) {
+                handleStartExam(grandTest);
+              }
+            }}
+            className="px-5 py-2.5 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs rounded-xl shadow-md transition shrink-0 flex items-center gap-1.5 active:scale-95"
+          >
+            <Zap className="w-4 h-4 text-slate-950" />
+            <span>Write 100-Mark Exam Free</span>
+          </button>
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
         <div>
@@ -850,7 +901,15 @@ export const MockTestsPage: React.FC = () => {
                         <span className="text-[10px] font-black text-amber-900 uppercase tracking-wider bg-amber-200/80 px-2 py-0.5 rounded">
                           {test.totalQuestions} MCQs
                         </span>
-                        {isAttempted && rankInfo.attempt ? (
+                        {test.id === 'mock-kpsc-grand-100' ? (
+                          <span className="px-2 py-0.5 rounded-full bg-emerald-600 text-white text-[10px] font-extrabold flex items-center gap-1 shadow-xs">
+                            <Sparkles className="w-2.5 h-2.5 text-amber-300" /> Free • Open to All
+                          </span>
+                        ) : !hasCourseAccess ? (
+                          <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300 text-[10px] font-bold flex items-center gap-1">
+                            <Lock className="w-2.5 h-2.5 text-amber-600" /> Enrolled Only
+                          </span>
+                        ) : isAttempted && rankInfo.attempt ? (
                           <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">
                             Rank #{rankInfo.rank}
                           </span>
@@ -1004,15 +1063,30 @@ export const MockTestsPage: React.FC = () => {
                         Take your official 1st attempt to enter the Statewide Leaderboard!
                       </div>
                     </div>
-                    <button
-                      onClick={() => handleStartExam(activeRankedExam)}
-                      className="w-full py-3 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black text-xs rounded-xl shadow-lg transition flex items-center justify-center gap-2"
-                    >
-                      <Zap className="w-4 h-4 text-slate-950" />
-                      <span>Start Official 1st Attempt (Ranked)</span>
-                    </button>
+                    {!hasCourseAccess && activeRankedExam.id !== 'mock-kpsc-grand-100' ? (
+                      <button
+                        onClick={() => {
+                          openEnrollmentModal('plan-mock');
+                          showToast('🔒 Course Purchase Required: Purchase the Mock Series (₹499) or Master Course (₹1,999) to unlock this test. The 100-Mark Full Syllabus Exam is free for all!', 'warning');
+                        }}
+                        className="w-full py-3 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs rounded-xl shadow-lg transition flex items-center justify-center gap-2 active:scale-95"
+                      >
+                        <Lock className="w-4 h-4 text-slate-950" />
+                        <span>Unlock Test (Mock Series ₹499)</span>
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => handleStartExam(activeRankedExam)}
+                        className="w-full py-3 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black text-xs rounded-xl shadow-lg transition flex items-center justify-center gap-2 active:scale-95"
+                      >
+                        <Zap className="w-4 h-4 text-slate-950" />
+                        <span>Start Official 1st Attempt (Ranked)</span>
+                      </button>
+                    )}
                     <div className="text-[10px] text-slate-400">
-                      Once started, the {activeRankedExam.durationMinutes}-minute countdown will begin.
+                      {!hasCourseAccess && activeRankedExam.id !== 'mock-kpsc-grand-100'
+                        ? 'Course enrollment unlocks all 21+ subject mock tests.'
+                        : `Once started, the ${activeRankedExam.durationMinutes}-minute countdown will begin.`}
                     </div>
                   </div>
                 )}
@@ -1352,9 +1426,15 @@ export const MockTestsPage: React.FC = () => {
                       <span className="text-[10px] font-bold text-brand-700 bg-brand-50 px-2.5 py-1 rounded-full border border-brand-200 uppercase tracking-wider">
                         {test.category}
                       </span>
-                      <span className="text-xs text-slate-500 font-medium">
-                        {test.difficulty}
-                      </span>
+                      {!hasCourseAccess && test.id !== 'mock-kpsc-grand-100' ? (
+                        <span className="text-[10px] font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full flex items-center gap-1 border border-amber-300">
+                          <Lock className="w-2.5 h-2.5 text-amber-600" /> Enrolled Only
+                        </span>
+                      ) : (
+                        <span className="text-xs text-slate-500 font-medium">
+                          {test.difficulty}
+                        </span>
+                      )}
                     </div>
 
                     <h3 className="font-bold text-slate-900 text-base leading-snug">
@@ -1393,10 +1473,23 @@ export const MockTestsPage: React.FC = () => {
 
                     <button
                       onClick={() => handleStartExam(test)}
-                      className="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold rounded-xl shadow transition flex items-center gap-1.5"
+                      className={`px-4 py-2 text-xs font-bold rounded-xl shadow transition flex items-center gap-1.5 active:scale-95 ${
+                        !hasCourseAccess && test.id !== 'mock-kpsc-grand-100'
+                          ? 'bg-amber-600 hover:bg-amber-700 text-white'
+                          : 'bg-brand-600 hover:bg-brand-700 text-white'
+                      }`}
                     >
-                      <Zap className="w-3.5 h-3.5" />
-                      <span>{bestScore !== null ? 'Retake Test' : 'Start Test'}</span>
+                      {!hasCourseAccess && test.id !== 'mock-kpsc-grand-100' ? (
+                        <>
+                          <Lock className="w-3.5 h-3.5" />
+                          <span>Unlock Test</span>
+                        </>
+                      ) : (
+                        <>
+                          <Zap className="w-3.5 h-3.5" />
+                          <span>{bestScore !== null ? 'Retake Test' : 'Start Test'}</span>
+                        </>
+                      )}
                     </button>
                   </div>
                 </div>

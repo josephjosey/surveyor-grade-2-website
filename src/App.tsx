@@ -186,7 +186,7 @@ const MainLayout: React.FC = () => {
 
       <main className="flex-1">
         <React.Suspense fallback={<PageLoadingFallback />}>
-          {!hasCourseAccess && activeTab !== 'home' ? (
+          {!hasCourseAccess && activeTab !== 'home' && activeTab !== 'mocktests' ? (
             <CourseAccessPaywall />
           ) : (
             <>

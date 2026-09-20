@@ -34,7 +34,8 @@ export const LandingPage: React.FC = () => {
     modules,
     studyNotes,
     mockTests,
-    pyqPapers
+    pyqPapers,
+    setSelectedMockTestId
   } = useApp();
 
   const handleOpenNote = (noteId: string) => {
@@ -332,31 +333,32 @@ export const LandingPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Pillar 3 */}
+          {/* Pillar 3: Kerala PSC Mock Engine */}
           <div
-            onClick={() => handleGuardedNav('mocktests', 'Kerala PSC Mock Engine')}
+            onClick={() => {
+              setSelectedMockTestId('mock-kpsc-grand-100');
+              setActiveTab('mocktests');
+            }}
             className="bg-white rounded-2xl p-6 border border-slate-200 hover:border-brand-500 hover:shadow-lg transition-all cursor-pointer group text-left space-y-4 relative"
           >
             <div className="flex items-center justify-between">
               <div className="w-12 h-12 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center group-hover:scale-110 transition-transform">
                 <CheckSquare className="w-6 h-6" />
               </div>
-              {!hasCourseAccess && (
-                <span className="text-[10px] font-extrabold uppercase tracking-wide bg-amber-100 text-amber-900 border border-amber-300 px-2 py-0.5 rounded-full flex items-center gap-1">
-                  <Lock className="w-2.5 h-2.5 text-amber-600" /> Enrolled Only
-                </span>
-              )}
+              <span className="text-[10px] font-extrabold uppercase tracking-wide bg-emerald-100 text-emerald-900 border border-emerald-300 px-2 py-0.5 rounded-full flex items-center gap-1 shadow-xs">
+                <Sparkles className="w-2.5 h-2.5 text-emerald-600" /> Free 100-Q Exam Open
+              </span>
             </div>
             <div className="space-y-1.5">
               <h3 className="font-bold text-slate-900 text-base group-hover:text-brand-600 transition-colors">
                 Kerala PSC Mock Engine
               </h3>
               <p className="text-xs text-slate-600 leading-relaxed">
-                Full-length timed test environment with real PSC marking (+1 / -0.33), instant scorecard, rank prediction, and ranker tips.
+                Full-length 100-mark timed test with real PSC marking (+1 / -0.33), instant scorecard, and statewide ranking open to everyone!
               </p>
             </div>
             <div className="pt-2 text-xs font-semibold text-amber-600 flex items-center gap-1">
-              Take Mock Test ({mockTests.length} Tests) <ArrowRight className="w-3.5 h-3.5" />
+              Write 100-Q Mock Exam Free <ArrowRight className="w-3.5 h-3.5" />
             </div>
           </div>
 
@@ -721,11 +723,14 @@ export const LandingPage: React.FC = () => {
               <span>Purchase Master Course (₹1,999)</span>
             </button>
             <button
-              onClick={() => handleGuardedNav('mocktests', 'Mock Tests')}
+              onClick={() => {
+                setSelectedMockTestId('mock-kpsc-grand-100');
+                setActiveTab('mocktests');
+              }}
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-sm px-6 py-3.5 rounded-xl border border-slate-700 transition"
             >
               <CheckSquare className="w-4 h-4 text-amber-400" />
-              <span>Explore Mock Tests</span>
+              <span>Write 100-Mark Grand Exam Free</span>
             </button>
           </div>
         </div>

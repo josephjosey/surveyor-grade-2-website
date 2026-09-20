@@ -17,6 +17,7 @@ import { MOCK_TEST_AUTOCAD_50, AUTOCAD_50_QUESTIONS } from './autocad50Questions
 import { MOCK_TEST_BUILDING_MATERIALS_50, BUILDING_MATERIALS_50_QUESTIONS } from './buildingMaterials50Questions';
 import { MOCK_TEST_WORKSHOP_CALCULATION_10, WORKSHOP_CALCULATION_10_QUESTIONS } from './workshopCalculation10Questions';
 import { MOCK_TEST_BASIC_ENGINEERING_DRAWING_50, BASIC_ENGINEERING_DRAWING_50_QUESTIONS } from './basicEngineeringDrawing50Questions';
+import { MOCK_TEST_KPSC_GRAND_100, KPSC_GRAND_100_QUESTIONS } from './kpscGrand100MockTest';
 import { INITIAL_BANK_QUESTIONS } from './bankQuestions';
 import { SIMULATED_STUDENTS, SIMULATED_ATTEMPTS } from './simulatedStudents';
 
@@ -742,10 +743,33 @@ export const INITIAL_PYQ_PAPERS: PYQPaper[] = [
       rankerTip: q.rankerTip,
       topic: q.topic || 'Basic Engineering Drawing'
     }))
+  },
+  {
+    id: 'pyq-kpsc-grand-100',
+    title: 'Kerala PSC 100-Mark Full Syllabus Official Solved Model Paper (100 Questions)',
+    examName: 'Kerala PSC Surveyor Grade II / Overseer Full Syllabus Exam',
+    examCode: 'Cat. No: 284/2022 - 100 Marks Grand Series',
+    year: 2026,
+    department: 'Survey and Land Records Department / KWA / PWD',
+    totalQuestions: 100,
+    pdfUrl: 'https://example.com/pyq/kpsc_grand_100_solved.pdf',
+    answerKeyUrl: 'https://example.com/pyq/kpsc_grand_100_answer_key.pdf',
+    isSolved: true,
+    questions: KPSC_GRAND_100_QUESTIONS.map((q, idx) => ({
+      id: q.id,
+      questionNumber: idx + 1,
+      question: q.question,
+      options: q.options,
+      correctOptionIndex: q.correctOptionIndex,
+      explanation: q.explanation,
+      rankerTip: q.rankerTip,
+      topic: q.topic || 'Kerala PSC Full Syllabus'
+    }))
   }
 ];
 
 export const INITIAL_MOCK_TESTS: MockTest[] = [
+  MOCK_TEST_KPSC_GRAND_100,
   MOCK_TEST_BASIC_ENGINEERING_DRAWING_50,
   MOCK_TEST_BUILDING_MATERIALS_50,
   MOCK_TEST_WORKSHOP_CALCULATION_10,
