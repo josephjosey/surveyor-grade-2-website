@@ -1182,7 +1182,7 @@ const bankQuestions = questionsData.map((q) => {
     rankerTip: q.rankerTip,
     topic: q.topic,
     type: 'pyq',
-    examName: 'Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)',
+    examName: `Paper 063/2024 (Q${q.num}) • Tradesman / Surveyor Gr. II`,
     year: 2024,
     createdAt: '2026-09-21T03:00:00Z'
   };

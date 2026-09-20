@@ -27,14 +27,14 @@ const newPaper = JSON.parse(paperMatch[1]);
 
 console.log(`Extracted ${newBankQuestions.length} bank questions and 1 paper.`);
 
-// Filter existing bankQuestions to avoid duplicate IDs
-const existingQIds = new Set(db.bankQuestions.map((q) => q.id));
 let addedQCount = 0;
 for (const q of newBankQuestions) {
-  if (!existingQIds.has(q.id)) {
+  const existingIdx = db.bankQuestions.findIndex((existing) => existing.id === q.id);
+  if (existingIdx === -1) {
     db.bankQuestions.push(q);
-    existingQIds.add(q.id);
     addedQCount++;
+  } else {
+    db.bankQuestions[existingIdx] = q;
   }
 }
 

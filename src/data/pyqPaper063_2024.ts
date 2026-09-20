@@ -17,7 +17,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Area of A0 is 1 m². A1 is 594×841 mm, A2 is 420×594 mm, A3 is 297×420 mm, A4 is 210×297 mm.",
     "topic": "Drawing sheet",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q1) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -37,7 +37,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "HB is used for lettering/borders; H for finished outlines; 2H for construction and center lines.",
     "topic": "Drawing instruments",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q2) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -57,7 +57,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Main titles use 6 to 8 mm; sub-titles and headings use 3 to 6 mm; notes and dimensions use 2.5 to 3 mm.",
     "topic": "Lettering",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q3) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -77,7 +77,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Dashed thin = Hidden outlines; Chain thin = Center lines; Continuous thick = Visible outlines.",
     "topic": "Types of lines",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q4) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -97,7 +97,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Aligned system dimensions are placed perpendicular to dimension lines and read from bottom or right side.",
     "topic": "Dimensioning",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q5) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -117,7 +117,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Trapezoid: quadrilateral with one pair of opposite sides parallel and unequal angles.",
     "topic": "Geometrical constructions",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q6) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -137,7 +137,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Section parallel to generator = Parabola; Cut through all generators = Ellipse; Parallel to axis = Hyperbola.",
     "topic": "Conic sections",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q7) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -157,7 +157,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Segment = Arc + Chord. Sector = Arc + Two radii.",
     "topic": "Geometrical constructions",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q8) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -177,7 +177,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Always convert both numerator and denominator into the same units (mm) before reducing.",
     "topic": "Scales",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q9) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -197,7 +197,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Perpendicular to HP implies top view is true shape (circle); front view on VP is a rectangle of height equal to cylinder height.",
     "topic": "Projection",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q10) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -217,7 +217,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Large scale = Plan; Small scale = Map.",
     "topic": "Classifications of Survey",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q11) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -237,7 +237,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Reconnaissance = Rough feasibility. Preliminary = Detailed data & alignment selection. Location = Setting out.",
     "topic": "Survey classifications",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q12) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -257,7 +257,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "In PSC exams, options often list 200 sq.km or 250 sq.km as the upper boundary for plane surveying.",
     "topic": "Principles of Survey",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q13) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -277,7 +277,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Working from part to whole magnifies minor errors uncontrollably.",
     "topic": "Principles of Survey",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q14) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -297,7 +297,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Invar = 36% Ni + 64% Fe. Lowest coefficient of thermal expansion (α ≈ 0.12 × 10⁻⁶/°C).",
     "topic": "Instruments used in Chain survey",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q15) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -317,7 +317,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Any offset not at 90° is an oblique offset.",
     "topic": "Offsetting",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q16) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -337,7 +337,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "20 m chain tolerance = ±5 mm; 30 m chain tolerance = ±8 mm.",
     "topic": "Chain tolerances",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q17) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -357,7 +357,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Too long chain means measured distance is shorter, so true length must be greater than 250 m.",
     "topic": "Errors in Chain survey",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q18) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -377,7 +377,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Planimeter = Area. Pantograph = Scale reproduction. Clinometer = Slope angles.",
     "topic": "Instruments used in Chain survey",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q19) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -397,7 +397,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Source of error refers to Natural, Instrumental, or Personal.",
     "topic": "Errors in Chain survey",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q20) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -417,7 +417,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Also called indirect ranging, requires two intermediate surveyors alternately aligning each other.",
     "topic": "Ranging",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q21) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -437,7 +437,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Field books open lengthwise and are made of high-quality parchment paper.",
     "topic": "Field book",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q22) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -457,7 +457,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Centesimal system: 1 circumference = 400 grades. Sexagesimal = 360 degrees.",
     "topic": "Angular measurement system",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q23) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -477,7 +477,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Used for small localized surveys where true meridian determination is not required.",
     "topic": "Meridians",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q24) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -497,7 +497,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "External magnetic flux lines run from South to North.",
     "topic": "Magnetic field",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q25) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -517,7 +517,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Prismatic compass = Whole Circle Bearing (0° to 360°). Surveyor's compass = Quadrantal Bearing (0° to 90°).",
     "topic": "Surveyor's compass",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q26) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -537,7 +537,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "West declination shifts the magnetic needle West, so in SE quadrant the angle increases.",
     "topic": "True and Magnetic bearings",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q27) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -557,7 +557,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "1st quadrant (NE): WCB = QB. 2nd quadrant (SE): WCB = 180° - QB.",
     "topic": "Conversion of bearings",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q28) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -577,7 +577,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "In QB system, BB is obtained simply by swapping N↔S and E↔W while keeping the numerical angle unchanged.",
     "topic": "Fore and Back bearing",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q29) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -597,7 +597,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Measured in the direction of progress = Fore Bearing; measured in the reverse direction = Back Bearing.",
     "topic": "Fore and Back bearing",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q30) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -617,7 +617,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Horizontal angle = Magnetic Declination. Vertical inclination of needle = Dip.",
     "topic": "Magnetic declination",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q31) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -637,7 +637,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "|FB - BB| = 180° means no local attraction at either station.",
     "topic": "Local attraction",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q32) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -657,7 +657,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Careless centering or leveling is a Personal error.",
     "topic": "Errors in compass survey",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q33) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -677,7 +677,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Diurnal variation is greater in summer than in winter, and greater near the poles than at the equator.",
     "topic": "Magnetic declination",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q34) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -697,7 +697,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Determining the table position from known points = Resection.",
     "topic": "Resection",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q35) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -717,7 +717,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Trough compass is long and narrow with a 5° range on either side of zero.",
     "topic": "Plane table equipment",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q36) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -737,7 +737,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Two visible points = Two-point problem; Three visible points = Three-point problem.",
     "topic": "Two-point problem",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q37) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -757,7 +757,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Orientation by back-sighting is the most accurate method.",
     "topic": "Orientation",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q38) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -777,7 +777,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "4 Methods: 1. Radiation 2. Intersection 3. Traversing 4. Resection.",
     "topic": "Methods of plane tabling",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q39) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -797,7 +797,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Two-peg test adjusts collimation error in levels.",
     "topic": "Dumpy level adjustments",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q40) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -817,7 +817,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Contour Interval is constant for a map; Horizontal Equivalent varies with slope.",
     "topic": "Contours & Horizontal equivalent",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q41) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -837,7 +837,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "19 years accounts for full cycle of lunar node regression (18.61 years).",
     "topic": "Datum & MSL",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q42) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -857,7 +857,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "C_comb = 0.0673 × D² (subtractive to staff readings). 0.0673 × 9 = 0.6057 m.",
     "topic": "Curvature and refraction",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q43) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -877,7 +877,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Carried out by taking two sets of observations from both banks.",
     "topic": "Reciprocal levelling",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q44) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -897,7 +897,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Vertical scale = 1:100 to 1:200; Horizontal scale = 1:1000 to 1:2000 (10x exaggeration).",
     "topic": "Profile levelling",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q45) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -917,7 +917,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Ridge: Higher values inside loop. Valley: Lower values inside loop.",
     "topic": "Characteristics of contours",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q46) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -937,7 +937,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Gradient line controls the permissible incline for transport routes.",
     "topic": "Contour gradient",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q47) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -957,7 +957,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "When GL > FL it is Cutting (GL - FL). When FL > GL it is Filling (FL - GL).",
     "topic": "Earthwork calculation",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q48) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -977,7 +977,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Target staff has vernier moved by staff-man until surveyor signals alignment.",
     "topic": "Levelling staff",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q49) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -997,7 +997,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Level surface is normal to gravity. A horizontal surface is tangential to a level surface at only one point.",
     "topic": "Definitions in Levelling",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q50) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1017,7 +1017,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Auto level uses an internal compensator; only circular bubble needs rough leveling.",
     "topic": "Types of levels",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q51) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1037,7 +1037,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Previous Reading - Current Reading: positive is Rise, negative is Fall.",
     "topic": "Rise and Fall method",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q52) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1057,7 +1057,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Abney level is specially designed for tracing gradient lines and grade contours.",
     "topic": "Minor instruments / Abney level",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q53) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1077,7 +1077,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "B = Formation width, d = depth of cut/fill, S = horizontal slope ratio (S:1).",
     "topic": "Earthwork formulas",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q54) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1097,7 +1097,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Consecutive coords: relative to previous point. Independent coords: relative to common origin.",
     "topic": "Coordinates",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q55) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1117,7 +1117,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Loose needle: compass needle read at every station. Fast needle: needle read at first station only.",
     "topic": "Theodolite traversing",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q56) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1137,7 +1137,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "There is no 'slant line' among theodolite fundamental axes.",
     "topic": "Fundamental lines",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q57) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1157,7 +1157,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Ordinary levelling staff has least count 5 mm (0.005 m); precise stadia rods can read to 1 mm (0.001 m).",
     "topic": "Stadia rods / Tacheometry",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q58) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1177,7 +1177,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "External distance E = R(sec(∆/2) - 1). Mid-ordinate M = R(1 - cos(∆/2)).",
     "topic": "Curve elements",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q59) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1197,7 +1197,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Tangent length = R tan(∆/2). Long chord = 2R sin(∆/2). Curve length = R × ∆ (radians).",
     "topic": "Curve elements",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q60) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1217,7 +1217,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Trunnion axis = Horizontal axis. Azimuth axis = Vertical axis.",
     "topic": "Theodolite axes",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q61) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1237,7 +1237,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "D = k·s + c where k = f/i and c = f + d.",
     "topic": "Tacheometric constants",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q62) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1257,7 +1257,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Sum of interior angles = (2n - 4) × 90°; enables rigorous checks.",
     "topic": "Theodolite traversing",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q63) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1277,7 +1277,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Latitude = l cos θ (parallel to meridian). Departure = l sin θ (perpendicular to meridian).",
     "topic": "Latitudes and Departures",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q64) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1297,7 +1297,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "1 Base Station + 1 Rover = Minimum 2 receivers.",
     "topic": "DGPS",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q65) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1317,7 +1317,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "RTK provides centimeter-level positioning accuracy in real time.",
     "topic": "RTK GPS",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q66) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1337,7 +1337,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Total Station = Electronic Theodolite + EDM + Microprocessor.",
     "topic": "Total Station",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q67) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1357,7 +1357,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Raw measurements: HA, VA, and Slope Distance (SD).",
     "topic": "Total Station measurements",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q68) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1377,7 +1377,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Cylindrical = Meridians and parallels form rectangular grid.",
     "topic": "Map projections",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q69) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1397,7 +1397,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Uses electromagnetic radiation to detect surface features.",
     "topic": "Remote Sensing",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q70) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1417,7 +1417,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Current meter = Water velocity. Echo sounder = Water depth (soundings).",
     "topic": "Hydrographic surveying",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q71) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1437,7 +1437,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Cross rope gives precise distance across rivers up to 300 m width.",
     "topic": "Hydrographic sounding",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q72) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1457,7 +1457,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "All other linetypes (dashed, hidden, center) must be loaded using LINETYPE command.",
     "topic": "AutoCAD linetypes",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q73) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1477,7 +1477,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Command sequence: EL → I (Isocircle) → Specify center and radius.",
     "topic": "Isometric drafting",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q74) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1497,7 +1497,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "F5 = Isoplane toggle. F3 = OSNAP. F7 = Grid. F8 = Ortho.",
     "topic": "Function keys",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q75) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1517,7 +1517,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "OOPS only restores the most recently erased objects without undoing intermediate commands.",
     "topic": "AutoCAD commands",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q76) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1537,7 +1537,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "T = MTEXT; ST = Text Style dialog; TR = TRIM.",
     "topic": "Shortcuts",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q77) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1557,7 +1557,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Can be shown or hidden with the MENUBAR system variable (1 to display).",
     "topic": "Interface & GUI",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q78) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1577,7 +1577,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "X,Y = Absolute. @X,Y = Relative rectangular. @dist<angle = Relative polar.",
     "topic": "Coordinate systems",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q79) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1597,7 +1597,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Legacy DOS and 16/32 bit OS cannot run modern versions of AutoCAD.",
     "topic": "System requirements",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q80) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1617,7 +1617,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "SI unit of heat = Joule. MKS technical unit = Calorie (kcal).",
     "topic": "Units of heat",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q81) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1637,7 +1637,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "1 Hectare = 100 Ares = 2.47 Acres = 10,000 m².",
     "topic": "Metric land units",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q82) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1657,7 +1657,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Dividing by 1000 shifts the decimal point 3 places to the left.",
     "topic": "Decimals & Fractions",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q83) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1677,7 +1677,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Tungsten (3422°C), Tantalum (3017°C), Molybdenum (2620°C) are key refractory metals.",
     "topic": "Material properties",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q84) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1697,7 +1697,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "1 N = 10⁵ dynes = 100,000 dynes.",
     "topic": "Force units",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q85) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1717,7 +1717,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "sin²θ + cos²θ = 1; 1 + tan²θ = sec²θ; 1 + cot²θ = cosec²θ.",
     "topic": "Trigonometric identities",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q86) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1737,7 +1737,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "In 2nd quadrant, tangent and cotangent are negative.",
     "topic": "Trigonometry",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q87) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1757,7 +1757,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Class 1: Fulcrum in middle (See-saw, Crowbar). Class 2: Load in middle (Nut cracker). Class 3: Effort in middle (Forceps).",
     "topic": "Simple machines / Levers",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q88) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1777,7 +1777,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Tenacity = Resistance to tensile tearing; Ductility = Drawn into wires; Malleability = Beaten into sheets.",
     "topic": "Material science",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q89) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1797,7 +1797,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "White cast iron cracks readily upon rapid heating/cooling due to zero ductility.",
     "topic": "Metallurgy",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q90) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1817,7 +1817,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Density of water = 1000 kg/m³ = 1 g/cm³.",
     "topic": "Density & Mass",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q91) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1837,7 +1837,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "v = s / t = 180 / 20 = 9 m/s.",
     "topic": "Speed and Velocity",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q92) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1857,7 +1857,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Acid refractory: Silica. Basic: Magnesite, Dolomite. Neutral: Chromite, Carbon.",
     "topic": "Refractory materials",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q93) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1877,7 +1877,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Fat lime < 5% clay; Hydraulic lime 5-30% clay; Poor lime > 30% clay.",
     "topic": "Lime",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q94) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1897,7 +1897,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "IS Sieve 480 = 4.75 mm (coarse sand boundary); IS Sieve 15 = 150 micron (fine sand boundary).",
     "topic": "Sand & Aggregates",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q95) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1917,7 +1917,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Timber expands and shrinks due to its natural hygroscopic nature.",
     "topic": "Timber",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q96) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1937,7 +1937,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Paleo watering is done before sowing seeds; Kor watering is first watering after germination.",
     "topic": "Irrigation engineering",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q97) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1957,7 +1957,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Connecting public road to private premises = Driveway.",
     "topic": "Highway engineering",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q98) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1977,7 +1977,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Ruling gradient is the default standard design slope adopted by IRC.",
     "topic": "Highway engineering",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q99) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   },
@@ -1997,7 +1997,7 @@ export const PYQ_PAPER_063_2024_QUESTIONS: BankQuestion[] = [
     "rankerTip": "Centage charges (departmental charges) are generally 10% to 15%.",
     "topic": "Estimation & Costing",
     "type": "pyq",
-    "examName": "Kerala PSC Tradesman (Survey) / Surveyor Gr. II 2024 (Paper 063/2024)",
+    "examName": "Paper 063/2024 (Q100) • Tradesman / Surveyor Gr. II",
     "year": 2024,
     "createdAt": "2026-09-21T03:00:00Z"
   }
