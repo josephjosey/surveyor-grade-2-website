@@ -29,7 +29,10 @@ jobs:
           java-version: '17'
 
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+        uses: android-actions/setup-android@v4
+
+      - name: Accept Android SDK Licenses
+        run: yes | sdkmanager --licenses || true
 
       - name: Install NPM Dependencies
         run: npm ci
@@ -81,12 +84,13 @@ jobs:
         with:
           tag_name: v1.0.0
           name: "SurveyRank Academy Android App (APK & AAB)"
+          make_latest: true
           body: |
-            ### 📱 SurveyRank Academy Android App v1.0.0
+            ### 📱 SurveyRank Academy Android App v1.0.0 (Updated)
             
             - **Direct APK Download**: Download [`SurveyRankAcademy.apk`](https://github.com/josephjosey/surveyor-grade-2-website/releases/download/v1.0.0/SurveyRankAcademy.apk) to install immediately on your Android phone!
             - **Google Play Store Bundle**: [`SurveyRankAcademy.aab`](https://github.com/josephjosey/surveyor-grade-2-website/releases/download/v1.0.0/SurveyRankAcademy.aab) for Google Play Console submission.
-            - **Features**: 1,089+ Kerala PSC Survey & Land Records Questions, 11 Timed Mock Tests, and State Rank Leaderboards.
+            - **Features**: 1,710+ Kerala PSC Survey & Land Records Questions across 10 modules, 17 Original Question Papers (incl. Paper 063/2024, Paper 43/2023, Paper 106/2017), 23 Timed Mock Tests & Series, and Statewide Rank Leaderboards.
           files: |
             build-output/SurveyRankAcademy.apk
             build-output/SurveyRankAcademy.aab

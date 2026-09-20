@@ -22,19 +22,36 @@ export interface DatabaseState {
 }
 
 export async function fetchDatabase(): Promise<DatabaseState | null> {
-  if (!import.meta.env.DEV) return null;
-  try {
-    const res = await fetch('/api/database');
-    if (!res.ok) return null;
-    const data = await res.json();
-    if (data && !data.empty && (data.studyNotes || data.mockTests || data.pyqPapers)) {
-      return data;
+  // 1. In dev mode, fetch from local Vite Express/node API
+  if (import.meta.env.DEV) {
+    try {
+      const res = await fetch('/api/database');
+      if (res.ok) {
+        const data = await res.json();
+        if (data && !data.empty && (data.studyNotes || data.mockTests || data.pyqPapers || data.bankQuestions)) {
+          return data;
+        }
+      }
+    } catch (err) {
+      console.warn('Persistence: could not fetch database from server disk:', err);
     }
-    return null;
-  } catch (err) {
-    console.warn('Persistence: could not fetch database from server disk:', err);
-    return null;
   }
+
+  // 2. In production & mobile APK (Capacitor Android): Fetch authoritative dataset from live GitHub CDN
+  try {
+    const remoteUrl = 'https://raw.githubusercontent.com/josephjosey/surveyor-grade-2-website/main/data/database.json';
+    const res = await fetch(remoteUrl, { cache: 'no-cache' });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.bankQuestions && data.bankQuestions.length > 0) {
+        return data;
+      }
+    }
+  } catch (err) {
+    console.warn('Persistence: could not fetch remote database from GitHub CDN:', err);
+  }
+
+  return null;
 }
 
 export async function saveDatabase(data: DatabaseState): Promise<boolean> {

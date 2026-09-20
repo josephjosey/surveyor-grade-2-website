@@ -19,6 +19,7 @@ import { MOCK_TEST_WORKSHOP_CALCULATION_10, WORKSHOP_CALCULATION_10_QUESTIONS } 
 import { MOCK_TEST_BASIC_ENGINEERING_DRAWING_50, BASIC_ENGINEERING_DRAWING_50_QUESTIONS } from './basicEngineeringDrawing50Questions';
 import { MOCK_TEST_KPSC_GRAND_100, KPSC_GRAND_100_QUESTIONS } from './kpscGrand100MockTest';
 import { PYQ_PAPER_063_2024 } from './pyqPaper063_2024';
+import { PYQ_PAPER_043_2023, PYQ_PAPER_106_2017, MOCK_TEST_TRACER_2023 } from './tracerSurveyor200Questions';
 import { INITIAL_BANK_QUESTIONS } from './bankQuestions';
 import { SIMULATED_STUDENTS, SIMULATED_ATTEMPTS } from './simulatedStudents';
 
@@ -369,6 +370,8 @@ export const INITIAL_STUDY_NOTES: StudyNote[] = [
 
 export const INITIAL_PYQ_PAPERS: PYQPaper[] = [
   PYQ_PAPER_063_2024,
+  PYQ_PAPER_043_2023,
+  PYQ_PAPER_106_2017,
   {
     id: 'pyq-1',
     title: 'Kerala PSC Surveyor Grade II - Survey & Land Records (2024)',
@@ -772,6 +775,7 @@ export const INITIAL_PYQ_PAPERS: PYQPaper[] = [
 
 export const INITIAL_MOCK_TESTS: MockTest[] = [
   MOCK_TEST_KPSC_GRAND_100,
+  MOCK_TEST_TRACER_2023,
   MOCK_TEST_BASIC_ENGINEERING_DRAWING_50,
   MOCK_TEST_BUILDING_MATERIALS_50,
   MOCK_TEST_WORKSHOP_CALCULATION_10,
@@ -1263,7 +1267,7 @@ export const DEMO_STUDENT: User = {
   bookmarkedClassIds: [],
   savedPYQIds: [],
   streakDays: 1,
-  subscriptionPlan: 'free',
+  subscriptionPlan: 'master',
   stateRank: 2,
   percentile: 0.0,
   mockScore: 1.01

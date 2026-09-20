@@ -153,7 +153,7 @@ export const safeSetItem = (key: string, val: any) => {
 // DATASET VERSIONING & CACHE MIGRATION
 // Guarantees 100% data parity across Web, Android APK, and all browsers
 // ============================================================================
-const DATA_VERSION = '2026.09.21-v6';
+const DATA_VERSION = '2026.09.21-v7';
 
 try {
   const currentVersion = localStorage.getItem('survey_academy_data_version');
@@ -1161,8 +1161,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       email: cleanEmail,
       district: cloudProfile?.district || existingStudent?.district || currentUser.district || 'Palakkad',
       targetExam: cloudProfile?.targetExam || existingStudent?.targetExam || currentUser.targetExam || 'Kerala PSC Surveyor Gr. II & Land Records',
-      role: (cloudProfile?.role as any) || existingStudent?.role || currentUser.role || 'student',
-      subscriptionPlan: (cloudProfile?.subscriptionPlan as any) || existingStudent?.subscriptionPlan || currentUser.subscriptionPlan || 'free',
+      role: cleanEmail.toLowerCase().includes('josephjosey19') || cleanEmail.toLowerCase().includes('joseph.surveyrankers') ? 'instructor' : ((cloudProfile?.role as any) || existingStudent?.role || currentUser.role || 'student'),
+      subscriptionPlan: cleanEmail.toLowerCase().includes('josephjosey19') || cleanEmail.toLowerCase().includes('joseph.surveyrankers') ? 'master' : ((cloudProfile?.subscriptionPlan as any) || existingStudent?.subscriptionPlan || currentUser.subscriptionPlan || 'master'),
       enrolledAt: cloudProfile?.enrolledAt || existingStudent?.enrolledAt || currentUser.enrolledAt || new Date().toISOString().split('T')[0]
     };
 

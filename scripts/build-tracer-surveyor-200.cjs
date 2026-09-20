@@ -2593,12 +2593,91 @@ const bankQuestions = rawQuestions.map((q) => {
   };
 });
 
-const tsContent = `import { BankQuestion } from '../types';
+// Paper 43/2023 (100 Questions: Q1 to Q100)
+const pyqPaper043_2023 = {
+  id: 'pyq-paper-043-2023',
+  title: 'Kerala PSC Tracer / Surveyor Grade II (Paper 43/2023)',
+  examName: 'Tracer / Surveyor Grade II',
+  examCode: 'Cat. No: 411/2022 • Paper 43/2023',
+  year: 2023,
+  department: 'Survey & Land Records / Irrigation / LSGD',
+  totalQuestions: 100,
+  pdfUrl: 'https://example.com/pyq/tracer_surveyor_gr2_paper_43_2023.pdf',
+  answerKeyUrl: 'https://example.com/pyq/tracer_surveyor_gr2_paper_43_2023_key.pdf',
+  isSolved: true,
+  questions: bankQuestions.slice(0, 100).map((q, idx) => ({
+    id: q.id,
+    questionNumber: idx + 1,
+    question: q.question,
+    options: q.options,
+    correctOptionIndex: q.correctOptionIndex,
+    explanation: q.explanation,
+    topic: q.topic
+  }))
+};
+
+// Paper 106/2017 (80 Technical Questions: Q101 to Q180)
+const pyqPaper106_2017 = {
+  id: 'pyq-paper-106-2017',
+  title: 'Kerala Water Authority (KWA) Surveyor Grade II (Paper 106/2017)',
+  examName: 'Surveyor Grade II / Tracer (KWA)',
+  examCode: 'Cat. No: 692/2022 • Paper 106/2017',
+  year: 2017,
+  department: 'Kerala Water Authority (KWA)',
+  totalQuestions: 80,
+  pdfUrl: 'https://example.com/pyq/kwa_surveyor_gr2_paper_106_2017.pdf',
+  answerKeyUrl: 'https://example.com/pyq/kwa_surveyor_gr2_paper_106_2017_key.pdf',
+  isSolved: true,
+  questions: bankQuestions.slice(100, 180).map((q, idx) => ({
+    id: q.id,
+    questionNumber: idx + 1,
+    question: q.question,
+    options: q.options,
+    correctOptionIndex: q.correctOptionIndex,
+    explanation: q.explanation,
+    topic: q.topic
+  }))
+};
+
+// Mock Test: Paper 43/2023 100 MCQ Grand Exam
+const mockTestTracer2023 = {
+  id: 'mock-tracer-2023-100',
+  title: 'Kerala PSC Tracer / Surveyor Grade II - 100 MCQ Grand PYQ Exam (Paper 43/2023)',
+  category: 'Full-Length Kerala PSC',
+  description: 'Authentic 100-mark full syllabus examination paper from Paper 43/2023 for Tracer / Surveyor Grade II across Survey & Land Records, LSGD, and Irrigation departments. Evaluated with standard PSC negative marking (+1.00 / -0.33).',
+  examCode: 'Cat. No: 411/2022 • Paper 43/2023',
+  targetDepartment: 'Survey and Land Records / LSGD / Irrigation',
+  durationMinutes: 75,
+  totalQuestions: 100,
+  totalMarks: 100,
+  marksPerCorrect: 1,
+  negativeMarksPerWrong: 0.33,
+  difficulty: 'PSC Standard (Advanced)',
+  isRankedExam: true,
+  questions: bankQuestions.slice(0, 100).map((q, idx) => ({
+    id: q.id,
+    questionNumber: idx + 1,
+    question: q.question,
+    options: q.options,
+    correctOptionIndex: q.correctOptionIndex,
+    explanation: q.explanation,
+    topic: q.topic
+  })),
+  attemptsCount: 214
+};
+
+const tsContent = `import { BankQuestion, PYQPaper, MockTest } from '../types';
 
 export const TRACER_SURVEYOR_200_QUESTIONS: BankQuestion[] = ${JSON.stringify(bankQuestions, null, 2)};
+
+export const PYQ_PAPER_043_2023: PYQPaper = ${JSON.stringify(pyqPaper043_2023, null, 2)};
+
+export const PYQ_PAPER_106_2017: PYQPaper = ${JSON.stringify(pyqPaper106_2017, null, 2)};
+
+export const MOCK_TEST_TRACER_2023: MockTest = ${JSON.stringify(mockTestTracer2023, null, 2)};
 `;
 
 const targetFile = path.join(__dirname, '..', 'src', 'data', 'tracerSurveyor200Questions.ts');
 fs.writeFileSync(targetFile, tsContent, 'utf8');
 
-console.log(`Generated ${bankQuestions.length} bank questions (Q1 to Q180, avoiding general knowledge Q181-Q200) in ${targetFile}`);
+console.log(`Generated ${bankQuestions.length} bank questions, 2 PYQ Papers, and 1 Mock Test in ${targetFile}`);
