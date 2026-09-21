@@ -55,10 +55,10 @@ export const Navbar: React.FC = () => {
   const currentNavItems = role === 'instructor' ? instructorNavItems : studentNavItems;
 
   const handleNavClick = (tabId: NavigationTab) => {
-    if (!hasCourseAccess && tabId !== 'home' && tabId !== 'mocktests' && tabId !== 'pyq') {
+    if (!hasCourseAccess && tabId !== 'home' && tabId !== 'mocktests') {
       openEnrollmentModal('plan-master');
       showToast(
-        '🔒 Course Purchase Required: Purchase the course to unlock Study Notes and Doubts Forum.',
+        '🔒 Course Purchase Required: Purchase the course to unlock PYQ & MCQ Bank, Study Notes, and Doubts Forum.',
         'warning'
       );
       setMobileMenuOpen(false);
@@ -102,15 +102,14 @@ export const Navbar: React.FC = () => {
             {currentNavItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
-              const isLocked = !hasCourseAccess && item.id !== 'home' && item.id !== 'mocktests' && item.id !== 'pyq';
+              const isLocked = !hasCourseAccess && item.id !== 'home' && item.id !== 'mocktests';
               const isFreeExamTab = !hasCourseAccess && item.id === 'mocktests';
-              const isOpenBankTab = !hasCourseAccess && item.id === 'pyq';
 
               return (
                 <button
                   key={item.id}
                   onClick={() => handleNavClick(item.id)}
-                  title={isLocked ? `🔒 Purchase course to unlock ${item.label}` : isFreeExamTab ? 'Free 100-Mark Full Syllabus Exam Open to All' : isOpenBankTab ? '10 Syllabus Modules Question Bank Open' : undefined}
+                  title={isLocked ? `🔒 Purchase course to unlock ${item.label}` : isFreeExamTab ? 'Free 100-Mark Full Syllabus Exam Open to All' : undefined}
                   className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs xl:text-sm font-semibold transition whitespace-nowrap ${
                     isActive
                       ? role === 'instructor' && item.id === 'admin'
@@ -125,11 +124,6 @@ export const Navbar: React.FC = () => {
                   <span>{item.label}</span>
                   {isLocked && (
                     <Lock className="w-3 h-3 text-amber-500 shrink-0 ml-0.5" />
-                  )}
-                  {isOpenBankTab && (
-                    <span className="text-[9px] font-black uppercase tracking-wider bg-blue-100 text-blue-800 border border-blue-300 px-1.5 py-0.5 rounded flex items-center gap-0.5 ml-0.5">
-                      <Sparkles className="w-2.5 h-2.5 text-blue-600" /> Open
-                    </span>
                   )}
                   {isFreeExamTab && (
                     <span className="text-[9px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-800 border border-emerald-300 px-1.5 py-0.5 rounded flex items-center gap-0.5 ml-0.5">
@@ -255,9 +249,8 @@ export const Navbar: React.FC = () => {
           {currentNavItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
-            const isLocked = !hasCourseAccess && item.id !== 'home' && item.id !== 'mocktests' && item.id !== 'pyq';
+            const isLocked = !hasCourseAccess && item.id !== 'home' && item.id !== 'mocktests';
             const isFreeExamTab = !hasCourseAccess && item.id === 'mocktests';
-            const isOpenBankTab = !hasCourseAccess && item.id === 'pyq';
 
             return (
               <button
@@ -274,11 +267,6 @@ export const Navbar: React.FC = () => {
                 {isLocked && (
                   <span className="text-[10px] font-extrabold uppercase tracking-wide bg-amber-100 text-amber-800 border border-amber-300 px-1.5 py-0.5 rounded flex items-center gap-1">
                     <Lock className="w-2.5 h-2.5 text-amber-600" /> Locked
-                  </span>
-                )}
-                {isOpenBankTab && (
-                  <span className="text-[10px] font-black uppercase tracking-wide bg-blue-100 text-blue-800 border border-blue-300 px-1.5 py-0.5 rounded flex items-center gap-1">
-                    <Sparkles className="w-2.5 h-2.5 text-blue-600" /> Open
                   </span>
                 )}
                 {isFreeExamTab && (

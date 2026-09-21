@@ -320,6 +320,14 @@ export const LandingPage: React.FC = () => {
           {/* Pillar 2 */}
           <div
             onClick={() => {
+              if (!hasCourseAccess) {
+                openEnrollmentModal('plan-master');
+                showToast(
+                  '🔒 Course Purchase Required: Purchase the course to unlock the Solved PYQ & MCQ Question Bank.',
+                  'warning'
+                );
+                return;
+              }
               setSelectedPYQModuleNumber(1);
               setActiveTab('pyq');
               window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -330,20 +338,28 @@ export const LandingPage: React.FC = () => {
               <div className="w-12 h-12 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center group-hover:scale-110 transition-transform">
                 <FileCheck className="w-6 h-6" />
               </div>
-              <span className="text-[10px] font-extrabold uppercase tracking-wide bg-blue-100 text-blue-900 border border-blue-300 px-2 py-0.5 rounded-full flex items-center gap-1 shadow-xs">
-                <Sparkles className="w-2.5 h-2.5 text-blue-600" /> 10 Modules Open
-              </span>
+              {hasCourseAccess ? (
+                <span className="text-[10px] font-extrabold uppercase tracking-wide bg-blue-100 text-blue-900 border border-blue-300 px-2 py-0.5 rounded-full flex items-center gap-1 shadow-xs">
+                  <Sparkles className="w-2.5 h-2.5 text-blue-600" /> 10 Modules Solved
+                </span>
+              ) : (
+                <span className="text-[10px] font-extrabold uppercase tracking-wide bg-amber-100 text-amber-900 border border-amber-300 px-2 py-0.5 rounded-full flex items-center gap-1 shadow-xs">
+                  <Lock className="w-2.5 h-2.5 text-amber-600" /> Enrolled Only
+                </span>
+              )}
             </div>
             <div className="space-y-1.5">
-              <h3 className="font-bold text-slate-900 text-base group-hover:text-brand-600 transition-colors">
-                Solved PYQ Question Bank
+              <h3 className="font-bold text-slate-900 text-base group-hover:text-brand-600 transition-colors flex items-center gap-1.5">
+                <span>Solved PYQ Question Bank</span>
+                {!hasCourseAccess && <Lock className="w-3.5 h-3.5 text-amber-600" />}
               </h3>
               <p className="text-xs text-slate-600 leading-relaxed">
                 Year-wise papers and 10 syllabus module portions with official Kerala PSC revised final answer keys and interactive practice mode.
               </p>
             </div>
             <div className="pt-2 text-xs font-semibold text-blue-600 flex items-center gap-1">
-              Practice PYQs ({bankQuestions.length} Questions) <ArrowRight className="w-3.5 h-3.5" />
+              <span>Practice PYQs ({bankQuestions.length} Questions)</span>
+              <ArrowRight className="w-3.5 h-3.5" />
             </div>
           </div>
 
@@ -423,13 +439,22 @@ export const LandingPage: React.FC = () => {
             </div>
             <button
               onClick={() => {
+                if (!hasCourseAccess) {
+                  openEnrollmentModal('plan-master');
+                  showToast(
+                    '🔒 Course Purchase Required: Purchase the course to access the 10 Syllabus Portions Question Bank.',
+                    'warning'
+                  );
+                  return;
+                }
                 setSelectedPYQModuleNumber(1);
                 setActiveTab('pyq');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold rounded-xl transition self-start md:self-auto"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold rounded-xl transition self-start md:self-auto shadow-md"
             >
-              View All 10 Syllabus Portions
+              {!hasCourseAccess && <Lock className="w-3.5 h-3.5 text-amber-300" />}
+              <span>View All 10 Syllabus Portions</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
@@ -439,6 +464,14 @@ export const LandingPage: React.FC = () => {
               <div
                 key={mod.id}
                 onClick={() => {
+                  if (!hasCourseAccess) {
+                    openEnrollmentModal('plan-master');
+                    showToast(
+                      `🔒 Course Purchase Required: Purchase the course to unlock Module ${mod.order} (${mod.title}) question pool.`,
+                      'warning'
+                    );
+                    return;
+                  }
                   setSelectedPYQModuleNumber(mod.order);
                   setActiveTab('pyq');
                   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -450,7 +483,8 @@ export const LandingPage: React.FC = () => {
                     <span className="text-xs font-mono font-bold text-slate-400">
                       Module {mod.order < 10 ? `0${mod.order}` : mod.order}
                     </span>
-                    <span className="text-[11px] font-extrabold bg-amber-400/20 text-amber-300 px-2 py-0.5 rounded border border-amber-400/30">
+                    <span className="text-[11px] font-extrabold bg-amber-400/20 text-amber-300 px-2 py-0.5 rounded border border-amber-400/30 flex items-center gap-1">
+                      {!hasCourseAccess && <Lock className="w-2.5 h-2.5 text-amber-400" />}
                       {mod.badge || `${mod.marks} Marks`}
                     </span>
                   </div>
@@ -465,7 +499,10 @@ export const LandingPage: React.FC = () => {
                 </div>
 
                 <div className="pt-2 border-t border-slate-700/50 flex items-center justify-between text-[11px] text-brand-400 font-semibold">
-                  <span>Practice Questions ({bankQuestions.filter((q) => q.moduleNumber === mod.order).length})</span>
+                  <span className="flex items-center gap-1">
+                    {!hasCourseAccess && <Lock className="w-3 h-3 text-amber-400 shrink-0" />}
+                    Practice Questions ({bankQuestions.filter((q) => q.moduleNumber === mod.order).length})
+                  </span>
                   <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>
