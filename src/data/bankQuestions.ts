@@ -1,6 +1,6 @@
 import { BASIC_ENGINEERING_DRAWING_50_QUESTIONS } from './basicEngineeringDrawing50Questions';
 import { BUILDING_MATERIALS_50_QUESTIONS } from './buildingMaterials50Questions';
-import { WORKSHOP_CALCULATION_10_QUESTIONS } from './workshopCalculation10Questions';
+import { WORKSHOP_CALCULATION_163_QUESTIONS } from './workshopCalculation163Questions';
 import { AUTOCAD_246_QUESTIONS } from './autocad246Questions';
 import { LEVELLING_15_QUESTIONS } from './levelling15Questions';
 import { COMPASS_SURVEY_25_QUESTIONS } from './compassSurvey25Questions';
@@ -26,7 +26,7 @@ export const INITIAL_BANK_QUESTIONS: BankQuestion[] = [
   ...PYQ_PAPER_063_2024_QUESTIONS,
   ...BASIC_ENGINEERING_DRAWING_50_QUESTIONS,
   ...BUILDING_MATERIALS_50_QUESTIONS,
-  ...WORKSHOP_CALCULATION_10_QUESTIONS,
+  ...WORKSHOP_CALCULATION_163_QUESTIONS,
   ...AUTOCAD_246_QUESTIONS,
   ...LEVELLING_15_QUESTIONS,
   ...COMPASS_SURVEY_25_QUESTIONS,
