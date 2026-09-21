@@ -71,11 +71,16 @@ interface AppContextType {
   loginWithCredentials: (email: string, password?: string) => void;
   loginWithGoogle: () => void;
   registerWithCredentials: (name: string, email: string, phone: string, district: string, targetExam: string) => void;
+  instructorEmail: string;
+  setInstructorEmail: (email: string) => void;
+  instructorPasscode: string;
+  setInstructorPasscode: (passcode: string) => void;
   instructorLinkedPhone: string;
   setInstructorLinkedPhone: (phone: string) => void;
+  loginInstructorWithCredentials: (email: string, passcode: string) => Promise<{ success: boolean; message: string }>;
   sendInstructorOtp: (phoneNumber: string) => Promise<{ success: boolean; message: string; otpPreview?: string; whatsappUrl?: string }>;
   verifyInstructorOtp: (enteredOtp: string) => Promise<boolean>;
-  loginInstructor: (pin: string) => Promise<boolean>;
+  loginInstructor: (emailOrPasscode: string, passcode?: string) => Promise<boolean>;
   selectedNoteId: string | null;
   setSelectedNoteId: (id: string | null) => void;
   selectedPYQId: string | null;
@@ -184,6 +189,27 @@ try {
 }
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  // Instructor Security Credentials
+  const [instructorEmail, setInstructorEmailState] = useState<string>(() => {
+    return localStorage.getItem('survey_academy_instructor_email') || 'josephjosey19@gmail.com';
+  });
+
+  const setInstructorEmail = (email: string) => {
+    const clean = email.trim().toLowerCase();
+    setInstructorEmailState(clean);
+    localStorage.setItem('survey_academy_instructor_email', clean);
+  };
+
+  const [instructorPasscode, setInstructorPasscodeState] = useState<string>(() => {
+    return localStorage.getItem('survey_academy_instructor_passcode') || 'survey2026';
+  });
+
+  const setInstructorPasscode = (passcode: string) => {
+    const clean = passcode.trim();
+    setInstructorPasscodeState(clean);
+    localStorage.setItem('survey_academy_instructor_passcode', clean);
+  };
+
   // Instructor Security & Phone OTP state
   const [instructorLinkedPhone, setInstructorLinkedPhoneState] = useState<string>(() => {
     return localStorage.getItem('survey_academy_instructor_phone') || '+91 94470 00000';
@@ -1447,8 +1473,96 @@ Expires in 5 minutes. Do not share this OTP with anyone.`
     return false;
   };
 
-  const loginInstructor = async (pin: string): Promise<boolean> => {
-    return await verifyInstructorOtp(pin);
+  const loginInstructorWithCredentials = async (
+    email: string,
+    passcode: string
+  ): Promise<{ success: boolean; message: string }> => {
+    const cleanEmail = email.trim().toLowerCase();
+    const cleanPasscode = passcode.trim();
+
+    if (!cleanEmail || !cleanPasscode) {
+      showToast('Please enter both your instructor email ID and security passcode.', 'error');
+      return { success: false, message: 'Email ID and security passcode are required.' };
+    }
+
+    // 1. Verify email authorization
+    const isAuthorized =
+      cleanEmail === 'josephjosey19@gmail.com' ||
+      cleanEmail === instructorEmail.toLowerCase() ||
+      students.some((s) => s.email?.toLowerCase() === cleanEmail && s.role === 'instructor');
+
+    if (!isAuthorized) {
+      showToast(`Access Denied: ${cleanEmail} is not authorized for instructor access.`, 'error');
+      return {
+        success: false,
+        message: 'Unauthorized email ID. Only registered faculty emails can access the instructor portal.'
+      };
+    }
+
+    // 2. Check Supabase password authentication
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: cleanEmail,
+        password: cleanPasscode
+      });
+
+      if (!error && data?.session) {
+        const currentPhone = instructorLinkedPhone || DEMO_INSTRUCTOR.phone;
+        const instructorUser: User = {
+          ...DEMO_INSTRUCTOR,
+          id: data.session.user.id,
+          email: cleanEmail,
+          phone: currentPhone
+        };
+        setCurrentUser(instructorUser);
+        safeSetItem('survey_academy_user', instructorUser);
+        setIsAuthenticated(true);
+        setActiveTab('admin');
+        showToast('Welcome back, Course Director Joseph Josey! Instructor Portal unlocked.', 'success');
+        return { success: true, message: 'Login successful' };
+      }
+    } catch (e) {
+      // ignore
+    }
+
+    // 3. Check Instructor Master Passcodes (survey2026, custom passcode, joseph@2026, 623817, 78312)
+    const validPasscodes = [
+      instructorPasscode,
+      'survey2026',
+      'joseph@2026',
+      '623817',
+      '78312'
+    ];
+
+    if (validPasscodes.includes(cleanPasscode)) {
+      const currentPhone = instructorLinkedPhone || DEMO_INSTRUCTOR.phone;
+      const instructorUser: User = {
+        ...DEMO_INSTRUCTOR,
+        email: cleanEmail,
+        phone: currentPhone
+      };
+      setCurrentUser(instructorUser);
+      safeSetItem('survey_academy_user', instructorUser);
+      setIsAuthenticated(true);
+      setActiveTab('admin');
+      showToast('Passcode Verified! Welcome back, Course Director Joseph Josey.', 'success');
+      return { success: true, message: 'Login successful' };
+    }
+
+    showToast('Incorrect passcode! Please enter your valid instructor security passcode.', 'error');
+    return {
+      success: false,
+      message: 'Incorrect security passcode. Please check your passcode and try again.'
+    };
+  };
+
+  const loginInstructor = async (emailOrPasscode: string, passcode?: string): Promise<boolean> => {
+    if (passcode !== undefined) {
+      const res = await loginInstructorWithCredentials(emailOrPasscode, passcode);
+      return res.success;
+    }
+    const res = await loginInstructorWithCredentials(instructorEmail, emailOrPasscode);
+    return res.success;
   };
 
   const logoutUser = async () => {
@@ -2170,8 +2284,13 @@ Expires in 5 minutes. Do not share this OTP with anyone.`
         loginWithCredentials,
         loginWithGoogle,
         registerWithCredentials,
+        instructorEmail,
+        setInstructorEmail,
+        instructorPasscode,
+        setInstructorPasscode,
         instructorLinkedPhone,
         setInstructorLinkedPhone,
+        loginInstructorWithCredentials,
         sendInstructorOtp,
         verifyInstructorOtp,
         loginInstructor,
