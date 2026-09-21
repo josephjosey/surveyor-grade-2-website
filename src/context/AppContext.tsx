@@ -74,8 +74,8 @@ interface AppContextType {
   instructorLinkedPhone: string;
   setInstructorLinkedPhone: (phone: string) => void;
   sendInstructorOtp: (phoneNumber: string) => Promise<{ success: boolean; message: string; otpPreview?: string; whatsappUrl?: string }>;
-  verifyInstructorOtp: (enteredOtp: string) => boolean;
-  loginInstructor: (pin: string) => boolean;
+  verifyInstructorOtp: (enteredOtp: string) => Promise<boolean>;
+  loginInstructor: (pin: string) => Promise<boolean>;
   selectedNoteId: string | null;
   setSelectedNoteId: (id: string | null) => void;
   selectedPYQId: string | null;
@@ -999,15 +999,23 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.user) {
         syncUserSession(session.user);
+        if (session.user.email === 'josephjosey19@gmail.com') {
+          setActiveTab('admin');
+          setIsAuthenticated(true);
+        }
       } else {
         setIsAuthenticated(false);
       }
     });
 
-    // Listen to real-time auth changes (Google OAuth redirect, login, logout)
+    // Listen to real-time auth changes (Google OAuth redirect, login, logout, magic link)
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session?.user) {
         syncUserSession(session.user);
+        if (session.user.email === 'josephjosey19@gmail.com') {
+          setActiveTab('admin');
+          setIsAuthenticated(true);
+        }
       } else {
         setIsAuthenticated(false);
       }
@@ -1369,21 +1377,16 @@ Expires in 5 minutes. Do not share this OTP with anyone.`
     };
   };
 
-  const verifyInstructorOtp = (enteredOtp: string): boolean => {
+  const verifyInstructorOtp = async (enteredOtp: string): Promise<boolean> => {
     const cleanEntered = enteredOtp.trim().replace(/\s+/g, '');
-    if (!activeInstructorOtp) {
-      showToast('No active OTP request. Please request a verification OTP first.', 'error');
-      return false;
-    }
 
-    if (Date.now() > activeInstructorOtp.expiresAt) {
-      setActiveInstructorOtp(null);
-      showToast('OTP has expired (5 minute limit). Please request a new OTP.', 'error');
-      return false;
-    }
-
-    if (cleanEntered === activeInstructorOtp.code) {
-      // OTP verified successfully!
+    // 1. Check if matches active OTP code (from WhatsApp or internal generator)
+    if (activeInstructorOtp && cleanEntered === activeInstructorOtp.code) {
+      if (Date.now() > activeInstructorOtp.expiresAt) {
+        setActiveInstructorOtp(null);
+        showToast('OTP has expired (5 minute limit). Please request a new OTP.', 'error');
+        return false;
+      }
       const currentPhone = activeInstructorOtp.phone || instructorLinkedPhone || DEMO_INSTRUCTOR.phone;
       setActiveInstructorOtp(null); // Invalidate OTP once used to prevent replay
       
@@ -1395,16 +1398,57 @@ Expires in 5 minutes. Do not share this OTP with anyone.`
       safeSetItem('survey_academy_user', instructorUser);
       setIsAuthenticated(true);
       setActiveTab('admin');
-      showToast('Phone OTP Verified! Welcome back, Joseph Josey (Course Director).', 'success');
+      showToast('OTP Verified! Welcome back, Course Director Joseph Josey.', 'success');
       return true;
-    } else {
-      showToast('Incorrect OTP code! Please check the 6-digit code on your phone and try again.', 'error');
-      return false;
     }
+
+    // 2. Check if verified via Supabase Email Token (if user entered code from Supabase email)
+    try {
+      const { data, error } = await supabase.auth.verifyOtp({
+        email: 'josephjosey19@gmail.com',
+        token: cleanEntered,
+        type: 'email'
+      });
+      if (!error && data?.session) {
+        const currentPhone = instructorLinkedPhone || DEMO_INSTRUCTOR.phone;
+        const instructorUser: User = {
+          ...DEMO_INSTRUCTOR,
+          id: data.session.user.id,
+          phone: currentPhone
+        };
+        setCurrentUser(instructorUser);
+        safeSetItem('survey_academy_user', instructorUser);
+        setIsAuthenticated(true);
+        setActiveTab('admin');
+        showToast('Email OTP Code Verified! Welcome back, Joseph Josey.', 'success');
+        return true;
+      }
+    } catch (e) {
+      // ignore
+    }
+
+    // 3. Confidential Master Security Key check (fail-safe for Joseph Josey)
+    // Only Joseph Josey's phone prefix/suffix or private master pass
+    if (cleanEntered === '623817' || cleanEntered === '78312' || cleanEntered === 'survey2026') {
+      const currentPhone = instructorLinkedPhone || DEMO_INSTRUCTOR.phone;
+      const instructorUser: User = {
+        ...DEMO_INSTRUCTOR,
+        phone: currentPhone
+      };
+      setCurrentUser(instructorUser);
+      safeSetItem('survey_academy_user', instructorUser);
+      setIsAuthenticated(true);
+      setActiveTab('admin');
+      showToast('Master Security Key Verified! Welcome back, Joseph Josey.', 'success');
+      return true;
+    }
+
+    showToast('Incorrect OTP code! Please check the code or tap the email login link.', 'error');
+    return false;
   };
 
-  const loginInstructor = (pin: string): boolean => {
-    return verifyInstructorOtp(pin);
+  const loginInstructor = async (pin: string): Promise<boolean> => {
+    return await verifyInstructorOtp(pin);
   };
 
   const logoutUser = async () => {
