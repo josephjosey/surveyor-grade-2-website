@@ -49,7 +49,7 @@ export const CourseAccessPaywall: React.FC = () => {
 
               {/* Sub-copy */}
               <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
-                Free preview mode only provides access to the platform overview on the Home page. Purchase the complete course or mock series to immediately unlock all 10 syllabus modules, 1,430+ PYQs, and 21 Kerala PSC pattern mock tests.
+                Free preview mode only provides access to the platform overview on the Home page. Purchase the complete course or mock series to immediately unlock all 10 syllabus modules, 10,000+ MCQs & PYQs, and 21 Kerala PSC pattern mock tests.
               </p>
 
               {/* Malayalam Note */}
@@ -81,7 +81,7 @@ export const CourseAccessPaywall: React.FC = () => {
                   <FileCheck className="w-5 h-5" />
                 </div>
                 <div className="space-y-1">
-                  <h4 className="text-sm font-bold text-slate-900">1,430+ Solved PYQ & MCQ Bank</h4>
+                  <h4 className="text-sm font-bold text-slate-900">10,000+ Solved PYQ & MCQ Bank</h4>
                   <p className="text-xs text-slate-600 leading-snug">
                     Year-wise papers (2024–2018) with official Kerala PSC revised final answer keys & explanations.
                   </p>
@@ -127,7 +127,7 @@ export const CourseAccessPaywall: React.FC = () => {
                 </h3>
                 <p className="text-xs text-slate-600">
                   <span className="line-through text-slate-400 font-bold mr-1.5">₹4,999</span>
-                  Includes all notes, 1,430+ MCQs, 21 mock tests, and mentor guidance until your exam.
+                  Includes all notes, 10,000+ MCQs, 21 mock tests, and mentor guidance until your exam.
                 </p>
               </div>
 

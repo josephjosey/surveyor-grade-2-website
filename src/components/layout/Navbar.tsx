@@ -231,7 +231,7 @@ export const Navbar: React.FC = () => {
                 <span className="text-[10px] bg-amber-400/40 text-amber-950 font-black px-1.5 py-0.5 rounded">60% OFF</span>
               </div>
               <p className="text-[11px] text-slate-700 leading-tight">
-                Purchase course to unlock all 10 modules, 1,430+ PYQs & 21 Mock Tests.
+                Purchase course to unlock all 10 modules, 10,000+ MCQs & 21 Mock Tests.
               </p>
               <button
                 onClick={() => {

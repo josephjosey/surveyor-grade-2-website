@@ -76,7 +76,7 @@ export const LandingPage: React.FC = () => {
                 <Crown className="w-3.5 h-3.5 text-amber-400" /> Free Preview
               </span>
               <span className="text-xs sm:text-sm text-slate-950 font-black">
-                Unlock all 10 Syllabus Modules, 1,430+ Solved PYQs & 21 Mock Tests with Statewide Rank Predictor!
+                Unlock all 10 Syllabus Modules, 10,000+ MCQs & 21 Mock Tests with Statewide Rank Predictor!
               </span>
             </div>
             <button
@@ -619,7 +619,7 @@ export const LandingPage: React.FC = () => {
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>1,430+ Solved PYQs with Revised PSC Keys</span>
+                  <span>10,000+ MCQs & Solved PYQs with Revised PSC Keys</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
