@@ -155,7 +155,7 @@ export const safeSetItem = (key: string, val: any) => {
 // DATASET VERSIONING & CACHE MIGRATION
 // Guarantees 100% data parity across Web, Android APK, and all browsers
 // ============================================================================
-const DATA_VERSION = '2026.09.21-v9';
+const DATA_VERSION = '2026.09.21-v10';
 
 try {
   const currentVersion = localStorage.getItem('survey_academy_data_version');
@@ -276,7 +276,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     if (saved) {
       try {
         const parsed = JSON.parse(saved) as PYQPaper[];
-        return parsed.filter((p) => !deletedIds.has(p.id));
+        const allowedIds = new Set(INITIAL_PYQ_PAPERS.map((p) => p.id));
+        const filtered = parsed.filter((p) => allowedIds.has(p.id) && !deletedIds.has(p.id));
+        if (filtered.length > 0) {
+          return filtered;
+        }
       } catch (e) {}
     }
     return INITIAL_PYQ_PAPERS.filter((p) => !deletedIds.has(p.id));

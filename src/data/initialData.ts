@@ -1,6 +1,6 @@
 import { ClassModule, StudyNote, PYQPaper, MockTest, MockTestAttempt, Doubt, User, BankQuestion } from '../types';
 import { MOCK_TEST_87_QUESTIONS } from './survey87Questions';
-import { MOCK_TEST_THEODOLITE_30, THEODOLITE_30_QUESTIONS } from './theodoliteQuestions';
+import { MOCK_TEST_THEODOLITE_30 } from './theodoliteQuestions';
 import { MOCK_TEST_LEVELLING_95 } from './levellingContouring95Questions';
 import { MOCK_TEST_LEVELLING_187 } from './levelling187Questions';
 import { MOCK_TEST_PLANE_TABLE_103 } from './planeTable103Questions';
@@ -8,16 +8,16 @@ import { MOCK_TEST_THEODOLITE_146 } from './theodolite146Questions';
 import { MOCK_TEST_MODERN_INSTRUMENTS_75 } from './modernInstruments75Questions';
 import { MOCK_TEST_MODERN_INSTRUMENTS_85 } from './modernInstruments85Questions';
 import { MOCK_TEST_MINOR_INSTRUMENTS_31 } from './minorInstruments31Questions';
-import { MOCK_TEST_CHAIN_SURVEY_25, CHAIN_SURVEY_25_QUESTIONS } from './chainSurvey25Questions';
-import { MOCK_TEST_MODERN_SURVEY_44, MODERN_SURVEY_44_QUESTIONS } from './modernSurvey44Questions';
-import { MOCK_TEST_PLANE_TABLE_12, PLANE_TABLE_12_QUESTIONS } from './planeTable12Questions';
-import { MOCK_TEST_COMPASS_25, COMPASS_SURVEY_25_QUESTIONS } from './compassSurvey25Questions';
-import { MOCK_TEST_LEVELLING_15, LEVELLING_15_QUESTIONS } from './levelling15Questions';
-import { MOCK_TEST_AUTOCAD_50, AUTOCAD_50_QUESTIONS } from './autocad50Questions';
-import { MOCK_TEST_BUILDING_MATERIALS_50, BUILDING_MATERIALS_50_QUESTIONS } from './buildingMaterials50Questions';
-import { MOCK_TEST_WORKSHOP_CALCULATION_10, WORKSHOP_CALCULATION_10_QUESTIONS } from './workshopCalculation10Questions';
-import { MOCK_TEST_BASIC_ENGINEERING_DRAWING_50, BASIC_ENGINEERING_DRAWING_50_QUESTIONS } from './basicEngineeringDrawing50Questions';
-import { MOCK_TEST_KPSC_GRAND_100, KPSC_GRAND_100_QUESTIONS } from './kpscGrand100MockTest';
+import { MOCK_TEST_CHAIN_SURVEY_25 } from './chainSurvey25Questions';
+import { MOCK_TEST_MODERN_SURVEY_44 } from './modernSurvey44Questions';
+import { MOCK_TEST_PLANE_TABLE_12 } from './planeTable12Questions';
+import { MOCK_TEST_COMPASS_25 } from './compassSurvey25Questions';
+import { MOCK_TEST_LEVELLING_15 } from './levelling15Questions';
+import { MOCK_TEST_AUTOCAD_50 } from './autocad50Questions';
+import { MOCK_TEST_BUILDING_MATERIALS_50 } from './buildingMaterials50Questions';
+import { MOCK_TEST_WORKSHOP_CALCULATION_10 } from './workshopCalculation10Questions';
+import { MOCK_TEST_BASIC_ENGINEERING_DRAWING_50 } from './basicEngineeringDrawing50Questions';
+import { MOCK_TEST_KPSC_GRAND_100 } from './kpscGrand100MockTest';
 import { PYQ_PAPER_063_2024 } from './pyqPaper063_2024';
 import { PYQ_PAPER_043_2023, PYQ_PAPER_106_2017, MOCK_TEST_TRACER_2023 } from './tracerSurveyor200Questions';
 import { INITIAL_BANK_QUESTIONS } from './bankQuestions';
@@ -370,8 +370,8 @@ export const INITIAL_STUDY_NOTES: StudyNote[] = [
 
 export const INITIAL_PYQ_PAPERS: PYQPaper[] = [
   PYQ_PAPER_063_2024,
-  PYQ_PAPER_043_2023,
   PYQ_PAPER_106_2017,
+  PYQ_PAPER_043_2023,
   {
     id: 'pyq-1',
     title: 'Kerala PSC Surveyor Grade II - Survey & Land Records (2024)',
@@ -528,248 +528,6 @@ export const INITIAL_PYQ_PAPERS: PYQPaper[] = [
         topic: 'Total Station & Modern Tech'
       }
     ]
-  },
-  {
-    id: 'pyq-chain-25',
-    title: 'Kerala PSC Chain Surveying Official Solved PYQ & Practice Paper (25 Questions)',
-    examName: 'Surveyor Grade II / Chain Survey Special',
-    examCode: 'Cat. No: 284/2022 - Chain Series',
-    year: 2024,
-    department: 'Survey and Land Records Department',
-    totalQuestions: 25,
-    pdfUrl: 'https://example.com/pyq/chain_survey_25_solved.pdf',
-    answerKeyUrl: 'https://example.com/pyq/chain_survey_25_answer_key.pdf',
-    isSolved: true,
-    questions: CHAIN_SURVEY_25_QUESTIONS.map((q, idx) => ({
-      id: q.id,
-      questionNumber: idx + 1,
-      question: q.question,
-      options: q.options,
-      correctOptionIndex: q.correctOptionIndex,
-      explanation: q.explanation,
-      rankerTip: q.rankerTip,
-      topic: q.topic || 'Chain Surveying'
-    }))
-  },
-  {
-    id: 'pyq-theodolite-30',
-    title: 'Kerala PSC Theodolite Survey Official Solved PYQ & Practice Paper (30 Questions)',
-    examName: 'Surveyor Grade II / Theodolite Special',
-    examCode: 'Cat. No: 284/2022 - Theodolite Series',
-    year: 2024,
-    department: 'Survey and Land Records Department',
-    totalQuestions: 30,
-    pdfUrl: 'https://example.com/pyq/theodolite_30_solved.pdf',
-    answerKeyUrl: 'https://example.com/pyq/theodolite_30_answer_key.pdf',
-    isSolved: true,
-    questions: THEODOLITE_30_QUESTIONS.map((q, idx) => ({
-      id: q.id,
-      questionNumber: idx + 1,
-      question: q.question,
-      options: q.options,
-      correctOptionIndex: q.correctOptionIndex,
-      explanation: q.explanation,
-      rankerTip: q.rankerTip,
-      topic: q.topic || 'Theodolite Survey'
-    }))
-  },
-  {
-    id: 'pyq-modern-44',
-    title: 'Kerala PSC Modern Survey Instruments Official Solved PYQ & Practice Paper (44 Questions)',
-    examName: 'Surveyor Grade II / Modern Instruments Special',
-    examCode: 'Cat. No: 284/2022 - Modern Series',
-    year: 2024,
-    department: 'Survey and Land Records Department',
-    totalQuestions: 44,
-    pdfUrl: 'https://example.com/pyq/modern_survey_44_solved.pdf',
-    answerKeyUrl: 'https://example.com/pyq/modern_survey_44_answer_key.pdf',
-    isSolved: true,
-    questions: MODERN_SURVEY_44_QUESTIONS.map((q, idx) => ({
-      id: q.id,
-      questionNumber: idx + 1,
-      question: q.question,
-      options: q.options,
-      correctOptionIndex: q.correctOptionIndex,
-      explanation: q.explanation,
-      rankerTip: q.rankerTip,
-      topic: q.topic || 'Modern Survey Instruments'
-    }))
-  },
-  {
-    id: 'pyq-planetbl-12',
-    title: 'Kerala PSC Planetable Survey & Traverse Official Solved PYQ & Practice Paper (12 Questions)',
-    examName: 'Surveyor Grade II / Planetable Special',
-    examCode: 'Cat. No: 284/2022 - Planetable Series',
-    year: 2024,
-    department: 'Survey and Land Records Department',
-    totalQuestions: 12,
-    pdfUrl: 'https://example.com/pyq/plane_table_12_solved.pdf',
-    answerKeyUrl: 'https://example.com/pyq/plane_table_12_answer_key.pdf',
-    isSolved: true,
-    questions: PLANE_TABLE_12_QUESTIONS.map((q, idx) => ({
-      id: q.id,
-      questionNumber: idx + 1,
-      question: q.question,
-      options: q.options,
-      correctOptionIndex: q.correctOptionIndex,
-      explanation: q.explanation,
-      rankerTip: q.rankerTip,
-      topic: q.topic || 'Planetable Survey'
-    }))
-  },
-  {
-    id: 'pyq-compass-25',
-    title: 'Kerala PSC Compass Survey Official Solved PYQ & Practice Paper (25 Questions)',
-    examName: 'Surveyor Grade II / Compass Survey Special',
-    examCode: 'Cat. No: 284/2022 - Compass Series',
-    year: 2024,
-    department: 'Survey and Land Records Department',
-    totalQuestions: 25,
-    pdfUrl: 'https://example.com/pyq/compass_survey_25_solved.pdf',
-    answerKeyUrl: 'https://example.com/pyq/compass_survey_25_answer_key.pdf',
-    isSolved: true,
-    questions: COMPASS_SURVEY_25_QUESTIONS.map((q, idx) => ({
-      id: q.id,
-      questionNumber: idx + 1,
-      question: q.question,
-      options: q.options,
-      correctOptionIndex: q.correctOptionIndex,
-      explanation: q.explanation,
-      rankerTip: q.rankerTip,
-      topic: q.topic || 'Compass Survey'
-    }))
-  },
-  {
-    id: 'pyq-levelling-15',
-    title: 'Kerala PSC Levelling Survey Official Solved PYQ & Practice Paper (15 Questions)',
-    examName: 'Surveyor Grade II / Levelling Special',
-    examCode: 'Cat. No: 284/2022 - Levelling Series',
-    year: 2024,
-    department: 'Survey and Land Records Department',
-    totalQuestions: 15,
-    pdfUrl: 'https://example.com/pyq/levelling_survey_15_solved.pdf',
-    answerKeyUrl: 'https://example.com/pyq/levelling_survey_15_answer_key.pdf',
-    isSolved: true,
-    questions: LEVELLING_15_QUESTIONS.map((q, idx) => ({
-      id: q.id,
-      questionNumber: idx + 1,
-      question: q.question,
-      options: q.options,
-      correctOptionIndex: q.correctOptionIndex,
-      explanation: q.explanation,
-      rankerTip: q.rankerTip,
-      topic: q.topic || 'Levelling Survey'
-    }))
-  },
-  {
-    id: 'pyq-autocad-50',
-    title: 'Kerala PSC AutoCAD Official Solved PYQ & Practice Paper (50 Questions)',
-    examName: 'Surveyor Grade II / AutoCAD Special',
-    examCode: 'Cat. No: 284/2022 - AutoCAD Series',
-    year: 2024,
-    department: 'Survey and Land Records Department',
-    totalQuestions: 50,
-    pdfUrl: 'https://example.com/pyq/autocad_50_solved.pdf',
-    answerKeyUrl: 'https://example.com/pyq/autocad_50_answer_key.pdf',
-    isSolved: true,
-    questions: AUTOCAD_50_QUESTIONS.map((q, idx) => ({
-      id: q.id,
-      questionNumber: idx + 1,
-      question: q.question,
-      options: q.options,
-      correctOptionIndex: q.correctOptionIndex,
-      explanation: q.explanation,
-      rankerTip: q.rankerTip,
-      topic: q.topic || 'AutoCAD'
-    }))
-  },
-  {
-    id: 'pyq-bmc-50',
-    title: 'Kerala PSC Building Materials & Construction Official Solved PYQ & Practice Paper (50 Questions)',
-    examName: 'Overseer Grade II / Surveyor Gr. II - Building Materials',
-    examCode: 'Cat. No: 411/2022 - BMC Series',
-    year: 2024,
-    department: 'Public Works Department / Survey & Land Records',
-    totalQuestions: 50,
-    pdfUrl: 'https://example.com/pyq/bmc_50_solved.pdf',
-    answerKeyUrl: 'https://example.com/pyq/bmc_50_answer_key.pdf',
-    isSolved: true,
-    questions: BUILDING_MATERIALS_50_QUESTIONS.map((q, idx) => ({
-      id: q.id,
-      questionNumber: idx + 1,
-      question: q.question,
-      options: q.options,
-      correctOptionIndex: q.correctOptionIndex,
-      explanation: q.explanation,
-      rankerTip: q.rankerTip,
-      topic: q.topic || 'Building Materials and Construction'
-    }))
-  },
-  {
-    id: 'pyq-wcs-10',
-    title: 'Kerala PSC Workshop Calculation & Science Official Solved PYQ & Practice Paper (10 Questions)',
-    examName: 'Surveyor Grade II / Workshop Calculation Special',
-    examCode: 'Cat. No: 284/2022 - WCS Series',
-    year: 2024,
-    department: 'Industrial Training / Survey and Land Records Department',
-    totalQuestions: 10,
-    pdfUrl: 'https://example.com/pyq/wcs_10_solved.pdf',
-    answerKeyUrl: 'https://example.com/pyq/wcs_10_answer_key.pdf',
-    isSolved: true,
-    questions: WORKSHOP_CALCULATION_10_QUESTIONS.map((q, idx) => ({
-      id: q.id,
-      questionNumber: idx + 1,
-      question: q.question,
-      options: q.options,
-      correctOptionIndex: q.correctOptionIndex,
-      explanation: q.explanation,
-      rankerTip: q.rankerTip,
-      topic: q.topic || 'Workshop Calculation and Science'
-    }))
-  },
-  {
-    id: 'pyq-bed-50',
-    title: 'Kerala PSC Basic Engineering Drawing Official Solved PYQ & Practice Paper (50 Questions)',
-    examName: 'Surveyor Grade II / Draftsman Gr. II - Basic Engineering Drawing',
-    examCode: 'Cat. No: 284/2022 - BED Series',
-    year: 2024,
-    department: 'Survey and Land Records Department / PWD',
-    totalQuestions: 50,
-    pdfUrl: 'https://example.com/pyq/bed_50_solved.pdf',
-    answerKeyUrl: 'https://example.com/pyq/bed_50_answer_key.pdf',
-    isSolved: true,
-    questions: BASIC_ENGINEERING_DRAWING_50_QUESTIONS.map((q, idx) => ({
-      id: q.id,
-      questionNumber: idx + 1,
-      question: q.question,
-      options: q.options,
-      correctOptionIndex: q.correctOptionIndex,
-      explanation: q.explanation,
-      rankerTip: q.rankerTip,
-      topic: q.topic || 'Basic Engineering Drawing'
-    }))
-  },
-  {
-    id: 'pyq-kpsc-grand-100',
-    title: 'Kerala PSC 100-Mark Full Syllabus Official Solved Model Paper (100 Questions)',
-    examName: 'Kerala PSC Surveyor Grade II / Overseer Full Syllabus Exam',
-    examCode: 'Cat. No: 284/2022 - 100 Marks Grand Series',
-    year: 2026,
-    department: 'Survey and Land Records Department / KWA / PWD',
-    totalQuestions: 100,
-    pdfUrl: 'https://example.com/pyq/kpsc_grand_100_solved.pdf',
-    answerKeyUrl: 'https://example.com/pyq/kpsc_grand_100_answer_key.pdf',
-    isSolved: true,
-    questions: KPSC_GRAND_100_QUESTIONS.map((q, idx) => ({
-      id: q.id,
-      questionNumber: idx + 1,
-      question: q.question,
-      options: q.options,
-      correctOptionIndex: q.correctOptionIndex,
-      explanation: q.explanation,
-      rankerTip: q.rankerTip,
-      topic: q.topic || 'Kerala PSC Full Syllabus'
-    }))
   }
 ];
 
