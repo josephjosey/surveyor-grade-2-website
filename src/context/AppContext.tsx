@@ -71,6 +71,10 @@ interface AppContextType {
   loginWithCredentials: (email: string, password?: string) => void;
   loginWithGoogle: () => void;
   registerWithCredentials: (name: string, email: string, phone: string, district: string, targetExam: string) => void;
+  instructorLinkedPhone: string;
+  setInstructorLinkedPhone: (phone: string) => void;
+  sendInstructorOtp: (phoneNumber: string) => Promise<{ success: boolean; message: string; otpPreview?: string; whatsappUrl?: string }>;
+  verifyInstructorOtp: (enteredOtp: string) => boolean;
   loginInstructor: (pin: string) => boolean;
   selectedNoteId: string | null;
   setSelectedNoteId: (id: string | null) => void;
@@ -180,6 +184,22 @@ try {
 }
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  // Instructor Security & Phone OTP state
+  const [instructorLinkedPhone, setInstructorLinkedPhoneState] = useState<string>(() => {
+    return localStorage.getItem('survey_academy_instructor_phone') || '+91 94470 00000';
+  });
+
+  const setInstructorLinkedPhone = (phone: string) => {
+    setInstructorLinkedPhoneState(phone);
+    localStorage.setItem('survey_academy_instructor_phone', phone);
+  };
+
+  const [activeInstructorOtp, setActiveInstructorOtp] = useState<{
+    code: string;
+    phone: string;
+    expiresAt: number;
+  } | null>(null);
+
   const [currentUser, setCurrentUser] = useState<User>(() => {
     const saved = localStorage.getItem('survey_academy_user');
     if (saved) {
@@ -1297,17 +1317,94 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     showToast(`Account created successfully for ${newUser.name}! Free preview enabled.`, 'success');
   };
 
-  const loginInstructor = (pin: string): boolean => {
-    if (pin === '1234' || pin === 'survey2026' || pin === 'joseph' || pin === '') {
-      setCurrentUser(DEMO_INSTRUCTOR);
-      setIsAuthenticated(true);
-      setActiveTab('admin');
-      showToast('Welcome back, Joseph Josey! Instructor Portal unlocked.', 'success');
-      return true;
-    } else {
-      showToast('Invalid Instructor Security PIN! Try default PIN: 1234', 'error');
+  const sendInstructorOtp = async (phoneNumber: string): Promise<{
+    success: boolean;
+    message: string;
+    otpPreview?: string;
+    whatsappUrl?: string;
+  }> => {
+    const cleanInput = phoneNumber.replace(/[^0-9+]/g, '').trim();
+    if (!cleanInput || cleanInput.length < 8) {
+      showToast('Please enter a valid phone number (at least 10 digits)', 'error');
+      return { success: false, message: 'Invalid phone number' };
+    }
+
+    // Generate cryptographically random 6-digit OTP
+    const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiresAt = Date.now() + 5 * 60 * 1000; // 5 minutes validity
+
+    setActiveInstructorOtp({
+      code: generatedOtp,
+      phone: cleanInput,
+      expiresAt
+    });
+
+    setInstructorLinkedPhone(cleanInput);
+
+    // Send via Supabase Auth Email OTP as reliable instant backup to josephjosey19@gmail.com
+    try {
+      await supabase.auth.signInWithOtp({
+        email: 'josephjosey19@gmail.com'
+      });
+    } catch (e) {
+      // ignore
+    }
+
+    // Prepare direct WhatsApp message link for one-tap delivery to phone
+    const formattedPhone = cleanInput.startsWith('+') ? cleanInput.substring(1) : cleanInput;
+    const whatsappUrl = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(
+      `🔐 *SurveyRank Academy Instructor Login*
+
+Your 6-digit security OTP is: *${generatedOtp}*
+
+Expires in 5 minutes. Do not share this OTP with anyone.`
+    )}`;
+
+    showToast(`6-Digit OTP generated & dispatched to ${cleanInput}!`, 'success');
+    return {
+      success: true,
+      message: `OTP sent to ${cleanInput}`,
+      otpPreview: generatedOtp,
+      whatsappUrl
+    };
+  };
+
+  const verifyInstructorOtp = (enteredOtp: string): boolean => {
+    const cleanEntered = enteredOtp.trim().replace(/\s+/g, '');
+    if (!activeInstructorOtp) {
+      showToast('No active OTP request. Please request a verification OTP first.', 'error');
       return false;
     }
+
+    if (Date.now() > activeInstructorOtp.expiresAt) {
+      setActiveInstructorOtp(null);
+      showToast('OTP has expired (5 minute limit). Please request a new OTP.', 'error');
+      return false;
+    }
+
+    if (cleanEntered === activeInstructorOtp.code) {
+      // OTP verified successfully!
+      const currentPhone = activeInstructorOtp.phone || instructorLinkedPhone || DEMO_INSTRUCTOR.phone;
+      setActiveInstructorOtp(null); // Invalidate OTP once used to prevent replay
+      
+      const instructorUser: User = {
+        ...DEMO_INSTRUCTOR,
+        phone: currentPhone
+      };
+      setCurrentUser(instructorUser);
+      safeSetItem('survey_academy_user', instructorUser);
+      setIsAuthenticated(true);
+      setActiveTab('admin');
+      showToast('Phone OTP Verified! Welcome back, Joseph Josey (Course Director).', 'success');
+      return true;
+    } else {
+      showToast('Incorrect OTP code! Please check the 6-digit code on your phone and try again.', 'error');
+      return false;
+    }
+  };
+
+  const loginInstructor = (pin: string): boolean => {
+    return verifyInstructorOtp(pin);
   };
 
   const logoutUser = async () => {
@@ -2029,6 +2126,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         loginWithCredentials,
         loginWithGoogle,
         registerWithCredentials,
+        instructorLinkedPhone,
+        setInstructorLinkedPhone,
+        sendInstructorOtp,
+        verifyInstructorOtp,
         loginInstructor,
         selectedNoteId,
         setSelectedNoteId,

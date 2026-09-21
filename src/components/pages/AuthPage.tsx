@@ -29,10 +29,38 @@ export const AuthPage: React.FC = () => {
     loginWithCredentials,
     loginWithGoogle,
     registerWithCredentials,
+    instructorLinkedPhone,
+    sendInstructorOtp,
+    verifyInstructorOtp,
     loginInstructor,
     showToast,
     setActiveTab
   } = useApp();
+
+  // Instructor OTP verification states
+  const [instructorPhone, setInstructorPhone] = useState(instructorLinkedPhone || '+91 94470 00000');
+  const [instructorOtp, setInstructorOtp] = useState('');
+  const [otpStep, setOtpStep] = useState<'phone' | 'verify'>('phone');
+  const [otpResendCooldown, setOtpResendCooldown] = useState(0);
+  const [isSendingOtp, setIsSendingOtp] = useState(false);
+  const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
+  const [whatsappUrl, setWhatsappUrl] = useState<string | null>(null);
+
+  // Sync initial phone
+  React.useEffect(() => {
+    if (instructorLinkedPhone && !instructorPhone) {
+      setInstructorPhone(instructorLinkedPhone);
+    }
+  }, [instructorLinkedPhone]);
+
+  // Resend cooldown timer
+  React.useEffect(() => {
+    if (otpResendCooldown <= 0) return;
+    const timer = setInterval(() => {
+      setOtpResendCooldown((prev) => Math.max(0, prev - 1));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [otpResendCooldown]);
 
   const [mode, setMode] = useState<'login' | 'signup' | 'instructor'>('login');
   const [showPassword, setShowPassword] = useState(false);
@@ -186,9 +214,51 @@ export const AuthPage: React.FC = () => {
     }
   };
 
-  const handleInstructorSubmit = (e: React.FormEvent) => {
+  const handleSendOtp = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!instructorPhone.trim()) {
+      setAuthError('Please enter the mobile number linked to the instructor profile.');
+      return;
+    }
+    setAuthError(null);
+    setIsSendingOtp(true);
+    try {
+      const res = await sendInstructorOtp(instructorPhone);
+      if (res.success) {
+        setOtpStep('verify');
+        setOtpResendCooldown(60);
+        if (res.whatsappUrl) {
+          setWhatsappUrl(res.whatsappUrl);
+        }
+      } else {
+        setAuthError(res.message);
+      }
+    } catch (err: any) {
+      setAuthError(err.message || 'Failed to generate OTP. Please try again.');
+    } finally {
+      setIsSendingOtp(false);
+    }
+  };
+
+  const handleVerifyOtp = (e: React.FormEvent) => {
     e.preventDefault();
-    loginInstructor(instructorPin);
+    if (!instructorOtp.trim() || instructorOtp.trim().length < 6) {
+      setAuthError('Please enter the complete 6-digit OTP received on your phone.');
+      return;
+    }
+    setAuthError(null);
+    setIsVerifyingOtp(true);
+    try {
+      const verified = verifyInstructorOtp(instructorOtp);
+      if (verified) {
+        setOtpStep('phone');
+        setInstructorOtp('');
+      } else {
+        setAuthError('Incorrect OTP! Please check the 6-digit code on your phone/email and try again.');
+      }
+    } finally {
+      setIsVerifyingOtp(false);
+    }
   };
 
   const handleForgotPassword = () => {
@@ -259,7 +329,7 @@ export const AuthPage: React.FC = () => {
               <p className="text-slate-500 text-xs sm:text-sm">
                 {mode === 'login' && 'Please enter your username and password to login'}
                 {mode === 'signup' && 'Create your student account to access free study documents'}
-                {mode === 'instructor' && 'Enter instructor security PIN to access administrative controls'}
+                {mode === 'instructor' && 'Two-factor phone OTP verification required to access administrative controls'}
               </p>
             </div>
 
@@ -582,60 +652,179 @@ export const AuthPage: React.FC = () => {
               </form>
             )}
 
-            {/* FORM 3: INSTRUCTOR PIN MODE */}
+            {/* FORM 3: INSTRUCTOR PHONE OTP MODE */}
             {mode === 'instructor' && (
-              <form onSubmit={handleInstructorSubmit} className="space-y-4">
-                <div className="p-4 bg-purple-50 rounded-2xl border border-purple-200 flex items-center gap-3.5">
-                  <img
-                    src="/instructor_joseph_josey.png"
-                    alt="Joseph Josey"
-                    className="w-12 h-12 rounded-full object-cover object-[center_20%] ring-2 ring-purple-400 flex-shrink-0 shadow"
-                  />
-                  <div>
-                    <div className="font-extrabold text-purple-950 text-sm">
-                      Joseph Josey
-                    </div>
-                    <div className="text-[11px] text-purple-700">
-                      Course Director & Faculty • Kerala PSC Surveyor
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                    Instructor Security PIN
-                  </label>
-                  <div className="relative">
-                    <KeyRound className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                    <input
-                      type="password"
-                      value={instructorPin}
-                      onChange={(e) => setInstructorPin(e.target.value)}
-                      placeholder="Enter 4-digit security PIN"
-                      className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-purple-600 focus:ring-2 focus:ring-purple-600/20 text-slate-900 placeholder:text-slate-400 placeholder:font-normal text-sm outline-none transition bg-white"
+              <div className="space-y-4">
+                <div className="p-4 bg-purple-50/80 rounded-2xl border border-purple-200 flex items-center justify-between gap-3 shadow-xs">
+                  <div className="flex items-center gap-3.5">
+                    <img
+                      src="/instructor_joseph_josey.png"
+                      alt="Joseph Josey"
+                      className="w-12 h-12 rounded-full object-cover object-[center_20%] ring-2 ring-purple-400 flex-shrink-0 shadow"
                     />
+                    <div>
+                      <div className="font-extrabold text-purple-950 text-sm">
+                        Joseph Josey
+                      </div>
+                      <div className="text-[11px] text-purple-700">
+                        Course Director & Faculty • Kerala PSC Surveyor
+                      </div>
+                    </div>
                   </div>
-                  <span className="text-[11px] text-slate-400 mt-1 block">Default PIN: 1234</span>
+                  <span className="px-2.5 py-1 rounded-full bg-purple-200/70 text-purple-900 font-extrabold text-[10px] flex items-center gap-1 border border-purple-300 shrink-0">
+                    <ShieldCheck className="w-3 h-3 text-purple-700" />
+                    2FA Protected
+                  </span>
                 </div>
 
-                <button
-                  type="submit"
-                  className="w-full py-3 bg-purple-800 hover:bg-purple-900 active:scale-[0.99] text-white font-bold rounded-xl shadow-md text-sm transition-all flex items-center justify-center gap-2"
-                >
-                  <ShieldCheck className="w-4 h-4 text-amber-300" />
-                  <span>Unlock Instructor Admin Controls</span>
-                </button>
+                {otpStep === 'phone' ? (
+                  <form onSubmit={handleSendOtp} className="space-y-4">
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                        Linked Instructor Phone Number
+                      </label>
+                      <div className="relative">
+                        <Phone className="w-4 h-4 text-purple-600 absolute left-3 top-1/2 -translate-y-1/2" />
+                        <input
+                          type="tel"
+                          value={instructorPhone}
+                          onChange={(e) => setInstructorPhone(e.target.value)}
+                          placeholder="+91 94470 00000"
+                          className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-purple-600 focus:ring-2 focus:ring-purple-600/20 text-slate-900 placeholder:text-slate-400 text-sm outline-none transition bg-white font-medium"
+                          required
+                        />
+                      </div>
+                      <p className="text-[11px] text-slate-500 mt-1.5 flex items-center gap-1">
+                        <Lock className="w-3 h-3 text-slate-400" />
+                        Every login requires dynamic OTP confirmation on this linked phone.
+                      </p>
+                    </div>
 
-                <div className="text-center pt-2">
-                  <button
-                    type="button"
-                    onClick={() => setMode('login')}
-                    className="text-xs text-slate-500 hover:text-slate-800 underline"
-                  >
-                    ← Back to Student Login
-                  </button>
-                </div>
-              </form>
+                    <button
+                      type="submit"
+                      disabled={isSendingOtp}
+                      className="w-full py-3 bg-purple-800 hover:bg-purple-900 active:scale-[0.99] text-white font-bold rounded-xl shadow-md text-sm transition-all flex items-center justify-center gap-2 disabled:opacity-60"
+                    >
+                      {isSendingOtp ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin text-amber-300" />
+                          <span>Generating & Sending OTP...</span>
+                        </>
+                      ) : (
+                        <>
+                          <ShieldCheck className="w-4 h-4 text-amber-300" />
+                          <span>Send 6-Digit Verification OTP</span>
+                        </>
+                      )}
+                    </button>
+
+                    <div className="text-center pt-2">
+                      <button
+                        type="button"
+                        onClick={() => { setMode('login'); setAuthError(null); }}
+                        className="text-xs text-slate-500 hover:text-slate-800 underline"
+                      >
+                        ← Back to Student Login
+                      </button>
+                    </div>
+                  </form>
+                ) : (
+                  <form onSubmit={handleVerifyOtp} className="space-y-4">
+                    <div className="bg-emerald-50 border border-emerald-200 p-3.5 rounded-xl space-y-1 text-xs">
+                      <div className="font-bold text-emerald-950 flex items-center gap-1.5">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                        OTP Dispatched to Linked Phone
+                      </div>
+                      <p className="text-emerald-700 text-[11px] leading-relaxed">
+                        A 6-digit one-time passcode has been generated for <strong>{instructorPhone}</strong> and also dispatched to <strong>josephjosey19@gmail.com</strong>.
+                      </p>
+                    </div>
+
+                    <div>
+                      <div className="flex items-center justify-between mb-1.5">
+                        <label className="text-xs font-bold text-slate-700">
+                          Enter 6-Digit Security OTP
+                        </label>
+                        <span className="text-[11px] font-bold text-purple-700">
+                          Valid for 5 mins
+                        </span>
+                      </div>
+                      <div className="relative">
+                        <KeyRound className="w-4 h-4 text-purple-600 absolute left-3 top-1/2 -translate-y-1/2" />
+                        <input
+                          type="text"
+                          inputMode="numeric"
+                          maxLength={6}
+                          value={instructorOtp}
+                          onChange={(e) => setInstructorOtp(e.target.value.replace(/[^0-9]/g, ''))}
+                          placeholder="••••••"
+                          autoFocus
+                          className="w-full pl-9 pr-3.5 py-3 rounded-xl border-2 border-purple-300 focus:border-purple-600 focus:ring-2 focus:ring-purple-600/20 text-slate-900 placeholder:text-slate-300 text-center font-black text-xl tracking-[0.4em] outline-none transition bg-white"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    {whatsappUrl && (
+                      <a
+                        href={whatsappUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="w-full py-2 px-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 shadow-xs"
+                      >
+                        <span>📲 Tap here to open OTP on WhatsApp</span>
+                      </a>
+                    )}
+
+                    <button
+                      type="submit"
+                      disabled={isVerifyingOtp || instructorOtp.length < 6}
+                      className="w-full py-3 bg-purple-800 hover:bg-purple-900 active:scale-[0.99] text-white font-bold rounded-xl shadow-md text-sm transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                    >
+                      {isVerifyingOtp ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin text-amber-300" />
+                          <span>Verifying OTP Code...</span>
+                        </>
+                      ) : (
+                        <>
+                          <ShieldCheck className="w-4 h-4 text-amber-300" />
+                          <span>Verify & Unlock Instructor Portal</span>
+                        </>
+                      )}
+                    </button>
+
+                    <div className="flex items-center justify-between text-xs pt-1">
+                      <button
+                        type="button"
+                        onClick={() => { setOtpStep('phone'); setInstructorOtp(''); setAuthError(null); }}
+                        className="text-purple-700 hover:text-purple-900 font-semibold"
+                      >
+                        ← Change Phone
+                      </button>
+
+                      <button
+                        type="button"
+                        disabled={otpResendCooldown > 0 || isSendingOtp}
+                        onClick={() => handleSendOtp()}
+                        className="text-slate-600 hover:text-purple-800 font-semibold disabled:opacity-40"
+                      >
+                        {otpResendCooldown > 0 ? `Resend OTP in ${otpResendCooldown}s` : 'Resend OTP'}
+                      </button>
+                    </div>
+
+                    <div className="text-center pt-2">
+                      <button
+                        type="button"
+                        onClick={() => { setMode('login'); setOtpStep('phone'); setInstructorOtp(''); setAuthError(null); }}
+                        className="text-xs text-slate-500 hover:text-slate-800 underline"
+                      >
+                        ← Back to Student Login
+                      </button>
+                    </div>
+                  </form>
+                )}
+              </div>
             )}
           </div>
 

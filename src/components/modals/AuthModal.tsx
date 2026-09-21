@@ -3,6 +3,8 @@ import { useApp } from '../../context/AppContext';
 import {
   X,
   ShieldAlert,
+  ShieldCheck,
+  Loader2,
   GraduationCap,
   Lock,
   Mail,
@@ -27,7 +29,34 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   onClose,
   defaultRole = 'student'
 }) => {
-  const { setCurrentUser, setActiveTab, showToast, setIsEnrollmentModalOpen, loginWithCredentials, loginWithGoogle } = useApp();
+  const {
+    setCurrentUser,
+    setActiveTab,
+    showToast,
+    setIsEnrollmentModalOpen,
+    loginWithCredentials,
+    loginWithGoogle,
+    instructorLinkedPhone,
+    sendInstructorOtp,
+    verifyInstructorOtp
+  } = useApp();
+
+  // Instructor OTP State
+  const [instructorPhone, setInstructorPhone] = useState(instructorLinkedPhone || '+91 94470 00000');
+  const [instructorOtp, setInstructorOtp] = useState('');
+  const [otpStep, setOtpStep] = useState<'phone' | 'verify'>('phone');
+  const [otpResendCooldown, setOtpResendCooldown] = useState(0);
+  const [isSendingOtp, setIsSendingOtp] = useState(false);
+  const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
+  const [whatsappUrl, setWhatsappUrl] = useState<string | null>(null);
+
+  React.useEffect(() => {
+    if (otpResendCooldown <= 0) return;
+    const timer = setInterval(() => {
+      setOtpResendCooldown((prev) => Math.max(0, prev - 1));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [otpResendCooldown]);
 
   const [authRole, setAuthRole] = useState<'student' | 'instructor'>(defaultRole);
 
@@ -54,19 +83,41 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     onClose();
   };
 
-  const handleInstructorLogin = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSendOtp = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!instructorPhone.trim()) {
+      showToast('Please enter the mobile number linked to the instructor profile.', 'error');
+      return;
+    }
+    setIsSendingOtp(true);
+    try {
+      const res = await sendInstructorOtp(instructorPhone);
+      if (res.success) {
+        setOtpStep('verify');
+        setOtpResendCooldown(60);
+        if (res.whatsappUrl) {
+          setWhatsappUrl(res.whatsappUrl);
+        }
+      }
+    } finally {
+      setIsSendingOtp(false);
+    }
+  };
 
-    // Default Instructor Security PIN is '1234' or any valid instructor input
-    if (instructorPin === '1234' || instructorPin === 'survey2026' || instructorPin === 'joseph' || instructorPin === '') {
-      setCurrentUser(DEMO_INSTRUCTOR);
-      showToast('Welcome back, Joseph Josey! Instructor Portal unlocked.', 'success');
-      setActiveTab('admin');
-      setPinError(false);
-      onClose();
-    } else {
-      setPinError(true);
-      showToast('Invalid Instructor Security PIN! Try default PIN: 1234', 'error');
+  const handleVerifyOtp = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!instructorOtp.trim() || instructorOtp.trim().length < 6) {
+      showToast('Please enter the full 6-digit OTP received on your phone.', 'error');
+      return;
+    }
+    setIsVerifyingOtp(true);
+    try {
+      const verified = verifyInstructorOtp(instructorOtp);
+      if (verified) {
+        onClose();
+      }
+    } finally {
+      setIsVerifyingOtp(false);
     }
   };
 
@@ -230,70 +281,155 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           </div>
         )}
 
-        {/* Tab 2: Instructor Login Form */}
+        {/* Tab 2: Instructor Login Form with Phone OTP */}
         {authRole === 'instructor' && (
-          <form onSubmit={handleInstructorLogin} className="p-6 space-y-4 text-xs">
-            <div className="bg-purple-50 p-3 rounded-xl border border-purple-200 text-purple-950 flex items-center gap-3">
-              <img
-                src="/instructor_joseph_josey.png"
-                alt="Joseph Josey"
-                className="w-10 h-10 rounded-full object-cover object-[center_20%] ring-2 ring-purple-400 flex-shrink-0"
-              />
-              <div className="space-y-0.5">
-                <div className="font-bold text-purple-900">Joseph Josey (Course Director)</div>
-                <div className="text-[10px] text-purple-700">Kerala PSC Survey & Land Records Specialist</div>
-              </div>
-            </div>
-
-            <div>
-              <label className="block font-semibold uppercase text-slate-700 mb-1">
-                Admin / Instructor Email
-              </label>
-              <div className="relative">
-                <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                <input
-                  type="email"
-                  required
-                  value={instructorEmail}
-                  onChange={(e) => setInstructorEmail(e.target.value)}
-                  placeholder="Enter instructor email ID"
-                  className="w-full pl-9 pr-3 py-2.5 border border-slate-300 rounded-xl outline-none bg-white text-slate-900 placeholder:text-slate-400 placeholder:font-normal"
+          <div className="p-6 space-y-4 text-xs">
+            <div className="bg-purple-50 p-3 rounded-xl border border-purple-200 text-purple-950 flex items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <img
+                  src="/instructor_joseph_josey.png"
+                  alt="Joseph Josey"
+                  className="w-10 h-10 rounded-full object-cover object-[center_20%] ring-2 ring-purple-400 flex-shrink-0"
                 />
+                <div className="space-y-0.5">
+                  <div className="font-bold text-purple-900">Joseph Josey (Course Director)</div>
+                  <div className="text-[10px] text-purple-700">Kerala PSC Survey & Land Records Specialist</div>
+                </div>
               </div>
+              <span className="px-2 py-0.5 rounded-full bg-purple-200/80 text-purple-900 font-extrabold text-[10px] flex items-center gap-1 border border-purple-300 shrink-0">
+                <ShieldCheck className="w-3 h-3 text-purple-700" />
+                2FA OTP
+              </span>
             </div>
 
-            <div>
-              <label className="block font-semibold uppercase text-slate-700 mb-1">
-                Instructor Security PIN
-              </label>
-              <div className="relative">
-                <KeyRound className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                <input
-                  type="password"
-                  value={instructorPin}
-                  onChange={(e) => {
-                    setInstructorPin(e.target.value);
-                    setPinError(false);
-                  }}
-                  placeholder="Enter 4-digit security PIN"
-                  className={`w-full pl-9 pr-3 py-2.5 border rounded-xl outline-none placeholder:text-slate-400 placeholder:font-normal ${
-                    pinError ? 'border-red-500 bg-red-50' : 'border-slate-300 bg-white focus:ring-2 focus:ring-purple-500'
-                  }`}
-                />
-              </div>
-              <p className="text-[10px] text-slate-500 mt-1">
-                Demo Instructor Master PIN is: <code className="bg-slate-200 px-1 py-0.2 rounded font-bold text-slate-800">1234</code>
-              </p>
-            </div>
+            {otpStep === 'phone' ? (
+              <form onSubmit={handleSendOtp} className="space-y-4">
+                <div>
+                  <label className="block font-semibold uppercase text-slate-700 mb-1">
+                    Linked Instructor Phone Number
+                  </label>
+                  <div className="relative">
+                    <Phone className="w-4 h-4 text-purple-600 absolute left-3 top-1/2 -translate-y-1/2" />
+                    <input
+                      type="tel"
+                      required
+                      value={instructorPhone}
+                      onChange={(e) => setInstructorPhone(e.target.value)}
+                      placeholder="+91 94470 00000"
+                      className="w-full pl-9 pr-3 py-2.5 border border-slate-300 rounded-xl outline-none bg-white text-slate-900 placeholder:text-slate-400 font-medium text-sm focus:border-purple-600 focus:ring-2 focus:ring-purple-600/20"
+                    />
+                  </div>
+                  <p className="text-[10px] text-slate-500 mt-1 flex items-center gap-1">
+                    <Lock className="w-3 h-3 text-slate-400" />
+                    Every login requires one-time passcode confirmation on this phone.
+                  </p>
+                </div>
 
-            <button
-              type="submit"
-              className="w-full py-3 bg-purple-900 hover:bg-purple-800 text-white font-bold rounded-xl shadow-md transition flex items-center justify-center gap-2"
-            >
-              <ShieldAlert className="w-4 h-4 text-amber-400" />
-              <span>Unlock Instructor Portal</span>
-            </button>
-          </form>
+                <button
+                  type="submit"
+                  disabled={isSendingOtp}
+                  className="w-full py-3 bg-purple-900 hover:bg-purple-800 text-white font-bold rounded-xl shadow-md transition flex items-center justify-center gap-2 disabled:opacity-60"
+                >
+                  {isSendingOtp ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin text-amber-400" />
+                      <span>Sending OTP...</span>
+                    </>
+                  ) : (
+                    <>
+                      <ShieldCheck className="w-4 h-4 text-amber-400" />
+                      <span>Send 6-Digit Verification OTP</span>
+                    </>
+                  )}
+                </button>
+              </form>
+            ) : (
+              <form onSubmit={handleVerifyOtp} className="space-y-4">
+                <div className="bg-emerald-50 border border-emerald-200 p-3 rounded-xl text-xs space-y-0.5">
+                  <div className="font-bold text-emerald-950 flex items-center gap-1">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                    OTP Sent to Linked Phone
+                  </div>
+                  <p className="text-emerald-700 text-[11px]">
+                    Code generated for <strong>{instructorPhone}</strong> & <strong>josephjosey19@gmail.com</strong>
+                  </p>
+                </div>
+
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-xs font-bold text-slate-700">
+                      Enter 6-Digit OTP
+                    </label>
+                    <span className="text-[10px] font-bold text-purple-700">
+                      Valid 5 mins
+                    </span>
+                  </div>
+                  <div className="relative">
+                    <KeyRound className="w-4 h-4 text-purple-600 absolute left-3 top-1/2 -translate-y-1/2" />
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      maxLength={6}
+                      value={instructorOtp}
+                      onChange={(e) => setInstructorOtp(e.target.value.replace(/[^0-9]/g, ''))}
+                      placeholder="••••••"
+                      autoFocus
+                      className="w-full pl-9 pr-3 py-2.5 border-2 border-purple-300 focus:border-purple-600 focus:ring-2 focus:ring-purple-600/20 rounded-xl outline-none bg-white text-slate-900 text-center font-black text-lg tracking-[0.3em]"
+                      required
+                    />
+                  </div>
+                </div>
+
+                {whatsappUrl && (
+                  <a
+                    href={whatsappUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="w-full py-2 px-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-xs"
+                  >
+                    <span>📲 Tap here to open OTP on WhatsApp</span>
+                  </a>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={isVerifyingOtp || instructorOtp.length < 6}
+                  className="w-full py-3 bg-purple-900 hover:bg-purple-800 text-white font-bold rounded-xl shadow-md transition flex items-center justify-center gap-2 disabled:opacity-50"
+                >
+                  {isVerifyingOtp ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin text-amber-400" />
+                      <span>Verifying...</span>
+                    </>
+                  ) : (
+                    <>
+                      <ShieldCheck className="w-4 h-4 text-amber-400" />
+                      <span>Verify & Unlock Portal</span>
+                    </>
+                  )}
+                </button>
+
+                <div className="flex items-center justify-between text-xs pt-1">
+                  <button
+                    type="button"
+                    onClick={() => { setOtpStep('phone'); setInstructorOtp(''); }}
+                    className="text-purple-700 hover:text-purple-900 font-semibold"
+                  >
+                    ← Change Phone
+                  </button>
+
+                  <button
+                    type="button"
+                    disabled={otpResendCooldown > 0 || isSendingOtp}
+                    onClick={() => handleSendOtp()}
+                    className="text-slate-600 hover:text-purple-800 font-semibold disabled:opacity-40"
+                  >
+                    {otpResendCooldown > 0 ? `Resend (${otpResendCooldown}s)` : 'Resend OTP'}
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
         )}
 
       </div>
