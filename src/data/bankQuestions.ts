@@ -1,4 +1,5 @@
 import { BASIC_ENGINEERING_DRAWING_50_QUESTIONS } from './basicEngineeringDrawing50Questions';
+import { ENGINEERING_DRAWING_472_QUESTIONS } from './engineeringDrawing472Questions';
 import { BUILDING_MATERIALS_50_QUESTIONS } from './buildingMaterials50Questions';
 import { WORKSHOP_CALCULATION_163_QUESTIONS } from './workshopCalculation163Questions';
 import { AUTOCAD_246_QUESTIONS } from './autocad246Questions';
@@ -25,6 +26,7 @@ export const INITIAL_BANK_QUESTIONS: BankQuestion[] = [
   ...TRACER_SURVEYOR_200_QUESTIONS,
   ...PYQ_PAPER_063_2024_QUESTIONS,
   ...BASIC_ENGINEERING_DRAWING_50_QUESTIONS,
+  ...ENGINEERING_DRAWING_472_QUESTIONS,
   ...BUILDING_MATERIALS_50_QUESTIONS,
   ...WORKSHOP_CALCULATION_163_QUESTIONS,
   ...AUTOCAD_246_QUESTIONS,
