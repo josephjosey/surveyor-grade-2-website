@@ -45,7 +45,8 @@ export const MockTestsPage: React.FC = () => {
     getUserRankInfo,
     showToast,
     hasCourseAccess,
-    openEnrollmentModal
+    openEnrollmentModal,
+    refreshTestAttempts
   } = useApp();
 
   // Navigation tab inside Mock Test Page
@@ -103,6 +104,11 @@ export const MockTestsPage: React.FC = () => {
       }
     }
   }, [selectedMockTestId, mockTests]);
+
+  // Live sync: fetch fresh test attempts from Supabase on mount and whenever examTab changes
+  useEffect(() => {
+    refreshTestAttempts();
+  }, [refreshTestAttempts, examTab]);
 
   const handleSubmitExamRef = useRef<() => void>(() => {});
 

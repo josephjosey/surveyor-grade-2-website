@@ -21,7 +21,6 @@ import { MOCK_TEST_KPSC_GRAND_100 } from './kpscGrand100MockTest';
 import { PYQ_PAPER_063_2024 } from './pyqPaper063_2024';
 import { PYQ_PAPER_043_2023, PYQ_PAPER_106_2017, MOCK_TEST_TRACER_2023 } from './tracerSurveyor200Questions';
 import { INITIAL_BANK_QUESTIONS } from './bankQuestions';
-import { SIMULATED_STUDENTS, SIMULATED_ATTEMPTS } from './simulatedStudents';
 
 export { INITIAL_BANK_QUESTIONS };
 
@@ -1053,7 +1052,7 @@ export const ENROLLED_STUDENTS_LIST: User[] = [
     id: '55f5d228-0fbe-49a4-abe2-261e343dbf12',
     name: 'Mariya Josey',
     email: 'mariyajosey09@gmail.com',
-    phone: '',
+    phone: '+91 94470 00000',
     role: 'student',
     avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80',
     enrolledAt: '2026-08-28',
@@ -1063,17 +1062,182 @@ export const ENROLLED_STUDENTS_LIST: User[] = [
     bookmarkedClassIds: [],
     savedPYQIds: [],
     streakDays: 1,
-    subscriptionPlan: 'free',
+    subscriptionPlan: 'master',
     stateRank: 1,
     percentile: 100.0,
     mockScore: 4.37
   },
-  ...SIMULATED_STUDENTS
+  {
+    id: 'd764f6b6-0093-4910-bfa1-6d8bc43229c2',
+    name: 'joseph',
+    email: 'josephjoseypsc@gmail.com',
+    phone: '',
+    role: 'student',
+    avatar: 'https://lh3.googleusercontent.com/a/ACg8ocJUXUPz_b_rCKOLOnve5x05FuE01bDcZnmDYYhJ_bghaRzthQ=s96-c',
+    enrolledAt: '2026-08-28',
+    district: 'Palakkad',
+    targetExam: 'Kerala PSC Surveyor Gr. II',
+    completedClassIds: [],
+    bookmarkedClassIds: [],
+    savedPYQIds: [],
+    streakDays: 1,
+    subscriptionPlan: 'free',
+    stateRank: 1,
+    percentile: 100.0,
+    mockScore: 11.67
+  },
+  {
+    id: '164d9aea-f4e2-43cd-850c-e0f2c1ef4829',
+    name: 'Josey Joseph',
+    email: 'joseyantony76@gmail.com',
+    phone: '',
+    role: 'student',
+    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80',
+    enrolledAt: '2026-09-11',
+    district: 'Idukki',
+    targetExam: 'Kerala PSC Surveyor Gr. II',
+    completedClassIds: [],
+    bookmarkedClassIds: [],
+    savedPYQIds: [],
+    streakDays: 1,
+    subscriptionPlan: 'free',
+    stateRank: 0,
+    percentile: 0,
+    mockScore: 0
+  }
 ];
 
 export const INITIAL_STATEWIDE_ATTEMPTS: MockTestAttempt[] = [
   // =========================================================================
-  // 1. KERALA PSC SURVEYOR GRADE II & OVERSEER - 87 MCQ MASTER TEST SERIES
+  // 1. KERALA PSC 100-MARK FULL SYLLABUS GRAND MODEL EXAM
+  // =========================================================================
+  {
+    id: 'att-1789933864950',
+    testId: 'mock-kpsc-grand-100',
+    userId: '11550992-238a-4e9c-ad5f-a95edef72423',
+    userName: 'JOSEPH JOSEY',
+    userAvatar: 'https://lh3.googleusercontent.com/a/ACg8ocIaBMAwuWUqnDUrEGQPCwFlLpQ8gGRd7SPCQvnJWg0-LuEwH_qu=s96-c',
+    district: 'Idukki',
+    startedAt: '2026-09-20T19:48:00.949Z',
+    submittedAt: '2026-09-20T19:51:04.950Z',
+    answers: {
+      'grand100-q1': 0,
+      'grand100-q2': 0,
+      'grand100-q3': 0,
+      'grand100-q4': 3,
+      'grand100-q5': 2,
+      'grand100-q11': 0,
+      'grand100-q12': 1,
+      'grand100-q13': 1,
+      'grand100-q19': 1,
+      'grand100-q21': 0,
+      'grand100-q62': 2,
+      'grand100-q73': 3,
+      'grand100-q98': 0
+    },
+    markedForReview: [],
+    score: 10.34,
+    correctCount: 11,
+    wrongCount: 2,
+    unattemptedCount: 87,
+    accuracy: 85,
+    timeSpentSeconds: 184,
+    rank: 1,
+    percentile: 100.0
+  },
+
+  // =========================================================================
+  // 2. THEODOLITE SURVEY 30 MCQ SPEED TEST
+  // =========================================================================
+  {
+    id: 'att-1788070789317',
+    testId: 'mock-theodolite-mcq-30',
+    userId: 'd764f6b6-0093-4910-bfa1-6d8bc43229c2',
+    userName: 'joseph',
+    userAvatar: 'https://lh3.googleusercontent.com/a/ACg8ocJUXUPz_b_rCKOLOnve5x05FuE01bDcZnmDYYhJ_bghaRzthQ=s96-c',
+    district: 'Palakkad',
+    startedAt: '2026-08-30T06:16:17.313Z',
+    submittedAt: '2026-08-30T06:19:49.317Z',
+    answers: {
+      'q-theo-1': 2,
+      'q-theo-2': 2,
+      'q-theo-4': 2,
+      'q-theo-5': 0,
+      'q-theo-6': 3,
+      'q-theo-7': 2,
+      'q-theo-9': 2,
+      'q-theo-10': 1,
+      'q-theo-14': 2,
+      'q-theo-15': 2,
+      'q-theo-16': 1,
+      'q-theo-22': 0,
+      'q-theo-29': 3
+    },
+    markedForReview: [],
+    score: 11.67,
+    correctCount: 12,
+    wrongCount: 1,
+    unattemptedCount: 17,
+    accuracy: 92,
+    timeSpentSeconds: 212,
+    rank: 1,
+    percentile: 100.0
+  },
+  {
+    id: 'att-1788116130894',
+    testId: 'mock-theodolite-mcq-30',
+    userId: '55f5d228-0fbe-49a4-abe2-261e343dbf12',
+    userName: 'Mariya Josey',
+    userAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80',
+    district: 'Idukki',
+    startedAt: '2026-08-30T18:54:49.892Z',
+    submittedAt: '2026-08-30T18:55:30.894Z',
+    answers: {
+      'q-theo-1': 0,
+      'q-theo-2': 2
+    },
+    markedForReview: [],
+    score: 0.67,
+    correctCount: 1,
+    wrongCount: 1,
+    unattemptedCount: 28,
+    accuracy: 50,
+    timeSpentSeconds: 41,
+    rank: 2,
+    percentile: 50.0
+  },
+  {
+    id: 'att-1787902729568',
+    testId: 'mock-theodolite-mcq-30',
+    userId: '11550992-238a-4e9c-ad5f-a95edef72423',
+    userName: 'JOSEPH JOSEY',
+    userAvatar: 'https://lh3.googleusercontent.com/a/ACg8ocIaBMAwuWUqnDUrEGQPCwFlLpQ8gGRd7SPCQvnJWg0-LuEwH_qu=s96-c',
+    district: 'Idukki',
+    startedAt: '2026-08-28T07:38:23.568Z',
+    submittedAt: '2026-08-28T07:38:49.568Z',
+    answers: {
+      'q-theo-1': 1,
+      'q-theo-2': 1,
+      'q-theo-12': 2,
+      'q-theo-13': 1,
+      'q-theo-14': 2,
+      'q-theo-17': 2,
+      'q-theo-23': 2,
+      'q-theo-24': 2
+    },
+    markedForReview: [],
+    score: 0.02,
+    correctCount: 2,
+    wrongCount: 6,
+    unattemptedCount: 22,
+    accuracy: 25,
+    timeSpentSeconds: 26,
+    rank: 3,
+    percentile: 0.0
+  },
+
+  // =========================================================================
+  // 3. KERALA PSC SURVEYOR GRADE II & OVERSEER - 87 MCQ MASTER TEST SERIES
   // =========================================================================
   {
     id: 'att-real-mariya-87',
@@ -1115,5 +1279,39 @@ export const INITIAL_STATEWIDE_ATTEMPTS: MockTestAttempt[] = [
     rank: 2,
     percentile: 0.0
   },
-  ...SIMULATED_ATTEMPTS
+
+  // =========================================================================
+  // 4. KERALA STATE RANKED MOCK EXAM 1
+  // =========================================================================
+  {
+    id: 'att-1789312433534',
+    testId: 'mock-state-rank-1',
+    userId: '11550992-238a-4e9c-ad5f-a95edef72423',
+    userName: 'JOSEPH JOSEY',
+    userAvatar: 'https://lh3.googleusercontent.com/a/ACg8ocIaBMAwuWUqnDUrEGQPCwFlLpQ8gGRd7SPCQvnJWg0-LuEwH_qu=s96-c',
+    district: 'Idukki',
+    startedAt: '2026-09-13T15:12:53.528Z',
+    submittedAt: '2026-09-13T15:13:53.534Z',
+    answers: {
+      'msq-1': 0,
+      'msq-2': 1,
+      'msq-3': 2,
+      'msq-4': 2,
+      'msq-5': 3,
+      'msq-6': 2,
+      'msq-7': 1,
+      'msq-8': 1,
+      'msq-9': 0,
+      'msq-10': 1
+    },
+    markedForReview: [],
+    score: 0,
+    correctCount: 2,
+    wrongCount: 8,
+    unattemptedCount: 0,
+    accuracy: 20,
+    timeSpentSeconds: 60,
+    rank: 1,
+    percentile: 100.0
+  }
 ];

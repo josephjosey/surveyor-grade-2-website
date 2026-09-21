@@ -53,6 +53,7 @@ interface AppContextType {
   bankQuestions: BankQuestion[];
   mockTests: MockTest[];
   testAttempts: MockTestAttempt[];
+  refreshTestAttempts: () => Promise<void>;
   doubts: Doubt[];
   students: User[];
   isEnrollmentModalOpen: boolean;
@@ -138,7 +139,11 @@ const DUMMY_CANDIDATE_NAMES = new Set([
   'aswathi nair'
 ]);
 
-export const isDummyCandidate = (_name?: string, _id?: string): boolean => {
+export const isDummyCandidate = (name?: string, id?: string): boolean => {
+  if (id && (id.startsWith('std-sim-') || id.startsWith('att-sim-'))) return true;
+  if (!name) return false;
+  const n = name.trim().toLowerCase();
+  if (DUMMY_CANDIDATE_NAMES.has(n)) return true;
   return false;
 };
 
@@ -155,17 +160,19 @@ export const safeSetItem = (key: string, val: any) => {
 // DATASET VERSIONING & CACHE MIGRATION
 // Guarantees 100% data parity across Web, Android APK, and all browsers
 // ============================================================================
-const DATA_VERSION = '2026.09.21-v11';
+const DATA_VERSION = '2026.09.21-v12';
 
 try {
   const currentVersion = localStorage.getItem('survey_academy_data_version');
   if (currentVersion !== DATA_VERSION) {
-    // Purge stale question, note, and test caches so Web and Mobile platforms have exact parity
+    // Purge stale caches so Web and Mobile platforms have exact parity with real students and attempts
     localStorage.removeItem('survey_academy_bank_questions');
     localStorage.removeItem('survey_academy_tests');
     localStorage.removeItem('survey_academy_notes');
     localStorage.removeItem('survey_academy_modules');
     localStorage.removeItem('survey_academy_pyqs');
+    localStorage.removeItem('survey_academy_attempts');
+    localStorage.removeItem('survey_academy_students');
     localStorage.setItem('survey_academy_data_version', DATA_VERSION);
   }
 } catch (e) {
@@ -454,9 +461,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           const deletedIds = getDeletedIds('survey_academy_deleted_tests');
           setMockTests(diskData.mockTests.filter((t: any) => !deletedIds.has(t.id)));
         }
-        if (diskData.testAttempts && diskData.testAttempts.length > 0) setTestAttempts(diskData.testAttempts);
+        if (diskData.testAttempts && diskData.testAttempts.length > 0) {
+          const cleanDiskAttempts = diskData.testAttempts.filter((a: any) => !isDummyCandidate(a.userName, a.id));
+          setTestAttempts(cleanDiskAttempts);
+        }
         if (diskData.doubts && diskData.doubts.length > 0) setDoubts(diskData.doubts);
-        if (diskData.students && diskData.students.length > 0) setStudents(diskData.students);
+        if (diskData.students && diskData.students.length > 0) {
+          const cleanDiskStudents = diskData.students.filter((s: any) => !isDummyCandidate(s.name, s.id));
+          setStudents(cleanDiskStudents);
+        }
       } else {
         // First run: save current initial data to disk
         saveDatabase({
@@ -473,6 +486,51 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setIsDiskLoaded(true);
     });
   }, []);
+
+  // Dedicated function to refresh statewide test attempts from Supabase on demand
+  const refreshTestAttempts = useCallback(async () => {
+    try {
+      const freshAttempts = await SupabaseDb.fetchTestAttempts();
+      if (freshAttempts && freshAttempts.length > 0) {
+        const cleanCloud = freshAttempts.filter((a) => !isDummyCandidate(a.userName, a.id));
+        setTestAttempts((prev) => {
+          const combined = [...cleanCloud];
+          const existingIds = new Set(cleanCloud.map((a) => a.id));
+          for (const initAtt of INITIAL_STATEWIDE_ATTEMPTS) {
+            if (!existingIds.has(initAtt.id)) {
+              combined.push(initAtt);
+              existingIds.add(initAtt.id);
+            }
+          }
+          for (const item of prev) {
+            if (!existingIds.has(item.id) && !isDummyCandidate(item.userName, item.id)) {
+              combined.push(item);
+              existingIds.add(item.id);
+            }
+          }
+          safeSetItem('survey_academy_attempts', combined);
+          return combined;
+        });
+      }
+    } catch (e) {
+      console.warn('Realtime test_attempts refresh notice:', e);
+    }
+  }, []);
+
+  // Auto-refresh attempts whenever user switches back to the tab or app window
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        refreshTestAttempts();
+      }
+    };
+    window.addEventListener('focus', refreshTestAttempts);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => {
+      window.removeEventListener('focus', refreshTestAttempts);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [refreshTestAttempts]);
 
   // 1.5. Live Supabase Cloud Sync: Fetch live records from Supabase tables
   useEffect(() => {
@@ -1437,7 +1495,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     );
 
     // 5. Save to Supabase cloud table
-    SupabaseDb.saveTestAttempt(newAttempt, currentUser.id);
+    SupabaseDb.saveTestAttempt(newAttempt, currentUser.id).then(() => {
+      refreshTestAttempts();
+    });
 
     showToast(`Exam submitted! Score: ${newAttempt.score.toFixed(2)} marks • State Rank #${calculatedRank}`, 'success');
     return newAttempt;
@@ -1951,6 +2011,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         bankQuestions,
         mockTests,
         testAttempts,
+        refreshTestAttempts,
         doubts,
         students,
         isEnrollmentModalOpen,
