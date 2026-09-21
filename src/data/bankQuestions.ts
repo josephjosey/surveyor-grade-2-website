@@ -1,7 +1,7 @@
 import { BASIC_ENGINEERING_DRAWING_50_QUESTIONS } from './basicEngineeringDrawing50Questions';
 import { BUILDING_MATERIALS_50_QUESTIONS } from './buildingMaterials50Questions';
 import { WORKSHOP_CALCULATION_10_QUESTIONS } from './workshopCalculation10Questions';
-import { AUTOCAD_50_QUESTIONS } from './autocad50Questions';
+import { AUTOCAD_246_QUESTIONS } from './autocad246Questions';
 import { LEVELLING_15_QUESTIONS } from './levelling15Questions';
 import { COMPASS_SURVEY_25_QUESTIONS } from './compassSurvey25Questions';
 import { PLANE_TABLE_12_QUESTIONS } from './planeTable12Questions';
@@ -27,7 +27,7 @@ export const INITIAL_BANK_QUESTIONS: BankQuestion[] = [
   ...BASIC_ENGINEERING_DRAWING_50_QUESTIONS,
   ...BUILDING_MATERIALS_50_QUESTIONS,
   ...WORKSHOP_CALCULATION_10_QUESTIONS,
-  ...AUTOCAD_50_QUESTIONS,
+  ...AUTOCAD_246_QUESTIONS,
   ...LEVELLING_15_QUESTIONS,
   ...COMPASS_SURVEY_25_QUESTIONS,
   ...PLANE_TABLE_12_QUESTIONS,
