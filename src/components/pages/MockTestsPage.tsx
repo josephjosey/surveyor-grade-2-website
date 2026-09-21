@@ -133,9 +133,9 @@ export const MockTestsPage: React.FC = () => {
     // Free Preview Access: 100-Mark Grand Exam is open to all candidates.
     // Other specialized subject/module-wise tests require course enrollment.
     if (!hasCourseAccess && test.id !== 'mock-kpsc-grand-100') {
-      openEnrollmentModal('plan-mock');
+      openEnrollmentModal('plan-6months');
       showToast(
-        '🔒 Course Purchase Required: This specialized mock test is part of the Mock Test Series. The 100-Mark Full Syllabus Grand Exam is free for everyone to write!',
+        '🔒 Course Purchase Required: This specialized mock test requires course access (6 Months for ₹600 or 1 Year for ₹1,000). The 100-Mark Full Syllabus Grand Exam is free for everyone to write!',
         'warning'
       );
       return;
@@ -1072,13 +1072,13 @@ export const MockTestsPage: React.FC = () => {
                     {!hasCourseAccess && activeRankedExam.id !== 'mock-kpsc-grand-100' ? (
                       <button
                         onClick={() => {
-                          openEnrollmentModal('plan-mock');
-                          showToast('🔒 Course Purchase Required: Purchase the Mock Series (₹499) or Master Course (₹1,999) to unlock this test. The 100-Mark Full Syllabus Exam is free for all!', 'warning');
+                          openEnrollmentModal('plan-6months');
+                          showToast('🔒 Course Purchase Required: Purchase the 6 Months (₹600) or 1 Year (₹1,000) plan to unlock all tests. The 100-Mark Full Syllabus Exam is free for all!', 'warning');
                         }}
                         className="w-full py-3 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs rounded-xl shadow-lg transition flex items-center justify-center gap-2 active:scale-95"
                       >
                         <Lock className="w-4 h-4 text-slate-950" />
-                        <span>Unlock Test (Mock Series ₹499)</span>
+                        <span>Unlock Test (From ₹600)</span>
                       </button>
                     ) : (
                       <button

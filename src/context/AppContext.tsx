@@ -94,7 +94,7 @@ interface AppContextType {
   removeToast: (id: string) => void;
   
   // Action Handlers
-  enrollStudent: (name: string, email: string, phone: string, district: string, targetExam: string, plan?: 'free' | 'master' | 'mock_only' | 'crash') => void;
+  enrollStudent: (name: string, email: string, phone: string, district: string, targetExam: string, plan?: 'free' | 'master' | 'mock_only' | 'crash' | '6months' | '1year') => void;
   toggleCompleteNote: (noteId: string) => void;
   toggleBookmarkNote: (noteId: string) => void;
   toggleSavePYQ: (pyqId: string) => void;
@@ -437,9 +437,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   });
 
   const [isEnrollmentModalOpen, setIsEnrollmentModalOpen] = useState<boolean>(false);
-  const [enrollmentPreselectedPlan, setEnrollmentPreselectedPlan] = useState<string>('plan-master');
+  const [enrollmentPreselectedPlan, setEnrollmentPreselectedPlan] = useState<string>('plan-1year');
 
-  const openEnrollmentModal = useCallback((planId: string = 'plan-master') => {
+  const openEnrollmentModal = useCallback((planId: string = 'plan-1year') => {
     setEnrollmentPreselectedPlan(planId);
     setIsEnrollmentModalOpen(true);
   }, []);
@@ -1587,7 +1587,7 @@ Expires in 5 minutes. Do not share this OTP with anyone.`
     phone: string,
     district: string,
     targetExam: string,
-    plan: 'free' | 'master' | 'mock_only' | 'crash' = 'master'
+    plan: 'free' | 'master' | 'mock_only' | 'crash' | '6months' | '1year' = '1year'
   ) => {
     const profileUpdates: Partial<User> = {
       name: name || currentUser.name,
@@ -1603,7 +1603,11 @@ Expires in 5 minutes. Do not share this OTP with anyone.`
     setActiveTab('dashboard');
     showToast(
       `🎉 Upgraded to ${
-        plan === 'master'
+        plan === '6months'
+          ? '6 Months Complete Access Plan (₹600)'
+          : plan === '1year'
+          ? '1 Year Complete Access Plan (₹1,000)'
+          : plan === 'master'
           ? 'Complete Master Course'
           : plan === 'mock_only'
           ? 'Mock Test Series'

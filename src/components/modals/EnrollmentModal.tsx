@@ -36,44 +36,32 @@ interface CoursePlan {
 
 const COURSE_PLANS: CoursePlan[] = [
   {
-    id: 'plan-master',
-    name: 'Kerala PSC Survey Complete Master Course',
-    subtitle: 'All 8 syllabus modules, concise handwritten PDF notes, PYQ bank & mock tests',
-    badge: 'Most Popular • Recommended',
-    originalPrice: 4999,
-    price: 1999,
-    features: [
-      'Full access to all 8 Kerala PSC Syllabus Modules',
-      'Concise Handwritten PDF Notes & Formula Sheets',
-      'Downloadable Chapter Summaries for quick revision',
-      'Year-wise Solved PYQ Bank (2024 to 2022)',
-      'Kerala PSC Pattern Timed Mock Tests (-0.33 Marking)',
-      'Direct 1-on-1 Doubt Clearance with Joseph Josey (Course Director)'
-    ]
-  },
-  {
-    id: 'plan-mock',
-    name: 'Kerala PSC Mock Test Series Only',
-    subtitle: '87 MCQ Master Series & Statewide Ranked Exams with -0.33 Negative Marking',
+    id: 'plan-6months',
+    name: '6 Months Complete Access Plan',
+    subtitle: 'All 10 modules, handwritten notes, 10,000+ MCQs & mock tests for 6 months',
     originalPrice: 1499,
-    price: 499,
+    price: 600,
     features: [
-      'Full-Length & Module-wise Kerala PSC Mock Tests',
-      '87 MCQ Surveyor Grade II Master Series',
-      'Real -0.33 negative marking calculation & live rank',
-      'Step-by-step verified explanations and faculty tips'
+      'Full access to all 10 Kerala PSC Syllabus Modules',
+      'Concise Handwritten PDF Notes & Formula Sheets',
+      '10,000+ Solved PYQs & MCQs with Revised PSC Keys',
+      '21 Timed Kerala PSC Mock Tests (-0.33 Marking)',
+      '1-on-1 Faculty Doubt Clearance for 6 Months'
     ]
   },
   {
-    id: 'plan-crash',
-    name: 'Fast-Track Survey Crash Course',
-    subtitle: 'High-yield numerical formula revision, Total Station/GPS & Survey Act',
+    id: 'plan-1year',
+    name: '1 Year Complete Access Plan',
+    subtitle: 'All 10 modules, notes, 10,000+ MCQs & statewide ranked tests for 1 full year',
+    badge: 'Best Value • Recommended',
     originalPrice: 2499,
-    price: 999,
+    price: 1000,
     features: [
-      'Total Station, GPS & Resurvey Special modules',
-      'Kerala Survey & Boundaries Act 1961 high-yield summary',
-      '5 Model Exams with Ranker Notes'
+      'Full 1-Year Access to all 10 Syllabus Modules',
+      'Concise Handwritten PDF Notes & Formula Sheets',
+      '10,000+ Solved PYQs & MCQs with Revised PSC Keys',
+      '21 Timed Mock Tests with Statewide Rank Predictor',
+      'Priority 1-on-1 Faculty Doubt Clearance until Selection'
     ]
   }
 ];
@@ -97,11 +85,17 @@ export const EnrollmentModal: React.FC = () => {
   const [phone, setPhone] = useState(currentUser?.phone || '+91 98471 23456');
   const [district, setDistrict] = useState(currentUser?.district || 'Palakkad');
   const [targetExam, setTargetExam] = useState(currentUser?.targetExam || 'Kerala PSC Surveyor Gr. II & Land Records');
-  const [selectedPlanId, setSelectedPlanId] = useState<string>(enrollmentPreselectedPlan || 'plan-master');
+  const [selectedPlanId, setSelectedPlanId] = useState<string>(
+    enrollmentPreselectedPlan === 'plan-6months' ? 'plan-6months' : 'plan-1year'
+  );
 
   React.useEffect(() => {
     if (enrollmentPreselectedPlan) {
-      setSelectedPlanId(enrollmentPreselectedPlan);
+      if (enrollmentPreselectedPlan === 'plan-6months') {
+        setSelectedPlanId('plan-6months');
+      } else {
+        setSelectedPlanId('plan-1year');
+      }
     }
   }, [enrollmentPreselectedPlan, isEnrollmentModalOpen]);
 
@@ -166,7 +160,7 @@ export const EnrollmentModal: React.FC = () => {
   };
 
   const handleFinishEnrollment = () => {
-    const planKey = selectedPlanId === 'plan-master' ? 'master' : selectedPlanId === 'plan-mock' ? 'mock_only' : 'crash';
+    const planKey = selectedPlanId === 'plan-6months' ? '6months' : '1year';
     enrollStudent(name, email, phone, district, targetExam, planKey);
     setStep(1);
   };
@@ -366,7 +360,7 @@ export const EnrollmentModal: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => {
-                    const planKey = selectedPlanId === 'plan-master' ? 'master' : selectedPlanId === 'plan-mock' ? 'mock_only' : 'crash';
+                    const planKey = selectedPlanId === 'plan-6months' ? '6months' : '1year';
                     enrollStudent(name, email, phone, district, targetExam, planKey);
                   }}
                   className="inline-flex items-center justify-center gap-1.5 px-4 py-3 border border-slate-300 text-slate-700 hover:bg-slate-100 rounded-xl text-xs font-semibold transition"
@@ -459,7 +453,7 @@ export const EnrollmentModal: React.FC = () => {
                     {/* QR Code Graphic Box */}
                     <div className="w-44 h-44 bg-white p-3 rounded-2xl border-2 border-brand-500 shadow-md mx-auto flex flex-col items-center justify-center space-y-2">
                       <img
-                        src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=joseph.surveyrankers@okhdfcbank%26pn=Joseph%20Josey%20Survey%20Academy%26am=1999%26cu=INR"
+                        src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=joseph.surveyrankers@okhdfcbank%26pn=Joseph%20Josey%20Survey%20Academy%26am=${selectedPlan.price}%26cu=INR`}
                         alt="Kerala PSC Survey Course Payment QR Code"
                         className="w-32 h-32 object-contain"
                       />

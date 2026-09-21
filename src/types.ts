@@ -14,7 +14,7 @@ export interface User {
   bookmarkedClassIds: string[]; // represents saved note ids
   savedPYQIds: string[];
   streakDays: number;
-  subscriptionPlan?: 'free' | 'master' | 'mock_only' | 'crash';
+  subscriptionPlan?: 'free' | 'master' | 'mock_only' | 'crash' | '6months' | '1year';
   stateRank?: number;
   percentile?: number;
   mockScore?: number;

@@ -42,9 +42,9 @@ export const LandingPage: React.FC = () => {
 
   const handleOpenNote = (noteId: string) => {
     if (!hasCourseAccess) {
-      openEnrollmentModal('plan-master');
+      openEnrollmentModal('plan-1year');
       showToast(
-        '🔒 Course Purchase Required: Purchase the Master Course to unlock all Handwritten Notes and Formulas.',
+        '🔒 Course Purchase Required: Purchase a course plan to unlock all Handwritten Notes and Formulas.',
         'warning'
       );
       return;
@@ -55,9 +55,9 @@ export const LandingPage: React.FC = () => {
 
   const handleGuardedNav = (tab: NavigationTab, sectionName: string) => {
     if (!hasCourseAccess) {
-      openEnrollmentModal('plan-master');
+      openEnrollmentModal('plan-1year');
       showToast(
-        `🔒 Course Purchase Required: Purchase the course to access ${sectionName}.`,
+        `🔒 Course Purchase Required: Purchase a course plan to access ${sectionName}.`,
         'warning'
       );
       return;
@@ -80,11 +80,11 @@ export const LandingPage: React.FC = () => {
               </span>
             </div>
             <button
-              onClick={() => openEnrollmentModal('plan-master')}
+              onClick={() => openEnrollmentModal('plan-1year')}
               className="inline-flex items-center gap-1.5 bg-slate-950 hover:bg-slate-900 text-amber-400 font-extrabold px-4 py-2 rounded-xl text-xs transition shadow-md active:scale-95 whitespace-nowrap"
             >
               <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-              <span>Purchase Course (₹1,999)</span>
+              <span>Purchase Course (From ₹600)</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
@@ -134,11 +134,11 @@ export const LandingPage: React.FC = () => {
               {/* CTAs */}
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
                 <button
-                  onClick={() => openEnrollmentModal('plan-master')}
+                  onClick={() => openEnrollmentModal('plan-1year')}
                   className="inline-flex items-center justify-center gap-2.5 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-bold text-sm sm:text-base px-7 py-3.5 rounded-xl shadow-lg hover:shadow-brand-500/25 transition-all transform hover:-translate-y-0.5"
                 >
                   <Sparkles className="w-5 h-5 text-amber-300" />
-                  <span>Enroll in Master Course (₹1,999)</span>
+                  <span>Enroll in Course (From ₹600)</span>
                 </button>
 
                 <button
@@ -321,7 +321,7 @@ export const LandingPage: React.FC = () => {
           <div
             onClick={() => {
               if (!hasCourseAccess) {
-                openEnrollmentModal('plan-master');
+                openEnrollmentModal('plan-1year');
                 showToast(
                   '🔒 Course Purchase Required: Purchase the course to unlock the Solved PYQ & MCQ Question Bank.',
                   'warning'
@@ -440,7 +440,7 @@ export const LandingPage: React.FC = () => {
             <button
               onClick={() => {
                 if (!hasCourseAccess) {
-                  openEnrollmentModal('plan-master');
+                  openEnrollmentModal('plan-1year');
                   showToast(
                     '🔒 Course Purchase Required: Purchase the course to access the 10 Syllabus Portions Question Bank.',
                     'warning'
@@ -465,7 +465,7 @@ export const LandingPage: React.FC = () => {
                 key={mod.id}
                 onClick={() => {
                   if (!hasCourseAccess) {
-                    openEnrollmentModal('plan-master');
+                    openEnrollmentModal('plan-1year');
                     showToast(
                       `🔒 Course Purchase Required: Purchase the course to unlock Module ${mod.order} (${mod.title}) question pool.`,
                       'warning'
@@ -585,24 +585,81 @@ export const LandingPage: React.FC = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
-          {/* Plan 1: Complete Master Course (Recommended) */}
-          <div className="bg-gradient-to-b from-slate-900 to-navy-950 text-white rounded-3xl p-7 sm:p-8 border-2 border-amber-400 shadow-2xl relative flex flex-col justify-between space-y-6 transform lg:-translate-y-2">
-            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 text-[11px] font-black uppercase tracking-wider px-4 py-1 rounded-full shadow-md flex items-center gap-1">
-              <Crown className="w-3.5 h-3.5" /> Most Popular • Full Access
+        <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+          {/* Plan 1: 6 Months Access */}
+          <div className="bg-white rounded-3xl p-7 sm:p-8 border border-slate-200 shadow-md flex flex-col justify-between space-y-6 hover:shadow-xl transition">
+            <div className="space-y-4 text-left">
+              <div>
+                <span className="text-[10px] font-black uppercase tracking-wider text-brand-700 bg-brand-50 px-2.5 py-1 rounded-full border border-brand-200">
+                  6 Months Validity
+                </span>
+                <h3 className="text-xl font-bold text-slate-900 mt-2">6 Months Complete Access</h3>
+                <p className="text-xs text-slate-500 pt-1">
+                  Full access to all 10 syllabus modules, handwritten notes, 10,000+ MCQs & 21 mock tests for 6 months.
+                </p>
+              </div>
+
+              <div className="flex items-baseline gap-2 pt-2 border-t border-slate-100">
+                <span className="text-3xl sm:text-4xl font-black text-slate-900">₹600</span>
+                <span className="text-sm line-through text-slate-400 font-bold">₹1,499</span>
+                <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">
+                  60% OFF
+                </span>
+              </div>
+
+              <ul className="space-y-2.5 text-xs text-slate-600">
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>All 10 Kerala PSC Syllabus Modules</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>Concise Handwritten PDF Notes & Formulas</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>10,000+ MCQs & Solved PYQs with Revised Keys</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>21 Timed Mock Tests (-0.33 Marking)</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>1-on-1 Faculty Doubt Solver</span>
+                </li>
+              </ul>
+            </div>
+
+            <button
+              onClick={() => openEnrollmentModal('plan-6months')}
+              className="w-full py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm rounded-xl transition flex items-center justify-center gap-2 active:scale-95 shadow-md"
+            >
+              <Sparkles className="w-4 h-4 text-amber-400" />
+              <span>Purchase 6 Months Plan — ₹600</span>
+            </button>
+          </div>
+
+          {/* Plan 2: 1 Year Complete Access (Recommended) */}
+          <div className="bg-gradient-to-b from-slate-900 to-navy-950 text-white rounded-3xl p-7 sm:p-8 border-2 border-amber-400 shadow-2xl relative flex flex-col justify-between space-y-6 transform md:-translate-y-2">
+            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 text-[11px] font-black uppercase tracking-wider px-4 py-1 rounded-full shadow-md flex items-center gap-1 whitespace-nowrap">
+              <Crown className="w-3.5 h-3.5" /> Best Value • Recommended (1 Year)
             </div>
 
             <div className="space-y-4 pt-2 text-left">
               <div>
-                <h3 className="text-xl font-extrabold text-white">Complete Master Course</h3>
+                <span className="text-[10px] font-black uppercase tracking-wider text-amber-300 bg-amber-400/20 px-2.5 py-1 rounded-full border border-amber-400/30">
+                  1 Year Validity (365 Days)
+                </span>
+                <h3 className="text-xl font-extrabold text-white mt-2">1 Year Complete Access</h3>
                 <p className="text-xs text-slate-300 pt-1">
-                  Complete preparation package with 10 syllabus modules, handwritten notes, PYQ bank & 21 mock tests.
+                  Full 1-year unlimited access until your PSC exam with all notes, updates, formulas, 10,000+ MCQs & mock tests.
                 </p>
               </div>
 
               <div className="flex items-baseline gap-2 pt-2 border-t border-slate-800">
-                <span className="text-3xl sm:text-4xl font-black text-amber-300">₹1,999</span>
-                <span className="text-sm line-through text-slate-400 font-bold">₹4,999</span>
+                <span className="text-3xl sm:text-4xl font-black text-amber-300">₹1,000</span>
+                <span className="text-sm line-through text-slate-400 font-bold">₹2,499</span>
                 <span className="text-[11px] font-extrabold text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800">
                   60% OFF
                 </span>
@@ -611,11 +668,11 @@ export const LandingPage: React.FC = () => {
               <ul className="space-y-2.5 text-xs text-slate-200">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>All 10 Kerala PSC Syllabus Modules</span>
+                  <span>Full 1-Year Access to All 10 Modules</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>Concise Handwritten PDF Notes & Formula Sheets</span>
+                  <span>Handwritten PDF Notes & Downloadable Formulas</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
@@ -623,121 +680,21 @@ export const LandingPage: React.FC = () => {
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>21 Mock Tests (-0.33 Negative Marking)</span>
+                  <span>21 Timed Tests with Statewide Rank Predictor</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>Direct 1-on-1 Doubt Solver with Joseph Josey</span>
+                  <span>Priority Direct 1-on-1 Faculty Mentorship</span>
                 </li>
               </ul>
             </div>
 
             <button
-              onClick={() => openEnrollmentModal('plan-master')}
+              onClick={() => openEnrollmentModal('plan-1year')}
               className="w-full py-3.5 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-950 font-black text-sm rounded-xl shadow-lg transition transform active:scale-95 flex items-center justify-center gap-2"
             >
               <Sparkles className="w-4 h-4" />
-              <span>Purchase Master Course — ₹1,999</span>
-            </button>
-          </div>
-
-          {/* Plan 2: Mock Test Series Only */}
-          <div className="bg-white rounded-3xl p-7 border border-slate-200 shadow-md flex flex-col justify-between space-y-6 hover:shadow-xl transition">
-            <div className="space-y-4 text-left">
-              <div>
-                <span className="text-[10px] font-black uppercase tracking-wider text-amber-700 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200">
-                  Exam Simulation
-                </span>
-                <h3 className="text-xl font-bold text-slate-900 mt-2">Mock Test Series Only</h3>
-                <p className="text-xs text-slate-500 pt-1">
-                  Full-length and module-wise timed tests with real Kerala PSC -0.33 marking and rank prediction.
-                </p>
-              </div>
-
-              <div className="flex items-baseline gap-2 pt-2 border-t border-slate-100">
-                <span className="text-3xl font-black text-slate-900">₹499</span>
-                <span className="text-sm line-through text-slate-400 font-bold">₹1,499</span>
-                <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">
-                  66% OFF
-                </span>
-              </div>
-
-              <ul className="space-y-2.5 text-xs text-slate-600">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>21 Full-Length & Module-Wise Mock Tests</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>Real -0.33 Negative Marking System</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>Statewide Live Leaderboard & Rank</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>Official Verified Explanations & Keys</span>
-                </li>
-              </ul>
-            </div>
-
-            <button
-              onClick={() => openEnrollmentModal('plan-mock')}
-              className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm rounded-xl transition flex items-center justify-center gap-2"
-            >
-              <CheckSquare className="w-4 h-4 text-amber-400" />
-              <span>Buy Mock Series — ₹499</span>
-            </button>
-          </div>
-
-          {/* Plan 3: Crash Course */}
-          <div className="bg-white rounded-3xl p-7 border border-slate-200 shadow-md flex flex-col justify-between space-y-6 hover:shadow-xl transition">
-            <div className="space-y-4 text-left">
-              <div>
-                <span className="text-[10px] font-black uppercase tracking-wider text-brand-700 bg-brand-50 px-2.5 py-1 rounded-full border border-brand-200">
-                  Fast Track
-                </span>
-                <h3 className="text-xl font-bold text-slate-900 mt-2">Survey Fast-Track Crash</h3>
-                <p className="text-xs text-slate-500 pt-1">
-                  High-yield numerical formulas, Total Station/GPS notes, and Kerala Survey & Boundaries Act 1961.
-                </p>
-              </div>
-
-              <div className="flex items-baseline gap-2 pt-2 border-t border-slate-100">
-                <span className="text-3xl font-black text-slate-900">₹999</span>
-                <span className="text-sm line-through text-slate-400 font-bold">₹2,499</span>
-                <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">
-                  60% OFF
-                </span>
-              </div>
-
-              <ul className="space-y-2.5 text-xs text-slate-600">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>Total Station, GPS & Resurvey Special</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>Kerala Survey & Boundaries Act 1961</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>Formula Revision & Shortcut Tricks</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>5 Model Practice Papers</span>
-                </li>
-              </ul>
-            </div>
-
-            <button
-              onClick={() => openEnrollmentModal('plan-crash')}
-              className="w-full py-3 bg-brand-700 hover:bg-brand-800 text-white font-bold text-sm rounded-xl transition flex items-center justify-center gap-2"
-            >
-              <Zap className="w-4 h-4 text-amber-400" />
-              <span>Buy Crash Course — ₹999</span>
+              <span>Purchase 1 Year Plan — ₹1,000</span>
             </button>
           </div>
         </div>
@@ -761,11 +718,18 @@ export const LandingPage: React.FC = () => {
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <button
-              onClick={() => openEnrollmentModal('plan-master')}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 via-brand-500 to-emerald-500 hover:from-amber-600 hover:to-emerald-600 text-slate-950 font-black text-sm px-8 py-3.5 rounded-xl shadow-lg transition"
+              onClick={() => openEnrollmentModal('plan-1year')}
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 via-brand-500 to-emerald-500 hover:from-amber-600 hover:to-emerald-600 text-slate-950 font-black text-sm px-7 py-3.5 rounded-xl shadow-lg transition"
             >
               <Sparkles className="w-4 h-4 text-slate-950" />
-              <span>Purchase Master Course (₹1,999)</span>
+              <span>Purchase 1 Year Plan (₹1,000)</span>
+            </button>
+            <button
+              onClick={() => openEnrollmentModal('plan-6months')}
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold text-sm px-6 py-3.5 rounded-xl border border-slate-700 transition"
+            >
+              <Sparkles className="w-4 h-4 text-amber-400" />
+              <span>Purchase 6 Months Plan (₹600)</span>
             </button>
             <button
               onClick={() => {

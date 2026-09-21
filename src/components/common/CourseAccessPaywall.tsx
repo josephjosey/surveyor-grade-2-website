@@ -118,27 +118,32 @@ export const CourseAccessPaywall: React.FC = () => {
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <span className="bg-amber-500 text-slate-950 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full flex items-center gap-1">
-                    <Flame className="w-3 h-3 text-red-600" /> Limited Time 60% OFF
+                    <Flame className="w-3 h-3 text-red-600" /> 60% Special Discount
                   </span>
-                  <span className="text-xs font-bold text-slate-600">Full Lifetime Access</span>
+                  <span className="text-xs font-bold text-slate-600">Choose 6 Months or 1 Year</span>
                 </div>
                 <h3 className="text-xl font-black text-slate-900">
-                  Complete Master Course — ₹1,999
+                  Course Plans: 6 Months (₹600) • 1 Year (₹1,000)
                 </h3>
                 <p className="text-xs text-slate-600">
-                  <span className="line-through text-slate-400 font-bold mr-1.5">₹4,999</span>
-                  Includes all notes, 10,000+ MCQs, 21 mock tests, and mentor guidance until your exam.
+                  Full unrestricted access to all 10 modules, handwritten notes, 10,000+ MCQs & 21 PSC mock tests.
                 </p>
               </div>
 
               <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto shrink-0">
                 <button
-                  onClick={() => openEnrollmentModal('plan-master')}
+                  onClick={() => openEnrollmentModal('plan-1year')}
                   className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gradient-to-r from-brand-600 to-emerald-600 hover:from-brand-700 hover:to-emerald-700 text-white font-extrabold text-sm px-6 py-3.5 rounded-xl shadow-lg hover:shadow-brand-600/30 transition transform hover:-translate-y-0.5 active:scale-95"
                 >
                   <Sparkles className="w-4 h-4 text-amber-300" />
-                  <span>Purchase Master Course (₹1,999)</span>
+                  <span>1 Year Access (₹1,000)</span>
                   <ArrowRight className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => openEnrollmentModal('plan-6months')}
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm px-5 py-3.5 rounded-xl shadow-md transition active:scale-95"
+                >
+                  <span>6 Months (₹600)</span>
                 </button>
               </div>
             </div>
@@ -146,10 +151,10 @@ export const CourseAccessPaywall: React.FC = () => {
             {/* Alternative Options & Back to Home */}
             <div className="flex flex-wrap items-center justify-center gap-4 pt-2 text-xs">
               <button
-                onClick={() => openEnrollmentModal('plan-mock')}
+                onClick={() => openEnrollmentModal('plan-6months')}
                 className="text-slate-600 hover:text-brand-600 font-bold underline decoration-slate-300 hover:decoration-brand-500 transition"
               >
-                Need Mock Tests Only? Enroll in Mock Series for ₹499
+                Need 6 Months Access? Enroll for ₹600
               </button>
               <span className="text-slate-300">•</span>
               <button

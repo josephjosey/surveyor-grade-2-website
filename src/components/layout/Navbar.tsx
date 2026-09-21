@@ -56,7 +56,7 @@ export const Navbar: React.FC = () => {
 
   const handleNavClick = (tabId: NavigationTab) => {
     if (!hasCourseAccess && tabId !== 'home' && tabId !== 'mocktests') {
-      openEnrollmentModal('plan-master');
+      openEnrollmentModal('plan-1year');
       showToast(
         '🔒 Course Purchase Required: Purchase the course to unlock PYQ & MCQ Bank, Study Notes, and Doubts Forum.',
         'warning'
@@ -141,11 +141,11 @@ export const Navbar: React.FC = () => {
             {role !== 'instructor' && (
               !hasCourseAccess ? (
                 <button
-                  onClick={() => openEnrollmentModal('plan-master')}
+                  onClick={() => openEnrollmentModal('plan-1year')}
                   className="inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-500 via-amber-600 to-emerald-600 hover:from-amber-600 hover:to-emerald-700 text-slate-950 text-xs font-black px-3.5 py-2 rounded-xl shadow-sm hover:shadow-amber-500/20 transition active:scale-95 shrink-0"
                 >
                   <Crown className="w-3.5 h-3.5 text-slate-950" />
-                  <span>Purchase Course (₹1,999)</span>
+                  <span>Purchase Course (From ₹600)</span>
                 </button>
               ) : (
                 <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold px-2.5 py-1 rounded-lg shrink-0">
@@ -159,7 +159,7 @@ export const Navbar: React.FC = () => {
             <div
               onClick={() => {
                 if (!hasCourseAccess) {
-                  openEnrollmentModal('plan-master');
+                  openEnrollmentModal('plan-1year');
                 } else {
                   handleNavClick(role === 'instructor' ? 'admin' : 'dashboard');
                 }
@@ -236,12 +236,12 @@ export const Navbar: React.FC = () => {
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);
-                  openEnrollmentModal('plan-master');
+                  openEnrollmentModal('plan-1year');
                 }}
                 className="w-full py-2 bg-gradient-to-r from-amber-500 to-emerald-600 text-slate-950 text-xs font-black rounded-xl shadow-xs flex items-center justify-center gap-1.5 active:scale-95 transition"
               >
                 <Sparkles className="w-3.5 h-3.5 text-slate-950" />
-                <span>Purchase Course — ₹1,999</span>
+                <span>Purchase Course — From ₹600</span>
               </button>
             </div>
           )}
