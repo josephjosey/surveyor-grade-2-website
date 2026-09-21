@@ -146,6 +146,16 @@ export const LandingPage: React.FC = () => {
                   <BookOpen className="w-4 h-4 text-brand-400" />
                   <span>Read Study Notes Online</span>
                 </button>
+
+                <a
+                  href="https://github.com/josephjosey/surveyor-grade-2-website/releases/tag/v1.0.0"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm px-6 py-3.5 rounded-xl shadow-lg transition transform hover:-translate-y-0.5"
+                >
+                  <Download className="w-4 h-4 text-white" />
+                  <span>Download Android App (.apk)</span>
+                </a>
               </div>
 
               {/* Trust Indicators */}
