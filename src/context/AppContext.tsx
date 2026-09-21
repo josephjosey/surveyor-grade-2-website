@@ -75,6 +75,8 @@ interface AppContextType {
   setSelectedNoteId: (id: string | null) => void;
   selectedPYQId: string | null;
   setSelectedPYQId: (id: string | null) => void;
+  selectedPYQModuleNumber: number;
+  setSelectedPYQModuleNumber: (modNum: number) => void;
   selectedMockTestId: string | null;
   setSelectedMockTestId: (id: string | null) => void;
   notifications: ToastNotification[];
@@ -396,6 +398,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [authDefaultRole, setAuthDefaultRole] = useState<'student' | 'instructor'>('student');
   const [selectedNoteId, setSelectedNoteId] = useState<string | null>('note-1');
   const [selectedPYQId, setSelectedPYQId] = useState<string | null>(null);
+  const [selectedPYQModuleNumber, setSelectedPYQModuleNumber] = useState<number>(1);
   const [selectedMockTestId, setSelectedMockTestId] = useState<string | null>(null);
   const [notifications, setNotifications] = useState<ToastNotification[]>([]);
   const [isDiskLoaded, setIsDiskLoaded] = useState<boolean>(false);
@@ -1966,6 +1969,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setSelectedNoteId,
         selectedPYQId,
         setSelectedPYQId,
+        selectedPYQModuleNumber,
+        setSelectedPYQModuleNumber,
         selectedMockTestId,
         setSelectedMockTestId,
         notifications,

@@ -147,14 +147,17 @@ export const PYQPage: React.FC = () => {
     bankQuestions,
     pyqPapers,
     currentUser,
-    showToast
+    showToast,
+    selectedPYQModuleNumber,
+    setSelectedPYQModuleNumber
   } = useApp();
 
   // Primary Mode: 'portions' (10 Syllabus Modules Question Bank) vs 'papers' (Original Question Paper PDFs)
   const [viewMode, setViewMode] = useState<'portions' | 'papers'>('portions');
 
-  // Portions Mode State
-  const [selectedModuleNumber, setSelectedModuleNumber] = useState<number>(1);
+  // Portions Mode State - synchronized with AppContext selectedPYQModuleNumber
+  const selectedModuleNumber = selectedPYQModuleNumber || 1;
+  const setSelectedModuleNumber = setSelectedPYQModuleNumber;
   const [questionTypeFilter, setQuestionTypeFilter] = useState<'all' | 'pyq' | 'mcq'>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [interactiveAnswers, setInteractiveAnswers] = useState<Record<string, number>>({});
@@ -196,6 +199,12 @@ export const PYQPage: React.FC = () => {
 
   const pyqCountForModule = currentModuleQuestions.filter((q) => q.type === 'pyq').length;
   const mcqCountForModule = currentModuleQuestions.filter((q) => q.type === 'mcq').length;
+
+  // Whenever selectedModuleNumber changes, ensure portions view mode is active and reset test mode
+  React.useEffect(() => {
+    setViewMode('portions');
+    setIsTestMode(false);
+  }, [selectedModuleNumber]);
 
   // Handler for interactive practice
   const handleSelectInteractiveOption = useCallback((qId: string, optIdx: number) => {
