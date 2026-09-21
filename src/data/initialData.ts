@@ -287,26 +287,26 @@ export const INITIAL_STUDY_NOTES: StudyNote[] = [
   {
     id: 'note-6',
     moduleId: 'mod-6',
-    title: 'Kerala Survey & Boundaries Act 1961 & Land Records (FMB, Thandaper)',
-    titleMalayalam: 'കേരള സർവേ & അതിരടയാള നിയമം 1961 - സുപ്രധാന വകുപ്പുകൾ',
-    description: 'Direct high-scoring session on Section 6 (Notification), Section 9 (Notice to record boundaries), Section 13 (Completion of survey), FMB ladder reading, and survey stones specifications.',
-    readTime: '35 mins read',
-    thumbnail: 'https://images.unsplash.com/photo-1450133064473-71024230f91b?auto=format&fit=crop&w=800&q=80',
+    title: 'Tacheometric Surveying & Curve Elements Formulas',
+    titleMalayalam: 'ടാക്കിയോമെട്രിക് സർവേ & കർവ് റാൻഗിംഗ് ഫോർമുലകൾ',
+    description: 'Stadia hair formula D = ks + c, anallatic lens, tangential tacheometry, and elements of simple circular curves with deflection angles.',
+    readTime: '30 mins read',
+    thumbnail: 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=800&q=80',
     pdfNotesUrl: '/sample-notes.pdf',
-    pdfNotesTitle: 'Kerala_Survey_Boundaries_Act_1961_Key_Sections.pdf',
-    pdfSize: '3.7 MB PDF',
+    pdfNotesTitle: 'Tacheometry_and_Curves_Formulas.pdf',
+    pdfSize: '2.8 MB PDF',
     chapterOverview: [
-      'Section 6: Government notification regarding commencement of survey',
-      'Section 9: Notice requiring attendance and clearing of boundaries by landholders',
-      'Section 10: Determination of disputed boundaries',
-      'Section 13: Official notification of completion of survey',
-      'Field Measurement Book (FMB): G-line, F-line, offset ladder & subdivision lines'
+      'Stadia method principle: D = (f/i)s + (f+d) = ks + c',
+      'Multiplying constant k = 100, Additive constant c = 0 for anallatic telescope',
+      'Tangential method of tacheometry for inclined lines of sight',
+      'Simple circular curve elements: Radius R, Deflection angle Δ, Tangent distance T = R tan(Δ/2)',
+      'Length of curve L = (π R Δ) / 180°, Long chord length = 2 R sin(Δ/2)'
     ],
     takeaways: [
-      'Section 6: Notification regarding commencement of survey',
-      'Section 9: Notice to registered owners to clear boundaries',
-      'Section 13: Final notification on completion of survey',
-      'FMB contains G-line, F-line, offset ladder, and sub-division measurements'
+      'Anallatic lens eliminates the additive constant (c = 0)',
+      'Multiplying constant of stadia tacheometer is usually kept as 100',
+      'Apex distance / External distance E = R(sec(Δ/2) - 1)',
+      'Rankine\'s method of deflection angles is the standard angular method for curve setting'
     ],
     order: 7,
     isFreePreview: true,
@@ -426,12 +426,12 @@ export const INITIAL_PYQ_PAPERS: PYQPaper[] = [
       {
         id: 'q1-5',
         questionNumber: 5,
-        question: 'Which section of Kerala Survey and Boundaries Act 1961 deals with the notification of completion of survey?',
-        questionMalayalam: 'കേരള സർവേ & അതിരടയാള നിയമം 1961 പ്രകാരം സർവേ പൂർത്തീകരണ വിജ്ഞാപനം ഏത് വകുപ്പാണ്?',
-        options: ['Section 6', 'Section 9', 'Section 11', 'Section 13'],
-        correctOptionIndex: 3,
-        explanation: 'Section 13 of the Kerala Survey and Boundaries Act 1961 mandates the publication of the final notification when survey is completed.',
-        topic: 'Kerala Survey & Boundaries Act'
+        question: 'The multiplying constant of a tacheometer is usually:',
+        questionMalayalam: 'ഒരു ടാക്കിയോമീറ്ററിന്റെ ഗുണന സ്ഥിരാങ്കം (Multiplying constant) സാധാരണയായി എത്രയാണ്?',
+        options: ['10', '50', '100', '200'],
+        correctOptionIndex: 2,
+        explanation: 'The multiplying constant (f/i) of a tacheometer is kept at 100, and the additive constant (f+d) is kept at 0 when fitted with an anallatic lens.',
+        topic: 'Theodolite & Tacheometry'
       }
     ]
   },
@@ -514,7 +514,7 @@ export const INITIAL_PYQ_PAPERS: PYQPaper[] = [
         options: ['1:1000 or 1:2000', '1:5000', '1:100', '1:25000'],
         correctOptionIndex: 0,
         explanation: 'In Kerala Cadastral Survey, FMB (Field Measurement Book) sketches are drafted at 1:1000 or 1:2000 scale depending on the parcel size and village map specifications.',
-        topic: 'Kerala Survey & Boundaries Act'
+        topic: 'Chain Surveying'
       },
       {
         id: 'q3-2',
@@ -652,18 +652,18 @@ export const INITIAL_MOCK_TESTS: MockTest[] = [
       {
         id: 'msq-7',
         questionNumber: 7,
-        question: 'Under Kerala Survey and Boundaries Act 1961, who is designated as the Director of Survey and Land Records?',
-        questionMalayalam: 'കേരള സർവേ & അതിരടയാള നിയമത്തിൽ \'ഡയറക്ടർ ഓഫ് സർവേ & ലാൻഡ് റെക്കോർഡ്സ്\' എന്ന പദവിയുടെ ചുമതല ആർക്കാണ്?',
+        question: 'The sensitivity of a bubble tube in levelling is increased by:',
+        questionMalayalam: 'ലെവലിംഗിൽ ഒരു ബബിൾ ട്യൂബിന്റെ സെൻസിറ്റിവിറ്റി വർദ്ധിപ്പിക്കുന്നത് എങ്ങനെയാണ്?',
         options: [
-          'Officer appointed by the State Government to be the Director of Survey and Land Records',
-          'District Collector exclusively',
-          'Tahsildar of the respective Taluk',
-          'Survey Superintendent of Resurvey'
+          'Increasing the radius of curvature of the internal surface',
+          'Decreasing the length of the bubble',
+          'Increasing the viscosity of the liquid',
+          'Decreasing the diameter of the tube'
         ],
         correctOptionIndex: 0,
-        explanation: 'As per Section 2(ii) of the Act, "Director" means an officer appointed by the Government to be the Director of Survey and Land Records.',
-        rankerTip: 'Direct quote from Section 2 Definitions in Kerala Survey Act.',
-        topic: 'Kerala Survey & Boundaries Act'
+        explanation: 'Sensitivity of bubble tube increases with increase in radius of curvature, tube length, and diameter, and decreases with increase in viscosity and surface tension.',
+        rankerTip: 'Sensitivity α Radius of curvature (R) and Length of tube (L); Sensitivity α 1 / Viscosity.',
+        topic: 'Levelling and Contouring'
       },
       {
         id: 'msq-8',
@@ -802,18 +802,18 @@ export const INITIAL_MOCK_TESTS: MockTest[] = [
       {
         id: 'mq-7',
         questionNumber: 7,
-        question: 'Under Kerala Survey and Boundaries Act 1961, who is designated as the Director of Survey and Land Records?',
-        questionMalayalam: 'കേരള സർവേ & അതിരടയാള നിയമത്തിൽ \'ഡയറക്ടർ ഓഫ് സർവേ & ലാൻഡ് റെക്കോർഡ്സ്\' എന്ന പദവിയുടെ ചുമതല ആർക്കാണ്?',
+        question: 'The sensitivity of a bubble tube in levelling is increased by:',
+        questionMalayalam: 'ലെവലിംഗിൽ ഒരു ബബിൾ ട്യൂബിന്റെ സെൻസിറ്റിവിറ്റി വർദ്ധിപ്പിക്കുന്നത് എങ്ങനെയാണ്?',
         options: [
-          'Officer appointed by the State Government to be the Director of Survey and Land Records',
-          'District Collector exclusively',
-          'Tahsildar of the respective Taluk',
-          'Survey Superintendent of Resurvey'
+          'Increasing the radius of curvature of the internal surface',
+          'Decreasing the length of the bubble',
+          'Increasing the viscosity of the liquid',
+          'Decreasing the diameter of the tube'
         ],
         correctOptionIndex: 0,
-        explanation: 'As per Section 2(ii) of the Act, "Director" means an officer appointed by the Government to be the Director of Survey and Land Records.',
-        rankerTip: 'Always check Section 2 Definitions in Kerala Survey Act.',
-        topic: 'Kerala Survey & Boundaries Act'
+        explanation: 'Sensitivity of bubble tube increases with increase in radius of curvature, tube length, and diameter, and decreases with increase in viscosity and surface tension.',
+        rankerTip: 'Sensitivity α Radius of curvature (R) and Length of tube (L); Sensitivity α 1 / Viscosity.',
+        topic: 'Levelling and Contouring'
       },
       {
         id: 'mq-8',
@@ -961,9 +961,9 @@ export const INITIAL_DOUBTS: Doubt[] = [
     userName: 'Sneha Mohan',
     userAvatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=120&q=80',
     userDistrict: 'Kozhikode',
-    title: 'Difference between Section 6 and Section 9 in Kerala Survey & Boundaries Act',
-    content: 'Is Section 6 the general notification and Section 9 the individual boundary notice to registered landholders? In PYQ 2024 both options were given.',
-    topic: 'Kerala Survey & Boundaries Act',
+    title: 'Difference between Repetition and Reiteration methods in Theodolite surveying',
+    content: 'When measuring horizontal angles, when should we use the Repetition method versus the Reiteration method?',
+    topic: 'Theodolite Surveying',
     relatedClassId: 'note-6',
     createdAt: '2026-08-25T14:10:00Z',
     upvotes: 24,
@@ -976,7 +976,7 @@ export const INITIAL_DOUBTS: Doubt[] = [
         authorRole: 'instructor',
         authorRankBadge: 'Course Director & Faculty',
         authorAvatar: '/instructor_joseph_josey.png',
-        content: 'Yes Sneha! Under Section 6, the Government issues a public Gazette notification ordering survey of lands. Under Section 9, the Survey Officer issues a specific notice requiring registered landholders to attend and point out/clear their boundaries. Section 13 is the notification of completion of survey. Memorize this sequence: 6 (Start) -> 9 (Boundary notice) -> 10 (Determination) -> 13 (Completion).',
+        content: 'Repetition method is used for measuring a single horizontal angle with very high precision by adding the angle multiple times on the graduated circle. Reiteration (direction) method is preferred when several angles are measured from a single instrument station to various stations (closing the horizon).',
         createdAt: '2026-08-25T15:00:00Z',
         isVerifiedInstructor: true
       }

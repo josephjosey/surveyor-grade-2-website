@@ -128,7 +128,7 @@ export const LandingPage: React.FC = () => {
               </p>
               
               <p className="text-brand-300/90 text-sm font-medium ml-text bg-brand-950/60 p-3 rounded-xl border border-brand-800/60">
-                ചെയിൻ സർവേ, തിയോഡലൈറ്റ്, ടോട്ടൽ സ്റ്റേഷൻ, ജി.പി.എസ്, കേരള സർവേ നിയമം (1961) എന്നിവയുടെ ഹാൻഡ് റിട്ടൺ നോട്സുകളും മോക്ക് ടെസ്റ്റുകളും.
+                ചെയിൻ സർവേ, ലെവലിംഗ്, തിയോഡലൈറ്റ്, ടോട്ടൽ സ്റ്റേഷൻ, ജി.പി.എസ്, ഓട്ടോകാഡ് എന്നിവയുടെ ഹാൻഡ് റിട്ടൺ നോട്സുകളും മോക്ക് ടെസ്റ്റുകളും.
               </p>
 
               {/* CTAs */}
@@ -549,7 +549,7 @@ export const LandingPage: React.FC = () => {
             </h3>
 
             <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
-              When preparing for technical exams like Surveyor Grade II or KWA Overseer, students often waste months memorizing huge textbooks. My curriculum focuses exclusively on what Kerala PSC actually tests: high-yield numerical formulas, inverted staff tricks, Total Station EDM carrier principles, and Kerala Survey & Boundaries Act sections.
+              When preparing for technical exams like Surveyor Grade II or KWA Overseer, students often waste months memorizing huge textbooks. My curriculum focuses exclusively on what Kerala PSC actually tests: high-yield numerical formulas, inverted staff tricks, Total Station EDM carrier principles, and AutoCAD & Workshop Calculation concepts.
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">

@@ -43,7 +43,7 @@ export const ManagePYQQuestionsModal: React.FC<ManagePYQQuestionsModalProps> = (
     'Theodolite',
     'Total Station',
     'GPS / GIS',
-    'Kerala Survey & Boundaries Act',
+    'AutoCAD & Drafting',
     'KWA Technical Topics',
     'General Surveying'
   ];

@@ -28,7 +28,7 @@ export const DoubtsForumPage: React.FC = () => {
   const topicsList = [
     'all',
     'Levelling',
-    'Kerala Survey & Boundaries Act',
+    'AutoCAD & Drafting',
     'Chain Surveying',
     'Compass Surveying',
     'Total Station & GPS',

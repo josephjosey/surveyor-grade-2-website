@@ -75,8 +75,8 @@ export const Footer: React.FC = () => {
               <li className="hover:text-white cursor-pointer" onClick={() => setActiveTab('notes')}>• Levelling & Reduced Levels (RL)</li>
               <li className="hover:text-white cursor-pointer" onClick={() => setActiveTab('notes')}>• Theodolite & Tacheometry</li>
               <li className="hover:text-white cursor-pointer" onClick={() => setActiveTab('notes')}>• Total Station, GPS & GIS</li>
-              <li className="hover:text-white cursor-pointer" onClick={() => setActiveTab('notes')}>• Kerala Survey & Boundaries Act 1961</li>
-              <li className="hover:text-white cursor-pointer" onClick={() => setActiveTab('notes')}>• KWA Pipeline & Technical Concepts</li>
+              <li className="hover:text-white cursor-pointer" onClick={() => setActiveTab('notes')}>• AutoCAD & Engineering Drawing</li>
+              <li className="hover:text-white cursor-pointer" onClick={() => setActiveTab('notes')}>• Building Materials & Workshop Science</li>
             </ul>
           </div>
 

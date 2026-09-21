@@ -40,7 +40,7 @@ export const AskDoubtModal: React.FC<AskDoubtModalProps> = ({ isOpen, onClose, d
     'Levelling & Contouring',
     'Theodolite & Tacheometry',
     'Total Station & GPS',
-    'Kerala Survey & Boundaries Act',
+    'AutoCAD & Drafting',
     'Engineering Drawing & AutoCad',
     'Kerala Water Authority Specific',
     'Kerala PSC Exam Strategy'
