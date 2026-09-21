@@ -44,7 +44,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   } = useApp();
 
   // Instructor Credentials Login State
-  const [instructorLoginEmail, setInstructorLoginEmail] = useState(instructorEmail || 'josephjosey19@gmail.com');
+  const [instructorLoginEmail, setInstructorLoginEmail] = useState('');
   const [instructorLoginPasscode, setInstructorLoginPasscode] = useState('');
   const [showInstructorPasscode, setShowInstructorPasscode] = useState(false);
   const [isVerifyingInstructor, setIsVerifyingInstructor] = useState(false);
@@ -55,12 +55,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       onClose();
     }
   }, [currentUser, onClose]);
-
-  React.useEffect(() => {
-    if (instructorEmail && !instructorLoginEmail) {
-      setInstructorLoginEmail(instructorEmail);
-    }
-  }, [instructorEmail]);
 
   const [authRole, setAuthRole] = useState<'student' | 'instructor'>(defaultRole);
 
@@ -307,9 +301,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 <input
                   type="email"
                   required
+                  autoComplete="off"
                   value={instructorLoginEmail}
                   onChange={(e) => setInstructorLoginEmail(e.target.value)}
-                  placeholder="josephjosey19@gmail.com"
+                  placeholder="Enter registered faculty email ID"
                   className="w-full pl-9 pr-3 py-2.5 border border-slate-300 rounded-xl outline-none bg-white text-slate-900 placeholder:text-slate-400 font-medium text-sm focus:border-purple-600 focus:ring-2 focus:ring-purple-600/20"
                 />
               </div>

@@ -38,7 +38,7 @@ export const AuthPage: React.FC = () => {
   } = useApp();
 
   // Instructor Email + Passcode Authentication states
-  const [instructorLoginEmail, setInstructorLoginEmail] = useState(instructorEmail || 'josephjosey19@gmail.com');
+  const [instructorLoginEmail, setInstructorLoginEmail] = useState('');
   const [instructorLoginPasscode, setInstructorLoginPasscode] = useState('');
   const [showInstructorPasscode, setShowInstructorPasscode] = useState(false);
   const [isVerifyingInstructor, setIsVerifyingInstructor] = useState(false);
@@ -50,12 +50,6 @@ export const AuthPage: React.FC = () => {
       window.history.pushState({}, '', '/');
     }
   }, [currentUser, setActiveTab]);
-
-  React.useEffect(() => {
-    if (instructorEmail && !instructorLoginEmail) {
-      setInstructorLoginEmail(instructorEmail);
-    }
-  }, [instructorEmail]);
 
   const [mode, setMode] = useState<'login' | 'signup' | 'instructor'>('login');
   const [showPassword, setShowPassword] = useState(false);
@@ -667,9 +661,10 @@ export const AuthPage: React.FC = () => {
                     <Mail className="w-4 h-4 text-purple-600 absolute left-3 top-1/2 -translate-y-1/2" />
                     <input
                       type="email"
+                      autoComplete="off"
                       value={instructorLoginEmail}
                       onChange={(e) => setInstructorLoginEmail(e.target.value)}
-                      placeholder="josephjosey19@gmail.com"
+                      placeholder="Enter registered faculty email ID"
                       className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-purple-600 focus:ring-2 focus:ring-purple-600/20 text-slate-900 placeholder:text-slate-400 text-sm outline-none transition bg-white font-medium"
                       required
                     />
