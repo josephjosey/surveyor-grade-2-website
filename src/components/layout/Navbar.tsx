@@ -14,7 +14,8 @@ import {
   LogOut,
   CheckCircle,
   Crown,
-  Lock
+  Lock,
+  RefreshCw
 } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
@@ -27,10 +28,12 @@ export const Navbar: React.FC = () => {
     openEnrollmentModal,
     hasCourseAccess,
     showToast,
-    logoutUser
+    logoutUser,
+    syncCloudDatabase
   } = useApp();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
 
   // Student Navigation Tabs
   const studentNavItems: { id: NavigationTab; label: string; icon: any }[] = [
@@ -155,6 +158,19 @@ export const Navbar: React.FC = () => {
               )
             )}
 
+            {/* Cloud Sync Button */}
+            <button
+              type="button"
+              onClick={() => {
+                setIsSyncing(true);
+                syncCloudDatabase().finally(() => setIsSyncing(false));
+              }}
+              title="Sync questions, mock tests & notes with Cloud (Web & Android)"
+              className="p-2 text-slate-500 hover:text-brand-600 hover:bg-slate-100 rounded-xl transition flex items-center justify-center shrink-0"
+            >
+              <RefreshCw className={`w-4 h-4 ${isSyncing ? 'animate-spin text-brand-600' : ''}`} />
+            </button>
+
             {/* Profile Info */}
             <div
               onClick={() => {
@@ -277,6 +293,22 @@ export const Navbar: React.FC = () => {
               </button>
             );
           })}
+
+          {/* Mobile Cloud Sync Button */}
+          <button
+            type="button"
+            onClick={() => {
+              setIsSyncing(true);
+              syncCloudDatabase().finally(() => setIsSyncing(false));
+            }}
+            className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 bg-slate-50 border border-slate-200 hover:bg-slate-100 transition"
+          >
+            <div className="flex items-center gap-2">
+              <RefreshCw className={`w-3.5 h-3.5 text-brand-600 ${isSyncing ? 'animate-spin' : ''}`} />
+              <span>Sync Cloud Database</span>
+            </div>
+            <span className="text-[10px] text-slate-400 font-medium">Web & Mobile</span>
+          </button>
 
           <div className="pt-3 mt-2 border-t border-slate-200 flex items-center justify-between">
             <div className="flex items-center gap-2">

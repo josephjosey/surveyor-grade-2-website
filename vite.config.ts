@@ -6,13 +6,27 @@ import path from 'path';
 function persistencePlugin(): Plugin {
   const dataDir = path.resolve(__dirname, 'data');
   const dbPath = path.join(dataDir, 'database.json');
+  const publicDataDir = path.resolve(__dirname, 'public/data');
+  const publicDbPath = path.join(publicDataDir, 'database.json');
   const uploadsDir = path.resolve(__dirname, 'public/uploads');
 
   if (!fs.existsSync(dataDir)) {
     fs.mkdirSync(dataDir, { recursive: true });
   }
+  if (!fs.existsSync(publicDataDir)) {
+    fs.mkdirSync(publicDataDir, { recursive: true });
+  }
   if (!fs.existsSync(uploadsDir)) {
     fs.mkdirSync(uploadsDir, { recursive: true });
+  }
+
+  // Ensure public/data/database.json is initially copied so Vite builds include it
+  if (fs.existsSync(dbPath)) {
+    try {
+      fs.copyFileSync(dbPath, publicDbPath);
+    } catch (e) {
+      // ignore
+    }
   }
 
   return {
@@ -54,6 +68,12 @@ function persistencePlugin(): Plugin {
                 // Validate JSON
                 JSON.parse(body);
                 fs.writeFileSync(dbPath, body, 'utf-8');
+                // Also write to public/data/database.json so Android and production builds stay in sync
+                try {
+                  fs.writeFileSync(publicDbPath, body, 'utf-8');
+                } catch (e) {
+                  // ignore
+                }
                 res.setHeader('Content-Type', 'application/json');
                 res.end(JSON.stringify({ success: true, timestamp: new Date().toISOString() }));
               } catch (parseErr: any) {

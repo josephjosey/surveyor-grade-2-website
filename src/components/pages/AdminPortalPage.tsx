@@ -54,7 +54,8 @@ export const AdminPortalPage: React.FC = () => {
     showToast,
     isDiskLoaded,
     exportBackup,
-    importBackup
+    importBackup,
+    syncCloudDatabase
   } = useApp();
 
   const [activeAdminTab, setActiveAdminTab] = useState<'notes' | 'tests' | 'pyq' | 'doubts' | 'students'>('notes');
@@ -377,8 +378,19 @@ export const AdminPortalPage: React.FC = () => {
           {/* Status badge */}
           <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500/20 text-emerald-300 text-xs font-bold rounded-full border border-emerald-400/30">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span>Disk Storage Active</span>
+            <span>Disk & Cloud Sync Active</span>
           </div>
+
+          {/* Sync Cloud & Mobile App */}
+          <button
+            type="button"
+            onClick={syncCloudDatabase}
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow transition"
+            title="Sync all mock tests, questions, and notes with the Mobile Android App and Cloud"
+          >
+            <RefreshCw className="w-3.5 h-3.5" />
+            <span>Sync Cloud & Mobile App</span>
+          </button>
 
           {/* Export JSON backup */}
           <button

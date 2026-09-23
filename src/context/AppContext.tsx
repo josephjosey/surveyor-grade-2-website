@@ -108,7 +108,9 @@ interface AppContextType {
   deleteBankQuestion: (questionId: string) => void;
   updateBankQuestion: (question: BankQuestion) => void;
   addMockTest: (newTest: Omit<MockTest, 'id' | 'attemptsCount'>) => void;
+  updateMockTest: (updatedTest: MockTest) => void;
   deleteMockTest: (testId: string) => void;
+  syncCloudDatabase: () => Promise<boolean>;
   addPYQPaper: (newPaper: Omit<PYQPaper, 'id'>) => void;
   deletePYQPaper: (paperId: string) => void;
   updatePYQQuestions: (paperId: string, questions: PYQQuestion[]) => void;
@@ -595,65 +597,54 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           const deletedIds = getDeletedIds('survey_academy_deleted_notes');
           setStudyNotes((prev) => {
             const cleanNotes = notes.filter((n) => !deletedIds.has(n.id));
-            const cloudMap = new Map(cleanNotes.map((n) => [n.id, n]));
+            const prevClean = prev.filter((n) => !deletedIds.has(n.id));
+            const noteMap = new Map(prevClean.map((n) => [n.id, n]));
 
-            // 1. Authoritative initial notes in their canonical, stable order
-            const canonicalList: StudyNote[] = INITIAL_STUDY_NOTES
-              .filter((initNote) => !deletedIds.has(initNote.id))
-              .map((initNote) => {
-                const cloudMatch = cloudMap.get(initNote.id);
-                if (!cloudMatch) return initNote;
-                return {
-                  ...initNote,
-                  downloadsCount: Math.max(initNote.downloadsCount || 0, cloudMatch.downloadsCount || 0)
-                };
-              });
-
-            // 2. Custom admin-created notes from Supabase
             for (const cn of cleanNotes) {
-              if (!INITIAL_STUDY_NOTES.some((init) => init.id === cn.id)) {
-                canonicalList.push(cn);
+              const existing = noteMap.get(cn.id);
+              if (existing) {
+                noteMap.set(cn.id, {
+                  ...existing,
+                  ...cn,
+                  downloadsCount: Math.max(existing.downloadsCount || 0, cn.downloadsCount || 0)
+                });
+              } else {
+                noteMap.set(cn.id, cn);
               }
             }
 
-            safeSetItem('survey_academy_notes', canonicalList);
-            return canonicalList;
+            const combined = Array.from(noteMap.values());
+            safeSetItem('survey_academy_notes', combined);
+            return combined;
           });
         }
+
         if (tests && tests.length > 0) {
           const deletedIds = getDeletedIds('survey_academy_deleted_tests');
           setMockTests((prev) => {
             const cleanTests = tests.filter((t) => !deletedIds.has(t.id));
-            const cloudMap = new Map(cleanTests.map((t) => [t.id, t]));
+            const prevClean = prev.filter((t) => !deletedIds.has(t.id));
+            const testMap = new Map(prevClean.map((t) => [t.id, t]));
 
-            // 1. Authoritative initial tests in their canonical, stable order
-            const canonicalList: MockTest[] = INITIAL_MOCK_TESTS
-              .filter((initTest) => !deletedIds.has(initTest.id))
-              .map((initTest) => {
-                const cloudMatch = cloudMap.get(initTest.id);
-                if (!cloudMatch) return initTest;
-                return {
-                  ...initTest,
-                  // Keep initial metadata authoritative, only update dynamic counters if higher
-                  attemptsCount: Math.max(initTest.attemptsCount || 0, cloudMatch.attemptsCount || 0)
-                };
-              });
-
-            // 2. Custom admin-created tests from Supabase
             for (const ct of cleanTests) {
-              if (!INITIAL_MOCK_TESTS.some((init) => init.id === ct.id)) {
-                canonicalList.push(ct);
+              const existing = testMap.get(ct.id);
+              if (existing) {
+                testMap.set(ct.id, {
+                  ...existing,
+                  ...ct,
+                  // Preserve existing questions if cloud record has empty array
+                  questions: (ct.questions && ct.questions.length > 0) ? ct.questions : existing.questions,
+                  attemptsCount: Math.max(existing.attemptsCount || 0, ct.attemptsCount || 0)
+                });
+              } else {
+                testMap.set(ct.id, ct);
               }
             }
 
-            safeSetItem('survey_academy_tests', canonicalList);
-            return canonicalList;
+            const combined = Array.from(testMap.values());
+            safeSetItem('survey_academy_tests', combined);
+            return combined;
           });
-        } else {
-          const deletedIds = getDeletedIds('survey_academy_deleted_tests');
-          const cleanTests = INITIAL_MOCK_TESTS.filter((t) => !deletedIds.has(t.id));
-          setMockTests(cleanTests);
-          safeSetItem('survey_academy_tests', cleanTests);
         }
         if (attempts && attempts.length > 0) {
           const cleanCloudAttempts = attempts.filter((a) => !isDummyCandidate(a.userName, a.id));
@@ -2031,9 +2022,88 @@ Expires in 5 minutes. Do not share this OTP with anyone.`
       attemptsCount: 0
     };
 
-    setMockTests((prev) => [newTest, ...prev]);
+    setMockTests((prev) => {
+      const updated = [newTest, ...prev];
+      safeSetItem('survey_academy_tests', updated);
+      saveDatabase({
+        modules,
+        studyNotes,
+        bankQuestions,
+        pyqPapers,
+        mockTests: updated,
+        testAttempts,
+        doubts,
+        students
+      });
+      return updated;
+    });
     SupabaseDb.createMockTest(newTest, currentUser.id);
     showToast(`Mock test "${newTest.title}" created successfully!`, 'success');
+  };
+
+  const updateMockTest = (updatedTest: MockTest) => {
+    setMockTests((prev) => {
+      const updated = prev.map((t) => (t.id === updatedTest.id ? updatedTest : t));
+      safeSetItem('survey_academy_tests', updated);
+      saveDatabase({
+        modules,
+        studyNotes,
+        bankQuestions,
+        pyqPapers,
+        mockTests: updated,
+        testAttempts,
+        doubts,
+        students
+      });
+      return updated;
+    });
+    SupabaseDb.createMockTest(updatedTest, currentUser.id);
+    showToast(`Mock test "${updatedTest.title}" updated successfully!`, 'success');
+  };
+
+  const syncCloudDatabase = async (): Promise<boolean> => {
+    showToast('Connecting to Cloud Database...', 'info');
+    try {
+      const remoteData = await fetchDatabase();
+      if (remoteData) {
+        let testsCount = 0;
+        let questionsCount = 0;
+        if (remoteData.mockTests && remoteData.mockTests.length > 0) {
+          const deletedIds = getDeletedIds('survey_academy_deleted_tests');
+          const cleanTests = remoteData.mockTests.filter((t: any) => !deletedIds.has(t.id));
+          setMockTests(cleanTests);
+          safeSetItem('survey_academy_tests', cleanTests);
+          testsCount = cleanTests.length;
+        }
+        if (remoteData.bankQuestions && remoteData.bankQuestions.length > 0) {
+          const deletedIds = getDeletedIds('survey_academy_deleted_bank_questions');
+          const cleanQuestions = remoteData.bankQuestions.filter((q: any) => !deletedIds.has(q.id));
+          setBankQuestions(cleanQuestions);
+          safeSetItem('survey_academy_bank_questions', cleanQuestions);
+          questionsCount = cleanQuestions.length;
+        }
+        if (remoteData.pyqPapers && remoteData.pyqPapers.length > 0) {
+          const deletedIds = getDeletedIds('survey_academy_deleted_pyqs');
+          const cleanPYQ = remoteData.pyqPapers.filter((p: any) => !deletedIds.has(p.id));
+          setPyqPapers(cleanPYQ);
+          safeSetItem('survey_academy_pyqs', cleanPYQ);
+        }
+        if (remoteData.studyNotes && remoteData.studyNotes.length > 0) {
+          const deletedIds = getDeletedIds('survey_academy_deleted_notes');
+          const cleanNotes = remoteData.studyNotes.filter((n: any) => !deletedIds.has(n.id));
+          setStudyNotes(cleanNotes);
+          safeSetItem('survey_academy_notes', cleanNotes);
+        }
+        showToast(`Sync Successful! Loaded ${testsCount} Mock Tests & ${questionsCount} Questions across Web & Android.`, 'success');
+        return true;
+      } else {
+        showToast('Already on the latest offline database version.', 'info');
+        return false;
+      }
+    } catch (err: any) {
+      showToast('Could not sync with cloud. Running in offline mode.', 'error');
+      return false;
+    }
   };
 
   const deleteMockTest = (testId: string) => {
@@ -2323,7 +2393,9 @@ Expires in 5 minutes. Do not share this OTP with anyone.`
         deleteBankQuestion,
         updateBankQuestion,
         addMockTest,
+        updateMockTest,
         deleteMockTest,
+        syncCloudDatabase,
         addPYQPaper,
         deletePYQPaper,
         updatePYQQuestions,
