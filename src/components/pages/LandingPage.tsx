@@ -37,7 +37,8 @@ export const LandingPage: React.FC = () => {
     pyqPapers,
     bankQuestions,
     setSelectedMockTestId,
-    setSelectedPYQModuleNumber
+    setSelectedPYQModuleNumber,
+    currentUser
   } = useApp();
 
   const handleOpenNote = (noteId: string) => {
@@ -133,13 +134,23 @@ export const LandingPage: React.FC = () => {
 
               {/* CTAs */}
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
-                <button
-                  onClick={() => openEnrollmentModal('plan-1year')}
-                  className="inline-flex items-center justify-center gap-2.5 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-bold text-sm sm:text-base px-7 py-3.5 rounded-xl shadow-lg hover:shadow-brand-500/25 transition-all transform hover:-translate-y-0.5"
-                >
-                  <Sparkles className="w-5 h-5 text-amber-300" />
-                  <span>Enroll in Course (From ₹600)</span>
-                </button>
+                {!hasCourseAccess ? (
+                  <button
+                    onClick={() => openEnrollmentModal('plan-1year')}
+                    className="inline-flex items-center justify-center gap-2.5 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-bold text-sm sm:text-base px-7 py-3.5 rounded-xl shadow-lg hover:shadow-brand-500/25 transition-all transform hover:-translate-y-0.5"
+                  >
+                    <Sparkles className="w-5 h-5 text-amber-300" />
+                    <span>Enroll in Course (From ₹600)</span>
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => setActiveTab('dashboard')}
+                    className="inline-flex items-center justify-center gap-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold text-sm sm:text-base px-7 py-3.5 rounded-xl shadow-lg transition-all transform hover:-translate-y-0.5"
+                  >
+                    <Compass className="w-5 h-5 text-white" />
+                    <span>Go to My Dashboard</span>
+                  </button>
+                )}
 
                 <button
                   onClick={() => handleOpenNote('note-1')}
@@ -571,134 +582,171 @@ export const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Course Plans & Pricing Showcase */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-2xl mx-auto space-y-3 mb-12">
-          <span className="text-xs font-black uppercase tracking-wider text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 inline-flex items-center gap-1">
-            <Sparkles className="w-3.5 h-3.5 text-amber-500" /> Affordable Selection Guarantee
-          </span>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
-            Course Packages & Enrollment Options
-          </h2>
-          <p className="text-slate-600 text-xs sm:text-sm">
-            Free users have preview access only. Choose your plan below for instant, permanent unlocking of all notes, question bank, and Kerala PSC mock tests.
-          </p>
-        </div>
-
-        <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
-          {/* Plan 1: 6 Months Access */}
-          <div className="bg-white rounded-3xl p-7 sm:p-8 border border-slate-200 shadow-md flex flex-col justify-between space-y-6 hover:shadow-xl transition">
-            <div className="space-y-4 text-left">
-              <div>
-                <span className="text-[10px] font-black uppercase tracking-wider text-brand-700 bg-brand-50 px-2.5 py-1 rounded-full border border-brand-200">
-                  6 Months Validity
-                </span>
-                <h3 className="text-xl font-bold text-slate-900 mt-2">6 Months Complete Access</h3>
-                <p className="text-xs text-slate-500 pt-1">
-                  Full access to all 10 syllabus modules, handwritten notes, 10,000+ MCQs & 21 mock tests for 6 months.
-                </p>
-              </div>
-
-              <div className="flex items-baseline gap-2 pt-2 border-t border-slate-100">
-                <span className="text-3xl sm:text-4xl font-black text-slate-900">₹600</span>
-                <span className="text-sm line-through text-slate-400 font-bold">₹1,499</span>
-                <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">
-                  60% OFF
-                </span>
-              </div>
-
-              <ul className="space-y-2.5 text-xs text-slate-600">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>All 10 Kerala PSC Syllabus Modules</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>Concise Handwritten PDF Notes & Formulas</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>10,000+ MCQs & Solved PYQs with Revised Keys</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>21 Timed Mock Tests (-0.33 Marking)</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>1-on-1 Faculty Doubt Solver</span>
-                </li>
-              </ul>
-            </div>
-
-            <button
-              onClick={() => openEnrollmentModal('plan-6months')}
-              className="w-full py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm rounded-xl transition flex items-center justify-center gap-2 active:scale-95 shadow-md"
-            >
-              <Sparkles className="w-4 h-4 text-amber-400" />
-              <span>Purchase 6 Months Plan — ₹600</span>
-            </button>
+      {/* Course Plans & Pricing Showcase: ONLY SHOWN TO UN-ENROLLED / FREE USERS */}
+      {!hasCourseAccess ? (
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto space-y-3 mb-12">
+            <span className="text-xs font-black uppercase tracking-wider text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 inline-flex items-center gap-1">
+              <Sparkles className="w-3.5 h-3.5 text-amber-500" /> Affordable Selection Guarantee
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
+              Course Packages & Enrollment Options
+            </h2>
+            <p className="text-slate-600 text-xs sm:text-sm">
+              Free users have preview access only. Choose your plan below for instant, permanent unlocking of all notes, question bank, and Kerala PSC mock tests.
+            </p>
           </div>
 
-          {/* Plan 2: 1 Year Complete Access (Recommended) */}
-          <div className="bg-gradient-to-b from-slate-900 to-navy-950 text-white rounded-3xl p-7 sm:p-8 border-2 border-amber-400 shadow-2xl relative flex flex-col justify-between space-y-6 transform md:-translate-y-2">
-            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 text-[11px] font-black uppercase tracking-wider px-4 py-1 rounded-full shadow-md flex items-center gap-1 whitespace-nowrap">
-              <Crown className="w-3.5 h-3.5" /> Best Value • Recommended (1 Year)
-            </div>
+          <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+            {/* Plan 1: 6 Months Access */}
+            <div className="bg-white rounded-3xl p-7 sm:p-8 border border-slate-200 shadow-md flex flex-col justify-between space-y-6 hover:shadow-xl transition">
+              <div className="space-y-4 text-left">
+                <div>
+                  <span className="text-[10px] font-black uppercase tracking-wider text-brand-700 bg-brand-50 px-2.5 py-1 rounded-full border border-brand-200">
+                    6 Months Validity
+                  </span>
+                  <h3 className="text-xl font-bold text-slate-900 mt-2">6 Months Complete Access</h3>
+                  <p className="text-xs text-slate-500 pt-1">
+                    Full access to all 10 syllabus modules, handwritten notes, 10,000+ MCQs & 21 mock tests for 6 months.
+                  </p>
+                </div>
 
-            <div className="space-y-4 pt-2 text-left">
-              <div>
-                <span className="text-[10px] font-black uppercase tracking-wider text-amber-300 bg-amber-400/20 px-2.5 py-1 rounded-full border border-amber-400/30">
-                  1 Year Validity (365 Days)
-                </span>
-                <h3 className="text-xl font-extrabold text-white mt-2">1 Year Complete Access</h3>
-                <p className="text-xs text-slate-300 pt-1">
-                  Full 1-year unlimited access until your PSC exam with all notes, updates, formulas, 10,000+ MCQs & mock tests.
-                </p>
+                <div className="flex items-baseline gap-2 pt-2 border-t border-slate-100">
+                  <span className="text-3xl sm:text-4xl font-black text-slate-900">₹600</span>
+                  <span className="text-sm line-through text-slate-400 font-bold">₹1,499</span>
+                  <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">
+                    60% OFF
+                  </span>
+                </div>
+
+                <ul className="space-y-2.5 text-xs text-slate-600">
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span>All 10 Kerala PSC Syllabus Modules</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span>Concise Handwritten PDF Notes & Formulas</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span>10,000+ MCQs & Solved PYQs with Revised Keys</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span>21 Timed Mock Tests (-0.33 Marking)</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span>1-on-1 Faculty Doubt Solver</span>
+                  </li>
+                </ul>
               </div>
 
-              <div className="flex items-baseline gap-2 pt-2 border-t border-slate-800">
-                <span className="text-3xl sm:text-4xl font-black text-amber-300">₹1,000</span>
-                <span className="text-sm line-through text-slate-400 font-bold">₹2,499</span>
-                <span className="text-[11px] font-extrabold text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800">
-                  60% OFF
-                </span>
-              </div>
-
-              <ul className="space-y-2.5 text-xs text-slate-200">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>Full 1-Year Access to All 10 Modules</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>Handwritten PDF Notes & Downloadable Formulas</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>10,000+ MCQs & Solved PYQs with Revised PSC Keys</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>21 Timed Tests with Statewide Rank Predictor</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>Priority Direct 1-on-1 Faculty Mentorship</span>
-                </li>
-              </ul>
+              <button
+                onClick={() => openEnrollmentModal('plan-6months')}
+                className="w-full py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm rounded-xl transition flex items-center justify-center gap-2 active:scale-95 shadow-md"
+              >
+                <Sparkles className="w-4 h-4 text-amber-400" />
+                <span>Purchase 6 Months Plan — ₹600</span>
+              </button>
             </div>
 
-            <button
-              onClick={() => openEnrollmentModal('plan-1year')}
-              className="w-full py-3.5 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-950 font-black text-sm rounded-xl shadow-lg transition transform active:scale-95 flex items-center justify-center gap-2"
-            >
-              <Sparkles className="w-4 h-4" />
-              <span>Purchase 1 Year Plan — ₹1,000</span>
-            </button>
+            {/* Plan 2: 1 Year Complete Access (Recommended) */}
+            <div className="bg-gradient-to-b from-slate-900 to-navy-950 text-white rounded-3xl p-7 sm:p-8 border-2 border-amber-400 shadow-2xl relative flex flex-col justify-between space-y-6 transform md:-translate-y-2">
+              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 text-[11px] font-black uppercase tracking-wider px-4 py-1 rounded-full shadow-md flex items-center gap-1 whitespace-nowrap">
+                <Crown className="w-3.5 h-3.5" /> Best Value • Recommended (1 Year)
+              </div>
+
+              <div className="space-y-4 pt-2 text-left">
+                <div>
+                  <span className="text-[10px] font-black uppercase tracking-wider text-amber-300 bg-amber-400/20 px-2.5 py-1 rounded-full border border-amber-400/30">
+                    1 Year Validity (365 Days)
+                  </span>
+                  <h3 className="text-xl font-extrabold text-white mt-2">1 Year Complete Access</h3>
+                  <p className="text-xs text-slate-300 pt-1">
+                    Full 1-year unlimited access until your PSC exam with all notes, updates, formulas, 10,000+ MCQs & mock tests.
+                  </p>
+                </div>
+
+                <div className="flex items-baseline gap-2 pt-2 border-t border-slate-800">
+                  <span className="text-3xl sm:text-4xl font-black text-amber-300">₹1,000</span>
+                  <span className="text-sm line-through text-slate-400 font-bold">₹2,499</span>
+                  <span className="text-[11px] font-extrabold text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800">
+                    60% OFF
+                  </span>
+                </div>
+
+                <ul className="space-y-2.5 text-xs text-slate-200">
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <span>Full 1-Year Access to All 10 Modules</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <span>Handwritten PDF Notes & Downloadable Formulas</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <span>10,000+ MCQs & Solved PYQs with Revised PSC Keys</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <span>21 Timed Tests with Statewide Rank Predictor</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <span>Priority Direct 1-on-1 Faculty Mentorship</span>
+                  </li>
+                </ul>
+              </div>
+
+              <button
+                onClick={() => openEnrollmentModal('plan-1year')}
+                className="w-full py-3.5 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-950 font-black text-sm rounded-xl shadow-lg transition transform active:scale-95 flex items-center justify-center gap-2"
+              >
+                <Sparkles className="w-4 h-4" />
+                <span>Purchase 1 Year Plan — ₹1,000</span>
+              </button>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      ) : (
+        /* Enrolled / Purchased Candidate Showcase: No purchase buttons shown */
+        <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-gradient-to-r from-brand-950 via-slate-900 to-navy-950 rounded-3xl p-7 sm:p-9 text-white shadow-xl border border-emerald-500/30 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="space-y-2 text-center md:text-left">
+              <div className="inline-flex items-center gap-1.5 bg-emerald-500/20 text-emerald-300 text-xs font-bold px-3 py-1 rounded-full border border-emerald-500/30">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                <span>Active Course Enrollment ({currentUser?.subscriptionPlan === '6months' ? '6 Months Complete Access' : '1 Year Complete Access'})</span>
+              </div>
+              <h3 className="text-xl sm:text-2xl font-black text-white">
+                All 10 Modules, 10,000+ MCQs & Mock Exams Unlocked! 🎉
+              </h3>
+              <p className="text-slate-300 text-xs sm:text-sm max-w-lg">
+                Welcome, <strong className="text-white">{currentUser?.name || 'Aspirant'}</strong>! Your account has full unlimited access. Practice mock exams with negative marking, review handwritten notes, and view your statewide rank.
+              </p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-2.5 w-full md:w-auto shrink-0">
+              <button
+                onClick={() => setActiveTab('dashboard')}
+                className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold text-xs sm:text-sm rounded-xl shadow-lg transition active:scale-95"
+              >
+                <Compass className="w-4 h-4" />
+                <span>My Dashboard</span>
+              </button>
+              <button
+                onClick={() => setActiveTab('mocktests')}
+                className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold text-xs sm:text-sm rounded-xl border border-slate-700 transition active:scale-95"
+              >
+                <CheckSquare className="w-4 h-4 text-amber-400" />
+                <span>Mock Tests Engine</span>
+              </button>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* CTA Final Enrollment Banner */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -709,38 +757,68 @@ export const LandingPage: React.FC = () => {
 
           <div className="space-y-2 max-w-xl mx-auto">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
-              Start Your Kerala PSC Survey Journey Today
+              {hasCourseAccess ? 'Continue Your Exam Preparation' : 'Start Your Kerala PSC Survey Journey Today'}
             </h2>
             <p className="text-slate-300 text-xs sm:text-sm">
-              Enroll now to get instant access to all handwritten notes, formula sheets, previous year solved papers, mock test series, and personalized doubt clearance.
+              {hasCourseAccess
+                ? 'Practice timed mock exams with -0.33 negative marking, review handwritten syllabus formulas, and solve official past question papers.'
+                : 'Enroll now to get instant access to all handwritten notes, formula sheets, previous year solved papers, mock test series, and personalized doubt clearance.'}
             </p>
           </div>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <button
-              onClick={() => openEnrollmentModal('plan-1year')}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 via-brand-500 to-emerald-500 hover:from-amber-600 hover:to-emerald-600 text-slate-950 font-black text-sm px-7 py-3.5 rounded-xl shadow-lg transition"
-            >
-              <Sparkles className="w-4 h-4 text-slate-950" />
-              <span>Purchase 1 Year Plan (₹1,000)</span>
-            </button>
-            <button
-              onClick={() => openEnrollmentModal('plan-6months')}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold text-sm px-6 py-3.5 rounded-xl border border-slate-700 transition"
-            >
-              <Sparkles className="w-4 h-4 text-amber-400" />
-              <span>Purchase 6 Months Plan (₹600)</span>
-            </button>
-            <button
-              onClick={() => {
-                setSelectedMockTestId('mock-kpsc-grand-100');
-                setActiveTab('mocktests');
-              }}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-sm px-6 py-3.5 rounded-xl border border-slate-700 transition"
-            >
-              <CheckSquare className="w-4 h-4 text-amber-400" />
-              <span>Write 100-Mark Grand Exam Free</span>
-            </button>
+            {!hasCourseAccess ? (
+              <>
+                <button
+                  onClick={() => openEnrollmentModal('plan-1year')}
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 via-brand-500 to-emerald-500 hover:from-amber-600 hover:to-emerald-600 text-slate-950 font-black text-sm px-7 py-3.5 rounded-xl shadow-lg transition"
+                >
+                  <Sparkles className="w-4 h-4 text-slate-950" />
+                  <span>Purchase 1 Year Plan (₹1,000)</span>
+                </button>
+                <button
+                  onClick={() => openEnrollmentModal('plan-6months')}
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold text-sm px-6 py-3.5 rounded-xl border border-slate-700 transition"
+                >
+                  <Sparkles className="w-4 h-4 text-amber-400" />
+                  <span>Purchase 6 Months Plan (₹600)</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setSelectedMockTestId('mock-kpsc-grand-100');
+                    setActiveTab('mocktests');
+                  }}
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-sm px-6 py-3.5 rounded-xl border border-slate-700 transition"
+                >
+                  <CheckSquare className="w-4 h-4 text-amber-400" />
+                  <span>Write 100-Mark Grand Exam Free</span>
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={() => setActiveTab('dashboard')}
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold text-sm px-7 py-3.5 rounded-xl shadow-lg transition"
+                >
+                  <Compass className="w-4 h-4" />
+                  <span>Open Student Dashboard</span>
+                </button>
+                <button
+                  onClick={() => setActiveTab('mocktests')}
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold text-sm px-6 py-3.5 rounded-xl border border-slate-700 transition"
+                >
+                  <CheckSquare className="w-4 h-4 text-amber-400" />
+                  <span>Practice All 23 Mock Tests</span>
+                </button>
+                <button
+                  onClick={() => setActiveTab('notes')}
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-sm px-6 py-3.5 rounded-xl border border-slate-700 transition"
+                >
+                  <BookOpen className="w-4 h-4 text-brand-400" />
+                  <span>Read Study Notes</span>
+                </button>
+              </>
+            )}
           </div>
         </div>
       </section>

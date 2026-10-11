@@ -3,7 +3,7 @@ import { useApp } from '../../context/AppContext';
 import { Compass, Award, MessageCircle, Mail, Phone, ExternalLink, ShieldCheck, CheckCircle2 } from 'lucide-react';
 
 export const Footer: React.FC = () => {
-  const { setActiveTab, setIsEnrollmentModalOpen, openLegalModal } = useApp();
+  const { setActiveTab, setIsEnrollmentModalOpen, openLegalModal, hasCourseAccess } = useApp();
 
   return (
     <footer className="bg-slate-950 text-slate-300 border-t border-slate-800 mt-20">
@@ -37,13 +37,23 @@ export const Footer: React.FC = () => {
               <MessageCircle className="w-4 h-4" />
               Join WhatsApp Doubts Group
             </a>
-            <button
-              onClick={() => setIsEnrollmentModalOpen(true)}
-              className="inline-flex items-center gap-2 bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition shadow"
-            >
-              <CheckCircle2 className="w-4 h-4 text-brand-200" />
-              Enroll in Batch
-            </button>
+            {!hasCourseAccess ? (
+              <button
+                onClick={() => setIsEnrollmentModalOpen(true)}
+                className="inline-flex items-center gap-2 bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition shadow"
+              >
+                <CheckCircle2 className="w-4 h-4 text-brand-200" />
+                Enroll in Batch
+              </button>
+            ) : (
+              <button
+                onClick={() => setActiveTab('dashboard')}
+                className="inline-flex items-center gap-2 bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition shadow"
+              >
+                <Compass className="w-4 h-4 text-brand-200" />
+                Open Dashboard
+              </button>
+            )}
           </div>
         </div>
       </div>
