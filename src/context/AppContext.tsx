@@ -176,7 +176,7 @@ export const safeSetItem = (key: string, val: any) => {
 // DATASET VERSIONING & CACHE MIGRATION
 // Guarantees 100% data parity across Web, Android APK, and all browsers
 // ============================================================================
-const DATA_VERSION = 'v1791698108266';
+const DATA_VERSION = 'v2026.10.11-5080-pyq';
 
 try {
   const currentVersion = localStorage.getItem('survey_academy_data_version');
@@ -353,14 +353,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       try {
         const parsed = JSON.parse(saved) as BankQuestion[];
         const filtered = parsed.filter((q) => !deletedIds.has(q.id));
-        const existingIds = new Set(filtered.map((q) => q.id));
-        const missing = INITIAL_BANK_QUESTIONS.filter((q) => !existingIds.has(q.id) && !deletedIds.has(q.id));
-        const combined = [...filtered, ...missing];
-        safeSetItem('survey_academy_bank_questions', combined);
-        return combined;
-      } catch (e) {
-        return INITIAL_BANK_QUESTIONS.filter((q) => !deletedIds.has(q.id));
-      }
+        if (filtered.length >= 5000) {
+          return filtered;
+        }
+      } catch (e) {}
     }
     const initialClean = INITIAL_BANK_QUESTIONS.filter((q) => !deletedIds.has(q.id));
     safeSetItem('survey_academy_bank_questions', initialClean);
@@ -515,11 +511,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         if (diskData.bankQuestions && diskData.bankQuestions.length > 0) {
           const deletedIds = getDeletedIds('survey_academy_deleted_bank_questions');
           const cleanQuestions = diskData.bankQuestions.filter((q: any) => !deletedIds.has(q.id));
-          const existingIds = new Set(cleanQuestions.map((q: any) => q.id));
-          const missing = INITIAL_BANK_QUESTIONS.filter((q) => !existingIds.has(q.id) && !deletedIds.has(q.id));
-          const combined = [...cleanQuestions, ...missing];
-          setBankQuestions(combined);
-          safeSetItem('survey_academy_bank_questions', combined);
+          setBankQuestions(cleanQuestions);
+          safeSetItem('survey_academy_bank_questions', cleanQuestions);
         } else {
           const deletedIds = getDeletedIds('survey_academy_deleted_bank_questions');
           const cleanInit = INITIAL_BANK_QUESTIONS.filter((q) => !deletedIds.has(q.id));

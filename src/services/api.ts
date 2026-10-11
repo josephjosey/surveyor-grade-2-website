@@ -37,12 +37,36 @@ export async function fetchDatabase(): Promise<DatabaseState | null> {
     }
   }
 
-  // Strategy 2: Fast Global Edge CDN (jsDelivr - high-speed & reliable across mobile networks in India)
+  // Strategy 2: Same-origin bundled database.json (instant 0ms on Web & Android APK)
+  try {
+    const res = await fetch(`/data/database.json?v=${Date.now()}`, { cache: 'no-store' });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && (data.bankQuestions?.length > 0 || data.mockTests?.length > 0)) {
+        return data;
+      }
+    }
+  } catch (err) {
+    // Relative path fallback for Capacitor Android WebView
+    try {
+      const res = await fetch(`./data/database.json?v=${Date.now()}`, { cache: 'no-store' });
+      if (res.ok) {
+        const data = await res.json();
+        if (data && (data.bankQuestions?.length > 0 || data.mockTests?.length > 0)) {
+          return data;
+        }
+      }
+    } catch (e) {
+      // Continue to CDN fallbacks
+    }
+  }
+
+  // Strategy 3: Fast Global Edge CDN (jsDelivr - high-speed & reliable fallback)
   try {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 6000);
-    const cdnUrl = `https://cdn.jsdelivr.net/gh/josephjosey/surveyor-grade-2-website@main/data/database.json?t=${Date.now()}`;
-    const res = await fetch(cdnUrl, { signal: controller.signal });
+    const cdnUrl = `https://cdn.jsdelivr.net/gh/josephjosey/surveyor-grade-2-website@main/data/database.json?v=${Date.now()}`;
+    const res = await fetch(cdnUrl, { signal: controller.signal, cache: 'no-store' });
     clearTimeout(timeoutId);
     if (res.ok) {
       const data = await res.json();
@@ -54,12 +78,12 @@ export async function fetchDatabase(): Promise<DatabaseState | null> {
     console.warn('Persistence: could not fetch database from jsDelivr CDN:', err);
   }
 
-  // Strategy 3: Direct GitHub Raw CDN fallback (with 5s AbortController timeout)
+  // Strategy 4: Direct GitHub Raw CDN fallback
   try {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 5000);
-    const rawUrl = `https://raw.githubusercontent.com/josephjosey/surveyor-grade-2-website/main/data/database.json?t=${Date.now()}`;
-    const res = await fetch(rawUrl, { cache: 'no-cache', signal: controller.signal });
+    const rawUrl = `https://raw.githubusercontent.com/josephjosey/surveyor-grade-2-website/main/data/database.json?v=${Date.now()}`;
+    const res = await fetch(rawUrl, { cache: 'no-store', signal: controller.signal });
     clearTimeout(timeoutId);
     if (res.ok) {
       const data = await res.json();
@@ -69,30 +93,6 @@ export async function fetchDatabase(): Promise<DatabaseState | null> {
     }
   } catch (err) {
     console.warn('Persistence: could not fetch remote database from GitHub CDN:', err);
-  }
-
-  // Strategy 4: Local Bundled Assets in Android APK & Web Build (works 100% offline, 0ms latency)
-  try {
-    const res = await fetch('/data/database.json');
-    if (res.ok) {
-      const data = await res.json();
-      if (data && (data.mockTests || data.bankQuestions)) {
-        return data;
-      }
-    }
-  } catch (err) {
-    // Relative path fallback for Capacitor Android WebView
-    try {
-      const res = await fetch('./data/database.json');
-      if (res.ok) {
-        const data = await res.json();
-        if (data && (data.mockTests || data.bankQuestions)) {
-          return data;
-        }
-      }
-    } catch (e) {
-      console.warn('Persistence: could not fetch local bundled database.json:', e);
-    }
   }
 
   return null;
