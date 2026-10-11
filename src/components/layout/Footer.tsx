@@ -3,7 +3,7 @@ import { useApp } from '../../context/AppContext';
 import { Compass, Award, MessageCircle, Mail, Phone, ExternalLink, ShieldCheck, CheckCircle2 } from 'lucide-react';
 
 export const Footer: React.FC = () => {
-  const { setActiveTab, setIsEnrollmentModalOpen } = useApp();
+  const { setActiveTab, setIsEnrollmentModalOpen, openLegalModal } = useApp();
 
   return (
     <footer className="bg-slate-950 text-slate-300 border-t border-slate-800 mt-20">
@@ -119,14 +119,51 @@ export const Footer: React.FC = () => {
           </div>
         </div>
 
-        <div className="border-t border-slate-800/80 mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-          <div>
-            © {new Date().getFullYear()} SurveyRank Kerala PSC Academy. All rights reserved.
+        <div className="border-t border-slate-800/80 mt-10 pt-6 space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-slate-400">
+            <div className="flex flex-wrap items-center gap-3 sm:gap-5">
+              <button
+                onClick={() => openLegalModal('privacy')}
+                className="hover:text-emerald-400 transition underline-offset-4 hover:underline"
+              >
+                Privacy Policy
+              </button>
+              <span className="text-slate-700">•</span>
+              <button
+                onClick={() => openLegalModal('terms')}
+                className="hover:text-emerald-400 transition underline-offset-4 hover:underline"
+              >
+                Terms of Service
+              </button>
+              <span className="text-slate-700">•</span>
+              <button
+                onClick={() => openLegalModal('refund')}
+                className="hover:text-emerald-400 transition underline-offset-4 hover:underline"
+              >
+                Cancellation & Refund
+              </button>
+              <span className="text-slate-700">•</span>
+              <button
+                onClick={() => openLegalModal('contact')}
+                className="hover:text-emerald-400 transition underline-offset-4 hover:underline"
+              >
+                Contact Us
+              </button>
+            </div>
+            <div className="text-[11px] text-slate-500">
+              Merchant: Joseph Josey • Kerala, India
+            </div>
           </div>
-          <div className="flex items-center gap-4">
-            <span>Designed for Kerala PSC Aspirants</span>
-            <span>•</span>
-            <span className="text-brand-400 font-medium">Expert Mentorship & Notes</span>
+
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 pt-2 border-t border-slate-900">
+            <div>
+              © {new Date().getFullYear()} SurveyRank Kerala PSC Academy. All rights reserved.
+            </div>
+            <div className="flex items-center gap-4">
+              <span>Designed for Kerala PSC Aspirants</span>
+              <span>•</span>
+              <span className="text-brand-400 font-medium">Expert Mentorship & Notes</span>
+            </div>
           </div>
         </div>
       </div>

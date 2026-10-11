@@ -16,10 +16,23 @@ android {
             ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    signingConfigs {
+        release {
+            if (file('release.keystore').exists()) {
+                storeFile file('release.keystore')
+                storePassword 'surveyrank2026'
+                keyAlias 'surveyrank-upload'
+                keyPassword 'surveyrank2026'
+            }
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            if (file('release.keystore').exists()) {
+                signingConfig signingConfigs.release
+            }
         }
     }
 }

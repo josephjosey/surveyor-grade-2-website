@@ -5,6 +5,7 @@ import { setupDeepLinkListener } from './services/mobileAuth';
 import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
 import { EnrollmentModal } from './components/modals/EnrollmentModal';
+import { LegalModal } from './components/modals/LegalModal';
 import { AuthModal } from './components/modals/AuthModal';
 import { CourseAccessPaywall } from './components/common/CourseAccessPaywall';
 import { CheckCircle, AlertCircle, Info, X } from 'lucide-react';
@@ -206,6 +207,9 @@ const MainLayout: React.FC = () => {
 
       {/* Global Plan Purchase Modal */}
       <EnrollmentModal />
+
+      {/* Global Legal & Compliance Modal (Play Store & Razorpay Policy Compliance) */}
+      <LegalModal />
 
       {/* Global Portal Auth Modal */}
       <AuthModal

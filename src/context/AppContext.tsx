@@ -61,6 +61,11 @@ interface AppContextType {
   enrollmentPreselectedPlan: string;
   setEnrollmentPreselectedPlan: (planId: string) => void;
   openEnrollmentModal: (planId?: string) => void;
+  isLegalModalOpen: boolean;
+  setIsLegalModalOpen: (open: boolean) => void;
+  legalModalTab: 'privacy' | 'terms' | 'refund' | 'contact';
+  setLegalModalTab: (tab: 'privacy' | 'terms' | 'refund' | 'contact') => void;
+  openLegalModal: (tab?: 'privacy' | 'terms' | 'refund' | 'contact') => void;
   hasCourseAccess: boolean;
   isAuthModalOpen: boolean;
   setIsAuthModalOpen: (open: boolean) => void;
@@ -445,6 +450,26 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setEnrollmentPreselectedPlan(planId);
     setIsEnrollmentModalOpen(true);
   }, []);
+
+  const [isLegalModalOpen, setIsLegalModalOpen] = useState<boolean>(false);
+  const [legalModalTab, setLegalModalTab] = useState<'privacy' | 'terms' | 'refund' | 'contact'>('privacy');
+
+  const openLegalModal = useCallback((tab: 'privacy' | 'terms' | 'refund' | 'contact' = 'privacy') => {
+    setLegalModalTab(tab);
+    setIsLegalModalOpen(true);
+  }, []);
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      const h = window.location.hash.toLowerCase().replace('#', '');
+      if (h === 'privacy' || h === 'terms' || h === 'refund' || h === 'contact') {
+        openLegalModal(h as any);
+      }
+    };
+    handleHashChange();
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, [openLegalModal]);
 
   const hasCourseAccess = useMemo(() => {
     return (
@@ -2348,6 +2373,11 @@ Expires in 5 minutes. Do not share this OTP with anyone.`
         enrollmentPreselectedPlan,
         setEnrollmentPreselectedPlan,
         openEnrollmentModal,
+        isLegalModalOpen,
+        setIsLegalModalOpen,
+        legalModalTab,
+        setLegalModalTab,
+        openLegalModal,
         hasCourseAccess,
         isAuthModalOpen,
         setIsAuthModalOpen,

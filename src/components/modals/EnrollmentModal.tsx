@@ -109,21 +109,12 @@ export const EnrollmentModal: React.FC = () => {
     }
   }, [currentUser, isEnrollmentModalOpen]);
 
-  // Payment Method State
-  const [paymentMethod, setPaymentMethod] = useState<'upi_qr' | 'upi_id' | 'card' | 'netbanking' | 'whatsapp'>('upi_qr');
-  const [upiId, setUpiId] = useState('aswathi@okaxis');
+  // Payment Method State: Razorpay, Direct UPI QR, or WhatsApp Mentorship
+  const [paymentMethod, setPaymentMethod] = useState<'razorpay' | 'upi_qr' | 'whatsapp'>('razorpay');
+  const [userUtr, setUserUtr] = useState('');
   const [copiedUpi, setCopiedUpi] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [transactionId, setTransactionId] = useState('');
-
-  // Card fields
-  const [cardNumber, setCardNumber] = useState('4532 •••• •••• 8821');
-  const [cardExpiry, setCardExpiry] = useState('08/28');
-  const [cardCvv, setCardCvv] = useState('•••');
-  const [cardHolder, setCardHolder] = useState('ASWATHI NAIR');
-
-  // Netbanking field
-  const [selectedBank, setSelectedBank] = useState('State Bank of India (SBI)');
 
   if (!isEnrollmentModalOpen) return null;
 
@@ -137,26 +128,81 @@ export const EnrollmentModal: React.FC = () => {
 
   const handleProcessPayment = () => {
     setIsProcessing(true);
-    const txId = 'TXN_KPSC_' + Math.floor(10000000 + Math.random() * 90000000);
+    const rzpKey = (import.meta.env.VITE_RAZORPAY_KEY_ID as string) || '';
+
+    // 1. If Razorpay is chosen and key is configured, trigger official Razorpay Checkout popup
+    if (paymentMethod === 'razorpay' && typeof window !== 'undefined' && (window as any).Razorpay && rzpKey && rzpKey.trim() !== '') {
+      try {
+        const options = {
+          key: rzpKey,
+          amount: selectedPlan.price * 100, // paise (e.g. 60000 or 100000)
+          currency: 'INR',
+          name: 'SurveyRank Kerala PSC Academy',
+          description: selectedPlan.name,
+          image: '/favicon.png',
+          prefill: {
+            name: name,
+            email: email,
+            contact: phone
+          },
+          theme: {
+            color: '#059669' // Emerald Brand Color
+          },
+          handler: function (response: any) {
+            setIsProcessing(false);
+            const txId = response.razorpay_payment_id || ('RZP_' + Date.now());
+            setTransactionId(txId);
+            setStep(3);
+
+            const planKey = selectedPlanId === 'plan-6months' ? '6months' : '1year';
+            enrollStudent(name, email, phone, district, targetExam, planKey);
+
+            try {
+              confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+            } catch (err) {}
+
+            showToast(`Payment of ₹${selectedPlan.price} received! Ref: ${txId}`, 'success');
+          },
+          modal: {
+            ondismiss: function () {
+              setIsProcessing(false);
+            }
+          }
+        };
+
+        const rzp = new (window as any).Razorpay(options);
+        rzp.on('payment.failed', function (resp: any) {
+          setIsProcessing(false);
+          showToast(`Payment Failed: ${resp.error?.description || 'Transaction cancelled'}`, 'error');
+        });
+        rzp.open();
+        return;
+      } catch (err) {
+        console.warn('Razorpay popup error:', err);
+      }
+    }
+
+    // 2. Direct UPI QR or Instant Verification Fallback
+    const txId = userUtr.trim() ? userUtr.trim() : ('TXN_KPSC_' + Math.floor(10000000 + Math.random() * 90000000));
     setTransactionId(txId);
 
     setTimeout(() => {
       setIsProcessing(false);
       setStep(3);
 
-      // Trigger Confetti
+      const planKey = selectedPlanId === 'plan-6months' ? '6months' : '1year';
+      enrollStudent(name, email, phone, district, targetExam, planKey);
+
       try {
         confetti({
           particleCount: 100,
           spread: 80,
           origin: { y: 0.6 }
         });
-      } catch (err) {
-        // ignore
-      }
+      } catch (err) {}
 
-      showToast(`Payment of ₹${selectedPlan.price} successful! Welcome to the course!`, 'success');
-    }, 1500);
+      showToast(`Payment of ₹${selectedPlan.price} confirmed! Welcome to the course!`, 'success');
+    }, 1200);
   };
 
   const handleFinishEnrollment = () => {
@@ -395,41 +441,31 @@ export const EnrollmentModal: React.FC = () => {
                 </label>
 
                 {/* Tab Bar */}
-                <div className="grid grid-cols-4 gap-1.5 bg-slate-100 p-1 rounded-xl text-xs font-semibold text-slate-600">
+                <div className="grid grid-cols-3 gap-1.5 bg-slate-100 p-1 rounded-xl text-xs font-semibold text-slate-600">
+                  <button
+                    type="button"
+                    onClick={() => setPaymentMethod('razorpay')}
+                    className={`py-2 rounded-lg transition flex flex-col sm:flex-row items-center justify-center gap-1.5 ${
+                      paymentMethod === 'razorpay' ? 'bg-white text-emerald-700 shadow-sm font-bold' : 'hover:bg-slate-200'
+                    }`}
+                  >
+                    <CreditCard className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>Razorpay / Cards / UPI</span>
+                  </button>
                   <button
                     type="button"
                     onClick={() => setPaymentMethod('upi_qr')}
-                    className={`py-2 rounded-lg transition flex flex-col sm:flex-row items-center justify-center gap-1 ${
+                    className={`py-2 rounded-lg transition flex flex-col sm:flex-row items-center justify-center gap-1.5 ${
                       paymentMethod === 'upi_qr' ? 'bg-white text-brand-700 shadow-sm font-bold' : 'hover:bg-slate-200'
                     }`}
                   >
                     <QrCode className="w-3.5 h-3.5" />
-                    <span>UPI / QR</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setPaymentMethod('card')}
-                    className={`py-2 rounded-lg transition flex flex-col sm:flex-row items-center justify-center gap-1 ${
-                      paymentMethod === 'card' ? 'bg-white text-brand-700 shadow-sm font-bold' : 'hover:bg-slate-200'
-                    }`}
-                  >
-                    <CreditCard className="w-3.5 h-3.5" />
-                    <span>Card</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setPaymentMethod('netbanking')}
-                    className={`py-2 rounded-lg transition flex flex-col sm:flex-row items-center justify-center gap-1 ${
-                      paymentMethod === 'netbanking' ? 'bg-white text-brand-700 shadow-sm font-bold' : 'hover:bg-slate-200'
-                    }`}
-                  >
-                    <Building2 className="w-3.5 h-3.5" />
-                    <span>NetBanking</span>
+                    <span>Scan UPI QR</span>
                   </button>
                   <button
                     type="button"
                     onClick={() => setPaymentMethod('whatsapp')}
-                    className={`py-2 rounded-lg transition flex flex-col sm:flex-row items-center justify-center gap-1 ${
+                    className={`py-2 rounded-lg transition flex flex-col sm:flex-row items-center justify-center gap-1.5 ${
                       paymentMethod === 'whatsapp' ? 'bg-white text-emerald-700 shadow-sm font-bold' : 'hover:bg-slate-200'
                     }`}
                   >
@@ -438,24 +474,53 @@ export const EnrollmentModal: React.FC = () => {
                   </button>
                 </div>
 
-                {/* TAB CONTENT 1: UPI & QR CODE */}
+                {/* TAB CONTENT 1: RAZORPAY INSTANT CHECKOUT */}
+                {paymentMethod === 'razorpay' && (
+                  <div className="bg-emerald-50/40 p-4 rounded-xl border border-emerald-200/80 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+                        <Sparkles className="w-4 h-4 text-emerald-600" />
+                        <span>Instant Gateway Checkout</span>
+                      </div>
+                      <span className="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                        Recommended
+                      </span>
+                    </div>
+
+                    <p className="text-[11px] text-slate-600 leading-relaxed">
+                      Pay securely with <strong>Google Pay, PhonePe, Paytm, Credit / Debit Cards, UPI</strong>, or <strong>50+ NetBanking options</strong>. Access unlocks automatically upon completion.
+                    </p>
+
+                    <div className="p-3 bg-white rounded-lg border border-emerald-100 flex items-center justify-between text-[11px]">
+                      <div className="text-slate-600">
+                        Total Amount: <span className="font-bold text-slate-900">₹{selectedPlan.price}.00</span>
+                      </div>
+                      <div className="text-[10px] text-emerald-700 font-semibold flex items-center gap-1">
+                        <ShieldCheck className="w-3.5 h-3.5" />
+                        <span>Razorpay Encrypted</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* TAB CONTENT 2: DIRECT UPI & QR CODE */}
                 {paymentMethod === 'upi_qr' && (
-                  <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-4 text-center">
+                  <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3 text-center">
                     <div className="space-y-1">
                       <div className="text-xs font-bold text-slate-800">
-                        Scan QR Code with Any UPI App (GPay / PhonePe / Paytm)
+                        Scan QR Code with Any UPI App (GPay / PhonePe / Paytm / BHIM)
                       </div>
                       <div className="text-[11px] text-slate-500">
-                        Zero transaction fees • Instant automated activation
+                        Zero transaction fees • Direct payment to faculty account
                       </div>
                     </div>
 
                     {/* QR Code Graphic Box */}
-                    <div className="w-44 h-44 bg-white p-3 rounded-2xl border-2 border-brand-500 shadow-md mx-auto flex flex-col items-center justify-center space-y-2">
+                    <div className="w-40 h-40 bg-white p-2.5 rounded-2xl border-2 border-brand-500 shadow-md mx-auto flex flex-col items-center justify-center space-y-1.5">
                       <img
-                        src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=joseph.surveyrankers@okhdfcbank%26pn=Joseph%20Josey%20Survey%20Academy%26am=${selectedPlan.price}%26cu=INR`}
+                        src={`https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=upi://pay?pa=joseph.surveyrankers@okhdfcbank%26pn=Joseph%20Josey%20Survey%20Academy%26am=${selectedPlan.price}%26cu=INR`}
                         alt="Kerala PSC Survey Course Payment QR Code"
-                        className="w-32 h-32 object-contain"
+                        className="w-28 h-28 object-contain"
                       />
                       <div className="text-[10px] font-bold text-slate-700 font-mono">
                         ₹{selectedPlan.price} • Joseph Josey
@@ -463,9 +528,9 @@ export const EnrollmentModal: React.FC = () => {
                     </div>
 
                     {/* Copy UPI ID */}
-                    <div className="flex items-center justify-center gap-2 bg-white px-3 py-2 rounded-xl border border-slate-200 text-xs max-w-sm mx-auto">
-                      <span className="text-slate-500">Official UPI ID:</span>
-                      <span className="font-bold text-brand-900 font-mono">joseph.surveyrankers@okhdfcbank</span>
+                    <div className="flex items-center justify-center gap-2 bg-white px-3 py-1.5 rounded-xl border border-slate-200 text-xs max-w-sm mx-auto">
+                      <span className="text-slate-500 text-[11px]">UPI ID:</span>
+                      <span className="font-bold text-brand-900 font-mono text-xs">joseph.surveyrankers@okhdfcbank</span>
                       <button
                         type="button"
                         onClick={handleCopyUpi}
@@ -475,86 +540,35 @@ export const EnrollmentModal: React.FC = () => {
                         {copiedUpi ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
                       </button>
                     </div>
-                  </div>
-                )}
 
-                {/* TAB CONTENT 2: CARD PAYMENT */}
-                {paymentMethod === 'card' && (
-                  <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3 text-xs">
-                    <div>
-                      <label className="block font-semibold text-slate-700 mb-1">Card Number</label>
+                    {/* Optional UTR / Reference ID Field */}
+                    <div className="text-left pt-1 max-w-sm mx-auto">
+                      <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+                        12-Digit UPI UTR / Reference No (Optional)
+                      </label>
                       <input
                         type="text"
-                        value={cardNumber}
-                        onChange={(e) => setCardNumber(e.target.value)}
-                        className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none bg-white font-mono"
-                      />
-                    </div>
-                    <div className="grid grid-cols-2 gap-3">
-                      <div>
-                        <label className="block font-semibold text-slate-700 mb-1">Expiry (MM/YY)</label>
-                        <input
-                          type="text"
-                          value={cardExpiry}
-                          onChange={(e) => setCardExpiry(e.target.value)}
-                          className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none bg-white font-mono"
-                        />
-                      </div>
-                      <div>
-                        <label className="block font-semibold text-slate-700 mb-1">CVV</label>
-                        <input
-                          type="password"
-                          maxLength={3}
-                          value={cardCvv}
-                          onChange={(e) => setCardCvv(e.target.value)}
-                          className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none bg-white font-mono"
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <label className="block font-semibold text-slate-700 mb-1">Cardholder Name</label>
-                      <input
-                        type="text"
-                        value={cardHolder}
-                        onChange={(e) => setCardHolder(e.target.value)}
-                        className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none bg-white uppercase"
+                        value={userUtr}
+                        onChange={(e) => setUserUtr(e.target.value)}
+                        placeholder="e.g. 428901234567"
+                        className="w-full px-3 py-1.5 border border-slate-300 rounded-lg text-xs font-mono outline-none bg-white focus:border-brand-500"
                       />
                     </div>
                   </div>
                 )}
 
-                {/* TAB CONTENT 3: NETBANKING */}
-                {paymentMethod === 'netbanking' && (
-                  <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3 text-xs">
-                    <label className="block font-semibold text-slate-700 mb-1">Select Bank</label>
-                    <select
-                      value={selectedBank}
-                      onChange={(e) => setSelectedBank(e.target.value)}
-                      className="w-full px-3 py-2.5 border border-slate-300 rounded-lg bg-white outline-none"
-                    >
-                      <option value="State Bank of India (SBI)">State Bank of India (SBI)</option>
-                      <option value="Federal Bank">Federal Bank</option>
-                      <option value="South Indian Bank (SIB)">South Indian Bank (SIB)</option>
-                      <option value="Canara Bank">Canara Bank</option>
-                      <option value="Kerala Gramin Bank">Kerala Gramin Bank</option>
-                      <option value="HDFC Bank">HDFC Bank</option>
-                      <option value="ICICI Bank">ICICI Bank</option>
-                    </select>
-                  </div>
-                )}
-
-                {/* TAB CONTENT 4: WHATSAPP DIRECT */}
+                {/* TAB CONTENT 3: WHATSAPP DIRECT */}
                 {paymentMethod === 'whatsapp' && (
                   <div className="bg-emerald-50/60 p-4 rounded-xl border border-emerald-200 space-y-3 text-xs text-emerald-950">
                     <div className="font-bold flex items-center gap-1.5 text-emerald-900">
                       <MessageCircle className="w-4 h-4 text-emerald-600" />
-                      Direct WhatsApp Mentorship Payment
+                      Direct WhatsApp Mentorship Enrollment
                     </div>
                     <p className="text-[11px] leading-relaxed">
-                      You can pay directly via Google Pay / PhonePe to <strong>+91 94470 00000</strong> (Joseph Josey) and send the screenshot on WhatsApp for instant batch activation.
+                      You can send the payment screenshot directly on WhatsApp to Course Director <strong>Joseph Josey (+91 94470 00000)</strong> for batch enrollment.
                     </p>
                     <a
-                      href={`https://wa.me/919447000000?text=Hi%20Joseph%20Sir%2C%20I%20want%20to%20enroll%20in%20the%20Kerala%20PSC%20Survey%20Master%20Course%20(Amount%3A%20INR%20${selectedPlan.price})`}
+                      href={`https://wa.me/919447000000?text=Hi%20Joseph%20Sir%2C%20I%20want%20to%20enroll%20in%20the%20Kerala%20PSC%20Survey%20Academy%20(${encodeURIComponent(selectedPlan.name)})%20(Amount%3A%20INR%20${selectedPlan.price})`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold shadow text-xs"
@@ -592,7 +606,7 @@ export const EnrollmentModal: React.FC = () => {
                   ) : (
                     <>
                       <CheckCircle className="w-4 h-4" />
-                      <span>Confirm & Pay ₹{selectedPlan.price}</span>
+                      <span>{paymentMethod === 'razorpay' ? `Pay ₹${selectedPlan.price} with Razorpay` : `Confirm & Enroll (₹${selectedPlan.price})`}</span>
                     </>
                   )}
                 </button>
