@@ -17881,19 +17881,19 @@
           "topic": "Plane Table Accessories and Components"
         },
         {
-          "id": "bq-planetbl-103-q63",
+          "id": "bq-planetbl-103-q63-unique",
           "questionNumber": 63,
-          "question": "Alidade is used for",
+          "question": "In the three-point problem in plane table surveying, when the station occupied by the instrument falls on the circumscribed circle passing through the three known control points, the condition is known as:",
           "options": [
-            "Sighting objects in plane table survey",
-            "Sighting the levelling staff in levelling",
-            "Marking stations in chain survey",
-            "Getting North direction"
+            "Danger Circle (Indeterminate solution)",
+            "Great Triangle Solution",
+            "Auxiliary Station Orientation",
+            "Fiducial Error Limit"
           ],
           "correctOptionIndex": 0,
-          "explanation": "An alidade (sight rule) consists of a ruling edge with sight and object vanes, used for sighting objects and drawing sight rays along its fiducial edge.",
-          "rankerTip": "Alidade = Sighting objects and drawing rays on the drawing sheet.",
-          "topic": "Plane Table Accessories and Components"
+          "explanation": "If the instrument station lies on or near the circumference of the circle passing through the three control points (the Great Circle), Lehman's trial-and-error method fails because the rays will meet on the circle, making the location indeterminate. This is termed the Danger Circle.",
+          "rankerTip": "Three-point resection is invalid/indeterminate if the instrument station lies on the circumscribed circle of the 3 points (Danger Circle).",
+          "topic": "Plane Table Three-Point Problem & Lehman's Rules"
         },
         {
           "id": "bq-planetbl-103-q64",
@@ -30519,26 +30519,6 @@
       "createdAt": "2026-08-30T22:00:00Z"
     },
     {
-      "id": "bq-compass-q8",
-      "moduleId": "mod-3",
-      "moduleNumber": 3,
-      "question": "A freely floating needle slightly gets inclined to the horizontal anywhere except on the equator, it's called :",
-      "options": [
-        "Dip",
-        "Declination",
-        "Local Attraction",
-        "Secular variation"
-      ],
-      "correctOptionIndex": 0,
-      "explanation": "Correct answer is option (A): \"Dip\". High-yield Kerala PSC Compass Survey standard syllabus question on Dip of Magnetic Needle.",
-      "rankerTip": "Kerala PSC Repeated Compass Question #8 on Dip of Magnetic Needle.",
-      "topic": "Compass Survey - Dip of Magnetic Needle",
-      "type": "pyq",
-      "examName": "Kerala PSC Surveyor Gr. II / Compass Survey Bank",
-      "year": 2024,
-      "createdAt": "2026-08-30T22:00:00Z"
-    },
-    {
       "id": "bq-compass-q9",
       "moduleId": "mod-3",
       "moduleNumber": 3,
@@ -34439,26 +34419,6 @@
       "createdAt": "2026-08-30T17:00:00Z"
     },
     {
-      "id": "bq-chain-q41",
-      "moduleId": "mod-2",
-      "moduleNumber": 2,
-      "question": "In chain surveying a tie line is primarily provided",
-      "options": [
-        "To check accuracy of the survey",
-        "To take offsets for detail survey",
-        "To avoid long offset from chain line",
-        "To increase the number of chain lines"
-      ],
-      "correctOptionIndex": 2,
-      "explanation": "Correct answer is option (C): \"To avoid long offset from chain line\". High-yield Kerala PSC Chain Survey standard syllabus question on Survey Lines.",
-      "rankerTip": "Kerala PSC Repeated Question #41 on Survey Lines.",
-      "topic": "Chain Survey - Survey Lines",
-      "type": "pyq",
-      "examName": "Kerala PSC Surveyor Gr. II / Chain Survey Bank",
-      "year": 2024,
-      "createdAt": "2026-08-30T17:00:00Z"
-    },
-    {
       "id": "bq-chain-q42",
       "moduleId": "mod-2",
       "moduleNumber": 2,
@@ -37613,26 +37573,6 @@
       "explanation": "Correct answer is option (D): \"Correct\". High-yield Kerala PSC Chain Survey standard syllabus question on Ranging Signals.",
       "rankerTip": "Kerala PSC Repeated Question #199 on Ranging Signals.",
       "topic": "Chain Survey - Ranging Signals",
-      "type": "pyq",
-      "examName": "Kerala PSC Surveyor Gr. II / Chain Survey Bank",
-      "year": 2024,
-      "createdAt": "2026-08-30T17:00:00Z"
-    },
-    {
-      "id": "bq-chain-q200",
-      "moduleId": "mod-2",
-      "moduleNumber": 2,
-      "question": "The principle of chain surveying is to divide the area into:",
-      "options": [
-        "Rectangles",
-        "Squares",
-        "Triangles",
-        "Trapezium"
-      ],
-      "correctOptionIndex": 2,
-      "explanation": "Correct answer is option (C): \"Triangles\". High-yield Kerala PSC Chain Survey standard syllabus question on Survey Principles.",
-      "rankerTip": "Kerala PSC Repeated Question #200 on Survey Principles.",
-      "topic": "Chain Survey - Survey Principles",
       "type": "pyq",
       "examName": "Kerala PSC Surveyor Gr. II / Chain Survey Bank",
       "year": 2024,
@@ -43439,26 +43379,6 @@
       "createdAt": "2026-09-09T00:00:00Z"
     },
     {
-      "id": "bq-planetbl-103-q5",
-      "moduleId": "mod-4",
-      "moduleNumber": 4,
-      "question": "The first temporary adjustment to be done after setting up the plane table at any station will be",
-      "options": [
-        "Orientation",
-        "Levelling",
-        "Centering and Levelling",
-        "Sighting"
-      ],
-      "correctOptionIndex": 2,
-      "explanation": "In setting up a plane table at any station, levelling and centering are carried out almost simultaneously, followed by orientation.",
-      "rankerTip": "Order of setup: Levelling & Centering (simultaneously) -> Orientation.",
-      "topic": "Field Operations and Characteristics of Plane Tabling",
-      "type": "pyq",
-      "examName": "Kerala PSC Surveyor Gr. II / Plane Table Bank",
-      "year": 2024,
-      "createdAt": "2026-09-09T00:00:00Z"
-    },
-    {
       "id": "bq-planetbl-103-q6",
       "moduleId": "mod-4",
       "moduleNumber": 4,
@@ -44599,26 +44519,6 @@
       "createdAt": "2026-09-09T00:00:00Z"
     },
     {
-      "id": "bq-planetbl-103-q63",
-      "moduleId": "mod-4",
-      "moduleNumber": 4,
-      "question": "Alidade is used for",
-      "options": [
-        "Sighting objects in plane table survey",
-        "Sighting the levelling staff in levelling",
-        "Marking stations in chain survey",
-        "Getting North direction"
-      ],
-      "correctOptionIndex": 0,
-      "explanation": "An alidade (sight rule) consists of a ruling edge with sight and object vanes, used for sighting objects and drawing sight rays along its fiducial edge.",
-      "rankerTip": "Alidade = Sighting objects and drawing rays on the drawing sheet.",
-      "topic": "Plane Table Accessories and Components",
-      "type": "pyq",
-      "examName": "Kerala PSC Surveyor Gr. II / Plane Table Bank",
-      "year": 2024,
-      "createdAt": "2026-09-09T00:00:00Z"
-    },
-    {
       "id": "bq-planetbl-103-q64",
       "moduleId": "mod-4",
       "moduleNumber": 4,
@@ -45399,26 +45299,6 @@
       "createdAt": "2026-09-09T00:00:00Z"
     },
     {
-      "id": "bq-planetbl-103-q103",
-      "moduleId": "mod-4",
-      "moduleNumber": 4,
-      "question": "In setting up a plane table at any station",
-      "options": [
-        "Levelling is done first",
-        "Centering is done first",
-        "Both levelling and centering are done simultaneously",
-        "Orientation is done first"
-      ],
-      "correctOptionIndex": 2,
-      "explanation": "In setting up a plane table at any station, levelling and centering are carried out almost simultaneously, followed by orientation.",
-      "rankerTip": "Order of setup: Levelling & Centering (simultaneously) -> Orientation.",
-      "topic": "Field Operations and Characteristics of Plane Tabling",
-      "type": "pyq",
-      "examName": "Kerala PSC Surveyor Gr. II / Plane Table Bank",
-      "year": 2024,
-      "createdAt": "2026-09-09T00:00:00Z"
-    },
-    {
       "id": "bq-theodolite-146-q1",
       "moduleId": "mod-6",
       "moduleNumber": 6,
@@ -45852,26 +45732,6 @@
       "correctOptionIndex": 2,
       "explanation": "The correct answer is 'Residual error'. In theodolite surveying, this conforms to standard Kerala PSC guidelines.",
       "rankerTip": "Key exam takeaway: Residual error.",
-      "topic": "Theodolite Surveying Fundamentals",
-      "type": "pyq",
-      "examName": "Kerala PSC Surveyor Gr. II / Theodolite Bank",
-      "year": 2024,
-      "createdAt": "2026-09-09T00:00:00Z"
-    },
-    {
-      "id": "bq-theodolite-146-q23",
-      "moduleId": "mod-6",
-      "moduleNumber": 6,
-      "question": "What test is that the line of sight perpendicular to the horizontal axis in theodolite?",
-      "options": [
-        "Cross hair ring test",
-        "Plate level test",
-        "Collimation test",
-        "Spire test"
-      ],
-      "correctOptionIndex": 2,
-      "explanation": "The correct answer is 'Collimation test'. In theodolite surveying, this conforms to standard Kerala PSC guidelines.",
-      "rankerTip": "Key exam takeaway: Collimation test.",
       "topic": "Theodolite Surveying Fundamentals",
       "type": "pyq",
       "examName": "Kerala PSC Surveyor Gr. II / Theodolite Bank",
@@ -46759,26 +46619,6 @@
       "createdAt": "2026-09-09T00:00:00Z"
     },
     {
-      "id": "bq-theodolite-146-q68",
-      "moduleId": "mod-6",
-      "moduleNumber": 6,
-      "question": "What test is that the vertical and horizontal cross hair lie in a plane perpendicular to the horizontal axis in theodolite?",
-      "options": [
-        "Cross hair ring test",
-        "Plate level test",
-        "Collimation test",
-        "Spire test"
-      ],
-      "correctOptionIndex": 0,
-      "explanation": "The correct answer is 'Cross hair ring test'. In theodolite surveying, this conforms to standard Kerala PSC guidelines.",
-      "rankerTip": "Key exam takeaway: Cross hair ring test.",
-      "topic": "Theodolite Surveying Fundamentals",
-      "type": "pyq",
-      "examName": "Kerala PSC Surveyor Gr. II / Theodolite Bank",
-      "year": 2024,
-      "createdAt": "2026-09-09T00:00:00Z"
-    },
-    {
       "id": "bq-theodolite-146-q69",
       "moduleId": "mod-6",
       "moduleNumber": 6,
@@ -46892,26 +46732,6 @@
       "correctOptionIndex": 0,
       "explanation": "The correct answer is 'Theodolite'. In theodolite surveying, this conforms to standard Kerala PSC guidelines.",
       "rankerTip": "Key exam takeaway: Theodolite.",
-      "topic": "Theodolite Surveying Fundamentals",
-      "type": "pyq",
-      "examName": "Kerala PSC Surveyor Gr. II / Theodolite Bank",
-      "year": 2024,
-      "createdAt": "2026-09-09T00:00:00Z"
-    },
-    {
-      "id": "bq-theodolite-146-q75",
-      "moduleId": "mod-6",
-      "moduleNumber": 6,
-      "question": "What is the term, while the vertical circle is on the right of the telescope and the target on the telescope is down in theodolite?",
-      "options": [
-        "Telescope forward",
-        "Telescope backward",
-        "Telescope inverted",
-        "Telescope normal"
-      ],
-      "correctOptionIndex": 2,
-      "explanation": "The correct answer is 'Telescope inverted'. In theodolite surveying, this conforms to standard Kerala PSC guidelines.",
-      "rankerTip": "Key exam takeaway: Telescope inverted.",
       "topic": "Theodolite Surveying Fundamentals",
       "type": "pyq",
       "examName": "Kerala PSC Surveyor Gr. II / Theodolite Bank",
@@ -47272,26 +47092,6 @@
       "correctOptionIndex": 0,
       "explanation": "The correct answer is 'Theodolite'. In theodolite surveying, this conforms to standard Kerala PSC guidelines.",
       "rankerTip": "Key exam takeaway: Theodolite.",
-      "topic": "Theodolite Surveying Fundamentals",
-      "type": "pyq",
-      "examName": "Kerala PSC Surveyor Gr. II / Theodolite Bank",
-      "year": 2024,
-      "createdAt": "2026-09-09T00:00:00Z"
-    },
-    {
-      "id": "bq-theodolite-146-q94",
-      "moduleId": "mod-6",
-      "moduleNumber": 6,
-      "question": "Which method is a single set of observations made for measuring a horizontal angle between any two point at a station?",
-      "options": [
-        "Repetition method",
-        "Reiteration method",
-        "Ordinary method",
-        "Deflection method"
-      ],
-      "correctOptionIndex": 2,
-      "explanation": "The correct answer is 'Ordinary method'. In theodolite surveying, this conforms to standard Kerala PSC guidelines.",
-      "rankerTip": "Key exam takeaway: Ordinary method.",
       "topic": "Theodolite Surveying Fundamentals",
       "type": "pyq",
       "examName": "Kerala PSC Surveyor Gr. II / Theodolite Bank",
@@ -48279,26 +48079,6 @@
       "createdAt": "2026-09-09T00:00:00Z"
     },
     {
-      "id": "bq-theodolite-146-q144",
-      "moduleId": "mod-6",
-      "moduleNumber": 6,
-      "question": "The sensitiveness of a level tube decreases if",
-      "options": [
-        "Radius of curvature of its internal surface is increased",
-        "Diameter of tube is increased",
-        "Increasing the radium of tube",
-        "Viscosity and surface tension are increased"
-      ],
-      "correctOptionIndex": 3,
-      "explanation": "The correct answer is 'Viscosity and surface tension are increased'. In theodolite surveying, this conforms to standard Kerala PSC guidelines.",
-      "rankerTip": "Key exam takeaway: Viscosity and surface tension are increased.",
-      "topic": "Theodolite Surveying Fundamentals",
-      "type": "pyq",
-      "examName": "Kerala PSC Surveyor Gr. II / Theodolite Bank",
-      "year": 2024,
-      "createdAt": "2026-09-09T00:00:00Z"
-    },
-    {
       "id": "bq-theodolite-146-q145",
       "moduleId": "mod-6",
       "moduleNumber": 6,
@@ -48335,26 +48115,6 @@
       "topic": "Theodolite Telescope Operations",
       "type": "pyq",
       "examName": "Kerala PSC Surveyor Gr. II / Theodolite Bank",
-      "year": 2024,
-      "createdAt": "2026-09-09T00:00:00Z"
-    },
-    {
-      "id": "bq-moderninst-75-q1",
-      "moduleId": "mod-7",
-      "moduleNumber": 7,
-      "question": "What is the advantage of Total Station?",
-      "options": [
-        "The instruments costly",
-        "Does not provide field note",
-        "Direct observation of sum not possible",
-        "Greater accuracy in area computation"
-      ],
-      "correctOptionIndex": 3,
-      "explanation": "A key advantage of Total Station surveying is high precision in coordinate calculation and area computation directly from field measurements without plotting distortion.",
-      "rankerTip": "Advantage of Total Station: Direct coordinate and area computation with high precision.",
-      "topic": "Total Station Advantages and Disadvantages",
-      "type": "pyq",
-      "examName": "Kerala PSC Surveyor Gr. II / Modern Instruments Bank",
       "year": 2024,
       "createdAt": "2026-09-09T00:00:00Z"
     },
@@ -48459,26 +48219,6 @@
       "createdAt": "2026-09-09T00:00:00Z"
     },
     {
-      "id": "bq-moderninst-75-q7",
-      "moduleId": "mod-7",
-      "moduleNumber": 7,
-      "question": "What is the disadvantage of Total Station?",
-      "options": [
-        "Automation of old maps",
-        "Local language support",
-        "Full GIS creation",
-        "The instrument is costly"
-      ],
-      "correctOptionIndex": 3,
-      "explanation": "The major disadvantages of Total Stations are high initial investment cost, requirement for skilled operators, and sensitivity to harsh field environments.",
-      "rankerTip": "Primary disadvantage of Total Station = High cost and need for skilled personnel.",
-      "topic": "Total Station Advantages and Disadvantages",
-      "type": "pyq",
-      "examName": "Kerala PSC Surveyor Gr. II / Modern Instruments Bank",
-      "year": 2024,
-      "createdAt": "2026-09-09T00:00:00Z"
-    },
-    {
       "id": "bq-moderninst-75-q8",
       "moduleId": "mod-7",
       "moduleNumber": 7,
@@ -48493,26 +48233,6 @@
       "explanation": "The basic physical principle of EDM is based on wave transit time: Velocity = Distance / Time, or Distance = (Velocity × Time) / 2 for the round-trip signal.",
       "rankerTip": "Principle of EDM: Velocity = Distance / Time (D = V × t / 2).",
       "topic": "EDM Fundamentals and Principles",
-      "type": "pyq",
-      "examName": "Kerala PSC Surveyor Gr. II / Modern Instruments Bank",
-      "year": 2024,
-      "createdAt": "2026-09-09T00:00:00Z"
-    },
-    {
-      "id": "bq-moderninst-75-q9",
-      "moduleId": "mod-7",
-      "moduleNumber": 7,
-      "question": "Which is the total station with latest technology?",
-      "options": [
-        "Mechanical",
-        "Semi automatic",
-        "Manual",
-        "Automatic"
-      ],
-      "correctOptionIndex": 3,
-      "explanation": "The correct answer is 'Automatic'. In modern surveying, this conforms to standard Kerala PSC guidelines.",
-      "rankerTip": "Key exam takeaway: Automatic.",
-      "topic": "Modern Survey Instruments and Total Station",
       "type": "pyq",
       "examName": "Kerala PSC Surveyor Gr. II / Modern Instruments Bank",
       "year": 2024,
@@ -48739,26 +48459,6 @@
       "createdAt": "2026-09-09T00:00:00Z"
     },
     {
-      "id": "bq-moderninst-75-q21",
-      "moduleId": "mod-7",
-      "moduleNumber": 7,
-      "question": "When total station is sighted to the target, which of the operation acts first?",
-      "options": [
-        "Rotation of optical axis",
-        "Rotation of vertical axis",
-        "Rotation of horizontal axis",
-        "Rotation of line of collimation"
-      ],
-      "correctOptionIndex": 0,
-      "explanation": "The correct answer is 'Rotation of optical axis'. In modern surveying, this conforms to standard Kerala PSC guidelines.",
-      "rankerTip": "Key exam takeaway: Rotation of optical axis.",
-      "topic": "Modern Survey Instruments and Total Station",
-      "type": "pyq",
-      "examName": "Kerala PSC Surveyor Gr. II / Modern Instruments Bank",
-      "year": 2024,
-      "createdAt": "2026-09-09T00:00:00Z"
-    },
-    {
       "id": "bq-moderninst-75-q22",
       "moduleId": "mod-7",
       "moduleNumber": 7,
@@ -48859,26 +48559,6 @@
       "createdAt": "2026-09-09T00:00:00Z"
     },
     {
-      "id": "bq-moderninst-75-q27",
-      "moduleId": "mod-7",
-      "moduleNumber": 7,
-      "question": "Which are dedicated to the particular instrument and can store and process surveying observation?",
-      "options": [
-        "Data recorders",
-        "Pocket calculators",
-        "Field note books",
-        "Pen-drives"
-      ],
-      "correctOptionIndex": 0,
-      "explanation": "The correct answer is 'Data recorders'. In modern surveying, this conforms to standard Kerala PSC guidelines.",
-      "rankerTip": "Key exam takeaway: Data recorders.",
-      "topic": "Modern Survey Instruments and Total Station",
-      "type": "pyq",
-      "examName": "Kerala PSC Surveyor Gr. II / Modern Instruments Bank",
-      "year": 2024,
-      "createdAt": "2026-09-09T00:00:00Z"
-    },
-    {
       "id": "bq-moderninst-75-q28",
       "moduleId": "mod-7",
       "moduleNumber": 7,
@@ -48953,26 +48633,6 @@
       "explanation": "The propagation velocity of an electromagnetic wave depends on the refractive index of the medium through which it travels (v = c / n). Frequency remains constant.",
       "rankerTip": "Velocity and wavelength depend on the atmospheric medium; Frequency is invariant.",
       "topic": "Electromagnetic Wave Physics in EDM",
-      "type": "pyq",
-      "examName": "Kerala PSC Surveyor Gr. II / Modern Instruments Bank",
-      "year": 2024,
-      "createdAt": "2026-09-09T00:00:00Z"
-    },
-    {
-      "id": "bq-moderninst-75-q32",
-      "moduleId": "mod-7",
-      "moduleNumber": 7,
-      "question": "Which instrument is used to find out the co-ordinates of a reflection and at the same time measuring the vertical angles?",
-      "options": [
-        "Auto level",
-        "Total station",
-        "Theodolite",
-        "Transmit theodolite"
-      ],
-      "correctOptionIndex": 1,
-      "explanation": "The correct answer is 'Total station'. In modern surveying, this conforms to standard Kerala PSC guidelines.",
-      "rankerTip": "Key exam takeaway: Total station.",
-      "topic": "Modern Survey Instruments and Total Station",
       "type": "pyq",
       "examName": "Kerala PSC Surveyor Gr. II / Modern Instruments Bank",
       "year": 2024,
@@ -49059,26 +48719,6 @@
       "createdAt": "2026-09-09T00:00:00Z"
     },
     {
-      "id": "bq-moderninst-75-q37",
-      "moduleId": "mod-7",
-      "moduleNumber": 7,
-      "question": "Vertical angle is measured in the total station as",
-      "options": [
-        "Zenith angle",
-        "Nadir angle",
-        "Latitude",
-        "longitude"
-      ],
-      "correctOptionIndex": 0,
-      "explanation": "The correct answer is 'Zenith angle'. In modern surveying, this conforms to standard Kerala PSC guidelines.",
-      "rankerTip": "Key exam takeaway: Zenith angle.",
-      "topic": "Modern Survey Instruments and Total Station",
-      "type": "pyq",
-      "examName": "Kerala PSC Surveyor Gr. II / Modern Instruments Bank",
-      "year": 2024,
-      "createdAt": "2026-09-09T00:00:00Z"
-    },
-    {
       "id": "bq-moderninst-75-q38",
       "moduleId": "mod-7",
       "moduleNumber": 7,
@@ -49153,26 +48793,6 @@
       "explanation": "In Total Station geometry with zenith angle z (where 0° is zenith and 90° is horizontal): Vertical Distance V = S × cos(z), where S is the slope distance.",
       "rankerTip": "Vertical Distance: V = S × cos(z); Horizontal Distance: H = S × sin(z).",
       "topic": "Total Station Geometry and Trigonometric Reductions",
-      "type": "pyq",
-      "examName": "Kerala PSC Surveyor Gr. II / Modern Instruments Bank",
-      "year": 2024,
-      "createdAt": "2026-09-09T00:00:00Z"
-    },
-    {
-      "id": "bq-moderninst-75-q42",
-      "moduleId": "mod-7",
-      "moduleNumber": 7,
-      "question": "Which among the following doesn't indicate the basic calculation of the total station?",
-      "options": [
-        "Horizontal distance",
-        "Slope distance",
-        "Vertical distance",
-        "Co-ordinate calculations"
-      ],
-      "correctOptionIndex": 1,
-      "explanation": "The correct answer is 'Slope distance'. In modern surveying, this conforms to standard Kerala PSC guidelines.",
-      "rankerTip": "Key exam takeaway: Slope distance.",
-      "topic": "Modern Survey Instruments and Total Station",
       "type": "pyq",
       "examName": "Kerala PSC Surveyor Gr. II / Modern Instruments Bank",
       "year": 2024,
@@ -49393,26 +49013,6 @@
       "explanation": "A retro-reflector survey prism is a cube corner prism (corner cube) with three mutually perpendicular reflecting surfaces, reflecting incoming light rays exactly parallel to the incident direction.",
       "rankerTip": "Survey prism = Cube corner (reflects rays 180° back along incident path).",
       "topic": "Reflectors and Prisms in EDM",
-      "type": "pyq",
-      "examName": "Kerala PSC Surveyor Gr. II / Modern Instruments Bank",
-      "year": 2024,
-      "createdAt": "2026-09-09T00:00:00Z"
-    },
-    {
-      "id": "bq-moderninst-75-q54",
-      "moduleId": "mod-7",
-      "moduleNumber": 7,
-      "question": "The data obtained from total station can be used in which among the following software directly?",
-      "options": [
-        "Primavera",
-        "STAAD PRO",
-        "Autodesk Revit",
-        "Surfer"
-      ],
-      "correctOptionIndex": 3,
-      "explanation": "The correct answer is 'Surfer'. In modern surveying, this conforms to standard Kerala PSC guidelines.",
-      "rankerTip": "Key exam takeaway: Surfer.",
-      "topic": "Modern Survey Instruments and Total Station",
       "type": "pyq",
       "examName": "Kerala PSC Surveyor Gr. II / Modern Instruments Bank",
       "year": 2024,
@@ -49673,26 +49273,6 @@
       "explanation": "The correct answer is 'Geotronics Unicom'. In modern surveying, this conforms to standard Kerala PSC guidelines.",
       "rankerTip": "Key exam takeaway: Geotronics Unicom.",
       "topic": "Modern Survey Instruments and Total Station",
-      "type": "pyq",
-      "examName": "Kerala PSC Surveyor Gr. II / Modern Instruments Bank",
-      "year": 2024,
-      "createdAt": "2026-09-09T00:00:00Z"
-    },
-    {
-      "id": "bq-moderninst-75-q68",
-      "moduleId": "mod-7",
-      "moduleNumber": 7,
-      "question": "Which is fitted with a total station capable of storing 900 to 10000 points?",
-      "options": [
-        "Memory card",
-        "Data recorder",
-        "Internal memory",
-        "Field computer"
-      ],
-      "correctOptionIndex": 2,
-      "explanation": "The correct answer is 'Internal memory'. In modern surveying, this conforms to standard Kerala PSC guidelines.",
-      "rankerTip": "Key exam takeaway: Internal memory.",
-      "topic": "Data Storage and Transfer",
       "type": "pyq",
       "examName": "Kerala PSC Surveyor Gr. II / Modern Instruments Bank",
       "year": 2024,
@@ -50219,26 +49799,6 @@
       "createdAt": "2026-09-09T00:00:00Z"
     },
     {
-      "id": "bq-gpsgis-85-q20",
-      "moduleId": "mod-7",
-      "moduleNumber": 7,
-      "question": "Which is an application of GPS for visually impaired?",
-      "options": [
-        "MOBIC",
-        "GIS",
-        "Ranchers",
-        "Navigation"
-      ],
-      "correctOptionIndex": 0,
-      "explanation": "MOBIC (Mobility of Blind and Elderly People Interacting with Computers) was a pioneering European GPS-based navigation guidance system for the visually impaired.",
-      "rankerTip": "GPS navigation aid application for visually impaired: MOBIC.",
-      "topic": "Assistive GPS Technology",
-      "type": "pyq",
-      "examName": "Kerala PSC Surveyor Gr. II / Modern Instruments Bank",
-      "year": 2024,
-      "createdAt": "2026-09-09T00:00:00Z"
-    },
-    {
       "id": "bq-gpsgis-85-q21",
       "moduleId": "mod-7",
       "moduleNumber": 7,
@@ -50393,26 +49953,6 @@
       "explanation": "Triangulation is the classic surveying method of locating unknown points by establishing a network of connected triangles and measuring their angles from a measured baseline.",
       "rankerTip": "Locating unknown points by forming interconnected triangles: Triangulation.",
       "topic": "Survey Triangulation",
-      "type": "pyq",
-      "examName": "Kerala PSC Surveyor Gr. II / Modern Instruments Bank",
-      "year": 2024,
-      "createdAt": "2026-09-09T00:00:00Z"
-    },
-    {
-      "id": "bq-gpsgis-85-q29",
-      "moduleId": "mod-7",
-      "moduleNumber": 7,
-      "question": "Which is an application of GPS for visually impaired in India?",
-      "options": [
-        "Marine GOS",
-        "Drishti",
-        "Ranchers",
-        "GIS"
-      ],
-      "correctOptionIndex": 1,
-      "explanation": "Drishti is an Indian GPS-based assistive navigation system designed to aid visually impaired individuals in outdoor and campus navigation.",
-      "rankerTip": "Indian GPS application for visually impaired: Drishti.",
-      "topic": "Assistive GPS in India",
       "type": "pyq",
       "examName": "Kerala PSC Surveyor Gr. II / Modern Instruments Bank",
       "year": 2024,
@@ -50859,26 +50399,6 @@
       "createdAt": "2026-09-09T00:00:00Z"
     },
     {
-      "id": "bq-gpsgis-85-q52",
-      "moduleId": "mod-7",
-      "moduleNumber": 7,
-      "question": "What is meant by the study of something without direct contact?",
-      "options": [
-        "Remote sensing",
-        "Geographic information system",
-        "Tachometry",
-        "Ranging"
-      ],
-      "correctOptionIndex": 0,
-      "explanation": "Remote sensing is the acquisition of information about an object or phenomenon without making direct physical contact with the object.",
-      "rankerTip": "Gathering data about an object without direct physical contact: Remote Sensing.",
-      "topic": "Remote Sensing Definition",
-      "type": "pyq",
-      "examName": "Kerala PSC Surveyor Gr. II / Modern Instruments Bank",
-      "year": 2024,
-      "createdAt": "2026-09-09T00:00:00Z"
-    },
-    {
       "id": "bq-gpsgis-85-q53",
       "moduleId": "mod-7",
       "moduleNumber": 7,
@@ -51139,26 +50659,6 @@
       "createdAt": "2026-09-09T00:00:00Z"
     },
     {
-      "id": "bq-gpsgis-85-q66",
-      "moduleId": "mod-7",
-      "moduleNumber": 7,
-      "question": "Which is used to put the satellite into Earth orbit?",
-      "options": [
-        "Sensors",
-        "Energy source",
-        "Radiation",
-        "Launch vehicle"
-      ],
-      "correctOptionIndex": 3,
-      "explanation": "A launch vehicle (rocket system such as Delta II, Falcon 9, PSLV) provides the necessary thrust and velocity to insert a satellite payload into Earth orbit.",
-      "rankerTip": "Used to propel and place satellites into orbit: Launch vehicle.",
-      "topic": "Satellite Launch Vehicles",
-      "type": "pyq",
-      "examName": "Kerala PSC Surveyor Gr. II / Modern Instruments Bank",
-      "year": 2024,
-      "createdAt": "2026-09-09T00:00:00Z"
-    },
-    {
       "id": "bq-gpsgis-85-q67",
       "moduleId": "mod-7",
       "moduleNumber": 7,
@@ -51373,26 +50873,6 @@
       "explanation": "Geostationary satellites orbit at ~35,786 km above the equator with an orbital period matching Earth's rotation (24 hours), remaining stationary relative to a fixed point on Earth.",
       "rankerTip": "Satellites appearing stationary relative to Earth: Geostationary satellites.",
       "topic": "Geostationary Satellites",
-      "type": "pyq",
-      "examName": "Kerala PSC Surveyor Gr. II / Modern Instruments Bank",
-      "year": 2024,
-      "createdAt": "2026-09-09T00:00:00Z"
-    },
-    {
-      "id": "bq-gpsgis-85-q78",
-      "moduleId": "mod-7",
-      "moduleNumber": 7,
-      "question": "What is meant by GPS?",
-      "options": [
-        "Global Processing System",
-        "Global Positioning System",
-        "Geographic Positional System",
-        "Geographic Processing System"
-      ],
-      "correctOptionIndex": 1,
-      "explanation": "GPS stands for Global Positioning System.",
-      "rankerTip": "GPS stands for: Global Positioning System.",
-      "topic": "GPS Expansion",
       "type": "pyq",
       "examName": "Kerala PSC Surveyor Gr. II / Modern Instruments Bank",
       "year": 2024,
@@ -52133,26 +51613,6 @@
       "explanation": "A Line Ranger consists of two reflecting right-angled isosceles prisms placed one above the other, used for locating intermediate ranging rods/stations on a chain line without needing a second surveyor.",
       "rankerTip": "Line ranger is used for: Locating intermediate stations in a chain line.",
       "topic": "Line Ranger Application",
-      "type": "pyq",
-      "examName": "Kerala PSC Surveyor Gr. II / Minor Instruments Bank",
-      "year": 2024,
-      "createdAt": "2026-09-09T00:00:00Z"
-    },
-    {
-      "id": "bq-minorinst-31-q31",
-      "moduleId": "mod-7",
-      "moduleNumber": 7,
-      "question": "Locating points on a given contour gradient can be done by :",
-      "options": [
-        "Clinometer",
-        "Pentagraph",
-        "Planimeter",
-        "Subtense bar"
-      ],
-      "correctOptionIndex": 0,
-      "explanation": "A Clinometer set to a specific slope angle can be sighted against a leveling staff to trace and locate points on a given contour gradient in hilly terrain.",
-      "rankerTip": "Locating points on a contour gradient: Clinometer (or Ghat tracer).",
-      "topic": "Clinometer Grade Contours",
       "type": "pyq",
       "examName": "Kerala PSC Surveyor Gr. II / Minor Instruments Bank",
       "year": 2024,
@@ -53155,26 +52615,6 @@
       "createdAt": "2026-09-21T03:00:00Z"
     },
     {
-      "id": "bq-063-2024-q022",
-      "moduleId": "mod-2",
-      "moduleNumber": 2,
-      "question": "The size of field book is :",
-      "options": [
-        "10 × 12 cm",
-        "20 × 12 cm",
-        "22 × 15 cm",
-        "25 × 15 cm"
-      ],
-      "correctOptionIndex": 1,
-      "explanation": "A standard field book used for recording survey chainage and offsets measures approximately 20 cm × 12 cm (200 mm × 120 mm).",
-      "rankerTip": "Field books open lengthwise and are made of high-quality parchment paper.",
-      "topic": "Field book",
-      "type": "pyq",
-      "examName": "Paper 063/2024 (Q22) • Tradesman / Surveyor Gr. II",
-      "year": 2024,
-      "createdAt": "2026-09-21T03:00:00Z"
-    },
-    {
       "id": "bq-063-2024-q023",
       "moduleId": "mod-3",
       "moduleNumber": 3,
@@ -53735,26 +53175,6 @@
       "createdAt": "2026-09-21T03:00:00Z"
     },
     {
-      "id": "bq-063-2024-q051",
-      "moduleId": "mod-5",
-      "moduleNumber": 5,
-      "question": "Which level is that the line of sight remains horizontal once the operator has roughly levelled the instruments?",
-      "options": [
-        "Wye level",
-        "Modern level",
-        "Auto level",
-        "Dumpy level"
-      ],
-      "correctOptionIndex": 2,
-      "explanation": "An automatic level (auto level) incorporates an internal optical-mechanical pendulum compensator that automatically levels the line of sight.",
-      "rankerTip": "Auto level uses an internal compensator; only circular bubble needs rough leveling.",
-      "topic": "Types of levels",
-      "type": "pyq",
-      "examName": "Paper 063/2024 (Q51) • Tradesman / Surveyor Gr. II",
-      "year": 2024,
-      "createdAt": "2026-09-21T03:00:00Z"
-    },
-    {
       "id": "bq-063-2024-q052",
       "moduleId": "mod-5",
       "moduleNumber": 5,
@@ -53771,26 +53191,6 @@
       "topic": "Rise and Fall method",
       "type": "pyq",
       "examName": "Paper 063/2024 (Q52) • Tradesman / Surveyor Gr. II",
-      "year": 2024,
-      "createdAt": "2026-09-21T03:00:00Z"
-    },
-    {
-      "id": "bq-063-2024-q053",
-      "moduleId": "mod-5",
-      "moduleNumber": 5,
-      "question": "Which instrument is used for establishing grade contour?",
-      "options": [
-        "Prismatic compass",
-        "Abney level",
-        "Telescopic alidade",
-        "Pentagraph"
-      ],
-      "correctOptionIndex": 1,
-      "explanation": "An Abney level is a light, handheld instrument combining a sighting tube and spirit level used to measure slope angles and locate grade contours.",
-      "rankerTip": "Abney level is specially designed for tracing gradient lines and grade contours.",
-      "topic": "Minor instruments / Abney level",
-      "type": "pyq",
-      "examName": "Paper 063/2024 (Q53) • Tradesman / Surveyor Gr. II",
       "year": 2024,
       "createdAt": "2026-09-21T03:00:00Z"
     },
@@ -53971,26 +53371,6 @@
       "topic": "Tacheometric constants",
       "type": "pyq",
       "examName": "Paper 063/2024 (Q62) • Tradesman / Surveyor Gr. II",
-      "year": 2024,
-      "createdAt": "2026-09-21T03:00:00Z"
-    },
-    {
-      "id": "bq-063-2024-q063",
-      "moduleId": "mod-6",
-      "moduleNumber": 6,
-      "question": "Which method is suitable for closed traverse in theodolite survey?",
-      "options": [
-        "Loose needle method",
-        "Fast needle method",
-        "Direct method",
-        "Included angle method"
-      ],
-      "correctOptionIndex": 3,
-      "explanation": "The included angle method is the most accurate and recommended method for theodolite traversing of a closed polygon.",
-      "rankerTip": "Sum of interior angles = (2n - 4) × 90°; enables rigorous checks.",
-      "topic": "Theodolite traversing",
-      "type": "pyq",
-      "examName": "Paper 063/2024 (Q63) • Tradesman / Surveyor Gr. II",
       "year": 2024,
       "createdAt": "2026-09-21T03:00:00Z"
     },
@@ -54795,26 +54175,6 @@
       "createdAt": "2026-09-21T04:00:00Z"
     },
     {
-      "id": "bq-pyq200-q004",
-      "moduleId": "mod-1",
-      "moduleNumber": 1,
-      "question": "For thin chain line alternate long and short dashes are in proportion ranging from",
-      "options": [
-        "6:1 to 4:1",
-        "9:1 to 3:1",
-        "6:2 to 4:2",
-        "9:1 to 4:1"
-      ],
-      "correctOptionIndex": 0,
-      "explanation": "For thin chain lines (center lines / Type G), long dashes are 9 to 12 mm and short dashes are 1.5 to 2 mm, giving a proportion ranging from 6:1 to 4:1.",
-      "rankerTip": "Center line dashes are in 6:1 to 4:1 proportion.",
-      "topic": "Types of lines",
-      "type": "pyq",
-      "examName": "Paper 43/2023 (Q4) • Tracer / Surveyor Gr. II",
-      "year": 2023,
-      "createdAt": "2026-09-21T04:00:00Z"
-    },
-    {
       "id": "bq-pyq200-q005",
       "moduleId": "mod-1",
       "moduleNumber": 1,
@@ -54851,26 +54211,6 @@
       "topic": "Dimensioning",
       "type": "pyq",
       "examName": "Paper 43/2023 (Q6) • Tracer / Surveyor Gr. II",
-      "year": 2023,
-      "createdAt": "2026-09-21T04:00:00Z"
-    },
-    {
-      "id": "bq-pyq200-q007",
-      "moduleId": "mod-1",
-      "moduleNumber": 1,
-      "question": "The type of Vernier in which the Vernier divisions are marked in the opposite direction of the main scale is",
-      "options": [
-        "Vernier Scale",
-        "Forward Vernier",
-        "Backward Vernier",
-        "None of these"
-      ],
-      "correctOptionIndex": 2,
-      "explanation": "In a backward (retrograde) vernier, divisions are numbered in the direction opposite to the main scale, where n vernier divisions equal (n + 1) main scale divisions.",
-      "rankerTip": "Direct vernier: same direction, nv = (n-1)d. Retrograde (backward) vernier: opposite direction, nv = (n+1)d.",
-      "topic": "Scales & Verniers",
-      "type": "pyq",
-      "examName": "Paper 43/2023 (Q7) • Tracer / Surveyor Gr. II",
       "year": 2023,
       "createdAt": "2026-09-21T04:00:00Z"
     },
@@ -54955,26 +54295,6 @@
       "createdAt": "2026-09-21T04:00:00Z"
     },
     {
-      "id": "bq-pyq200-q012",
-      "moduleId": "mod-2",
-      "moduleNumber": 2,
-      "question": "Surveying Chain is Made up of",
-      "options": [
-        "Galvanised MS Wire",
-        "MS Wire",
-        "High carbon steel",
-        "None of these"
-      ],
-      "correctOptionIndex": 0,
-      "explanation": "Survey chains are manufactured from galvanized mild steel (MS) wire of 4 mm diameter (8 SWG) with ends looped into rings.",
-      "rankerTip": "Galvanized mild steel wire of 4 mm diameter protects against rust.",
-      "topic": "Chain construction",
-      "type": "pyq",
-      "examName": "Paper 43/2023 (Q12) • Tracer / Surveyor Gr. II",
-      "year": 2023,
-      "createdAt": "2026-09-21T04:00:00Z"
-    },
-    {
       "id": "bq-pyq200-q013",
       "moduleId": "mod-2",
       "moduleNumber": 2,
@@ -54995,26 +54315,6 @@
       "createdAt": "2026-09-21T04:00:00Z"
     },
     {
-      "id": "bq-pyq200-q014",
-      "moduleId": "mod-2",
-      "moduleNumber": 2,
-      "question": "In ordinary chain survey the maximum permissible error is",
-      "options": [
-        "1 in 250",
-        "1 in 1000",
-        "1 in 2000",
-        "1 in 5000"
-      ],
-      "correctOptionIndex": 1,
-      "explanation": "In ordinary chain surveying under normal field conditions, the maximum permissible ratio of error is 1 in 1000 (1 in 250 in rough ground; 1 in 1000 is official key for standard ordinary chaining).",
-      "rankerTip": "1 in 1000 for standard chaining; 1 in 2000 for steel band chaining.",
-      "topic": "Permissible errors",
-      "type": "pyq",
-      "examName": "Paper 43/2023 (Q15) • Tracer / Surveyor Gr. II",
-      "year": 2023,
-      "createdAt": "2026-09-21T04:00:00Z"
-    },
-    {
       "id": "bq-pyq200-q015",
       "moduleId": "mod-2",
       "moduleNumber": 2,
@@ -55031,66 +54331,6 @@
       "topic": "Sag correction",
       "type": "pyq",
       "examName": "Paper 43/2023 (Q16) • Tracer / Surveyor Gr. II",
-      "year": 2023,
-      "createdAt": "2026-09-21T04:00:00Z"
-    },
-    {
-      "id": "bq-pyq200-q016",
-      "moduleId": "mod-2",
-      "moduleNumber": 2,
-      "question": "If L is the correct length of a chain, L' is the incorrect length and D' is the measured length, then the correct length is:",
-      "options": [
-        "(L' / L) × D'",
-        "(L / L') × D'",
-        "(L / D') × L'",
-        "(D' / L) × L'"
-      ],
-      "correctOptionIndex": 0,
-      "explanation": "True distance = (Measured length) × (Incorrect length of chain / True length of chain) = D' × (L' / L).",
-      "rankerTip": "True × True = Wrong × Wrong => True Distance = (L'/L) × D'.",
-      "topic": "Chain errors",
-      "type": "pyq",
-      "examName": "Paper 43/2023 (Q17) • Tracer / Surveyor Gr. II",
-      "year": 2023,
-      "createdAt": "2026-09-21T04:00:00Z"
-    },
-    {
-      "id": "bq-pyq200-q017",
-      "moduleId": "mod-2",
-      "moduleNumber": 2,
-      "question": "The instrument which is not used in chain survey is",
-      "options": [
-        "Ranging Rod",
-        "Cross Staff",
-        "Offset Rod",
-        "Levelling Staff"
-      ],
-      "correctOptionIndex": 3,
-      "explanation": "A levelling staff is used exclusively in levelling and tachometric work to measure vertical elevations, not for linear distance measurement in chain surveying.",
-      "rankerTip": "Levelling staff is for vertical measurements, not chain surveying.",
-      "topic": "Instruments",
-      "type": "pyq",
-      "examName": "Paper 43/2023 (Q18) • Tracer / Surveyor Gr. II",
-      "year": 2023,
-      "createdAt": "2026-09-21T04:00:00Z"
-    },
-    {
-      "id": "bq-pyq200-q018",
-      "moduleId": "mod-2",
-      "moduleNumber": 2,
-      "question": "The Principle of chain surveying is",
-      "options": [
-        "Work from Whole to Part",
-        "Triangulation",
-        "Traversing",
-        "None of these"
-      ],
-      "correctOptionIndex": 1,
-      "explanation": "The fundamental principle of chain surveying is triangulation, whereby the survey area is partitioned into a network of well-conditioned triangles.",
-      "rankerTip": "Chain survey principle: Triangulation.",
-      "topic": "Principles of Chain Survey",
-      "type": "pyq",
-      "examName": "Paper 43/2023 (Q19) • Tracer / Surveyor Gr. II",
       "year": 2023,
       "createdAt": "2026-09-21T04:00:00Z"
     },
@@ -55455,26 +54695,6 @@
       "createdAt": "2026-09-21T04:00:00Z"
     },
     {
-      "id": "bq-pyq200-q037",
-      "moduleId": "mod-2",
-      "moduleNumber": 2,
-      "question": "Which of the following instrument is used for ranging ?",
-      "options": [
-        "Peg",
-        "Cross staff",
-        "Optical square",
-        "Line ranger"
-      ],
-      "correctOptionIndex": 3,
-      "explanation": "A line ranger is an optical instrument consisting of two 90° reflecting prisms used for fixing intermediate ranging points without an assistant at the ends.",
-      "rankerTip": "Line ranger allows a single surveyor to fix intermediate points.",
-      "topic": "Line ranger",
-      "type": "pyq",
-      "examName": "Paper 106/2017 (Q91) • Surveyor Gr. II (KWA)",
-      "year": 2017,
-      "createdAt": "2026-09-21T04:00:00Z"
-    },
-    {
       "id": "bq-pyq200-q038",
       "moduleId": "mod-3",
       "moduleNumber": 3,
@@ -55491,46 +54711,6 @@
       "topic": "Bearing",
       "type": "pyq",
       "examName": "Paper 43/2023 (Q23) • Tracer / Surveyor Gr. II",
-      "year": 2023,
-      "createdAt": "2026-09-21T04:00:00Z"
-    },
-    {
-      "id": "bq-pyq200-q039",
-      "moduleId": "mod-3",
-      "moduleNumber": 3,
-      "question": "The graduated ring being attached to the magnetic needle remains stationary in",
-      "options": [
-        "Surveyor's compass",
-        "Prismatic compass",
-        "Trough compass",
-        "None of these"
-      ],
-      "correctOptionIndex": 1,
-      "explanation": "In a prismatic compass, the graduated aluminum ring is attached directly to the broad magnetic needle and remains stationary pointing magnetic North.",
-      "rankerTip": "Prismatic: ring attached to needle, remains stationary. Surveyor: ring fixed to box.",
-      "topic": "Prismatic compass",
-      "type": "pyq",
-      "examName": "Paper 43/2023 (Q24) • Tracer / Surveyor Gr. II",
-      "year": 2023,
-      "createdAt": "2026-09-21T04:00:00Z"
-    },
-    {
-      "id": "bq-pyq200-q040",
-      "moduleId": "mod-3",
-      "moduleNumber": 3,
-      "question": "In a prismatic compass 180° is marked at",
-      "options": [
-        "North end",
-        "South end",
-        "East",
-        "West"
-      ],
-      "correctOptionIndex": 0,
-      "explanation": "In a prismatic compass, 0° is engraved at the South end and 180° is at the North end so that the bearing can be read directly through the prism at the eye vane.",
-      "rankerTip": "0° at South, 180° at North, 90° at West, 270° at East.",
-      "topic": "Prismatic compass graduations",
-      "type": "pyq",
-      "examName": "Paper 43/2023 (Q25) • Tracer / Surveyor Gr. II",
       "year": 2023,
       "createdAt": "2026-09-21T04:00:00Z"
     },
@@ -55695,46 +54875,6 @@
       "createdAt": "2026-09-21T04:00:00Z"
     },
     {
-      "id": "bq-pyq200-q049",
-      "moduleId": "mod-3",
-      "moduleNumber": 3,
-      "question": "The permissible error in prismatic compass survey is",
-      "options": [
-        "1 in 20°",
-        "1 in 120°",
-        "1 in 340°",
-        "1 in 220°"
-      ],
-      "correctOptionIndex": 2,
-      "explanation": "In prismatic compass surveying, the permissible error of closure is generally specified as 1 in 340 (or an angular limit of 20').",
-      "rankerTip": "1 in 340 (or 20 minutes) is standard permissible compass error.",
-      "topic": "Permissible error in compass",
-      "type": "pyq",
-      "examName": "Paper 43/2023 (Q34) • Tracer / Surveyor Gr. II",
-      "year": 2023,
-      "createdAt": "2026-09-21T04:00:00Z"
-    },
-    {
-      "id": "bq-pyq200-q050",
-      "moduleId": "mod-3",
-      "moduleNumber": 3,
-      "question": "Meridian joining earth's true north and south is called",
-      "options": [
-        "Assumed meridian",
-        "Arbitrary meridian",
-        "Magnetic meridian",
-        "True meridian"
-      ],
-      "correctOptionIndex": 3,
-      "explanation": "The true meridian is the imaginary great circle passing through the geographical north and south poles of the earth and the observer's position.",
-      "rankerTip": "Through true geographic poles = True meridian.",
-      "topic": "True meridian",
-      "type": "pyq",
-      "examName": "Paper 106/2017 (Q27) • Surveyor Gr. II (KWA)",
-      "year": 2017,
-      "createdAt": "2026-09-21T04:00:00Z"
-    },
-    {
       "id": "bq-pyq200-q051",
       "moduleId": "mod-3",
       "moduleNumber": 3,
@@ -55835,26 +54975,6 @@
       "createdAt": "2026-09-21T04:00:00Z"
     },
     {
-      "id": "bq-pyq200-q056",
-      "moduleId": "mod-3",
-      "moduleNumber": 3,
-      "question": "W.C.B. is always reckoned from",
-      "options": [
-        "North",
-        "East",
-        "South",
-        "West"
-      ],
-      "correctOptionIndex": 0,
-      "explanation": "Whole Circle Bearing (WCB) is always measured clockwise starting from the magnetic or true North direction.",
-      "rankerTip": "WCB is always measured clockwise from North (0° to 360°).",
-      "topic": "WCB convention",
-      "type": "pyq",
-      "examName": "Paper 106/2017 (Q52) • Surveyor Gr. II (KWA)",
-      "year": 2017,
-      "createdAt": "2026-09-21T04:00:00Z"
-    },
-    {
       "id": "bq-pyq200-q057",
       "moduleId": "mod-3",
       "moduleNumber": 3,
@@ -55911,26 +55031,6 @@
       "topic": "Included angles",
       "type": "pyq",
       "examName": "Paper 106/2017 (Q60) • Surveyor Gr. II (KWA)",
-      "year": 2017,
-      "createdAt": "2026-09-21T04:00:00Z"
-    },
-    {
-      "id": "bq-pyq200-q060",
-      "moduleId": "mod-3",
-      "moduleNumber": 3,
-      "question": "Magnetic equator is an example for",
-      "options": [
-        "Isogonic line",
-        "Agonic line",
-        "Isoclinic line",
-        "Aclinic line"
-      ],
-      "correctOptionIndex": 3,
-      "explanation": "The magnetic equator is an aclinic line where the magnetic dip is zero (the magnetic needle remains horizontal).",
-      "rankerTip": "Zero dip = Aclinic line (Magnetic equator). Equal dip = Isoclinic line.",
-      "topic": "Magnetic lines",
-      "type": "pyq",
-      "examName": "Paper 106/2017 (Q76) • Surveyor Gr. II (KWA)",
       "year": 2017,
       "createdAt": "2026-09-21T04:00:00Z"
     },
@@ -56075,26 +55175,6 @@
       "createdAt": "2026-09-21T04:00:00Z"
     },
     {
-      "id": "bq-pyq200-q068",
-      "moduleId": "mod-4",
-      "moduleNumber": 4,
-      "question": "Which type of survey cannot be done in dense wooded areas?",
-      "options": [
-        "Chain survey",
-        "Compass survey",
-        "Plane table survey",
-        "Theodolite survey"
-      ],
-      "correctOptionIndex": 2,
-      "explanation": "Plane table surveying requires unobstructed sight lines and daylight; it cannot be effectively conducted in dense wooded forests or wet rainy climates.",
-      "rankerTip": "Plane tabling cannot be done in dense woods or rainy weather.",
-      "topic": "Suitability",
-      "type": "pyq",
-      "examName": "Paper 43/2023 (Q38) • Tracer / Surveyor Gr. II",
-      "year": 2023,
-      "createdAt": "2026-09-21T04:00:00Z"
-    },
-    {
       "id": "bq-pyq200-q069",
       "moduleId": "mod-4",
       "moduleNumber": 4,
@@ -56112,46 +55192,6 @@
       "type": "pyq",
       "examName": "Paper 43/2023 (Q39) • Tracer / Surveyor Gr. II",
       "year": 2023,
-      "createdAt": "2026-09-21T04:00:00Z"
-    },
-    {
-      "id": "bq-pyq200-q070",
-      "moduleId": "mod-4",
-      "moduleNumber": 4,
-      "question": "Instrument used for sighting objects and drawing rays in plane tabling is",
-      "options": [
-        "Alidade",
-        "Trough compass",
-        "Spirit level",
-        "Plumb-bob"
-      ],
-      "correctOptionIndex": 0,
-      "explanation": "An alidade (plain or telescopic) is the primary sighting and ray-drawing instrument used in plane table surveying.",
-      "rankerTip": "Alidade sights objects and draws rays along fiducial edge.",
-      "topic": "Alidade",
-      "type": "pyq",
-      "examName": "Paper 106/2017 (Q24) • Surveyor Gr. II (KWA)",
-      "year": 2017,
-      "createdAt": "2026-09-21T04:00:00Z"
-    },
-    {
-      "id": "bq-pyq200-q071",
-      "moduleId": "mod-4",
-      "moduleNumber": 4,
-      "question": "___________ surveying can be performed without field book.",
-      "options": [
-        "Plane table",
-        "Chain",
-        "Compass",
-        "Theodolite"
-      ],
-      "correctOptionIndex": 0,
-      "explanation": "In plane table surveying, observations and plotting are performed concurrently in the field on the drawing board, eliminating the need for a field notebook.",
-      "rankerTip": "Plane table surveying needs no field book because plotting is done on site.",
-      "topic": "Field work",
-      "type": "pyq",
-      "examName": "Paper 106/2017 (Q57) • Surveyor Gr. II (KWA)",
-      "year": 2017,
       "createdAt": "2026-09-21T04:00:00Z"
     },
     {
@@ -56215,46 +55255,6 @@
       "createdAt": "2026-09-21T04:00:00Z"
     },
     {
-      "id": "bq-pyq200-q075",
-      "moduleId": "mod-5",
-      "moduleNumber": 5,
-      "question": "What is the term that is normal to plumb line at all points?",
-      "options": [
-        "Level surface",
-        "Datum surface",
-        "Horizontal surface",
-        "Vertical surface"
-      ],
-      "correctOptionIndex": 0,
-      "explanation": "A level surface is a curved surface that is concentric with the mean spheroidal shape of the earth and perpendicular (normal) to the gravity plumb line at every point.",
-      "rankerTip": "Normal to plumb line at all points = Level surface.",
-      "topic": "Level surface",
-      "type": "pyq",
-      "examName": "Paper 43/2023 (Q40) • Tracer / Surveyor Gr. II",
-      "year": 2023,
-      "createdAt": "2026-09-21T04:00:00Z"
-    },
-    {
-      "id": "bq-pyq200-q076",
-      "moduleId": "mod-5",
-      "moduleNumber": 5,
-      "question": "What is the benchmarks established between the G.T.S. benchmarks by the state PWD is known as",
-      "options": [
-        "Arbitrary benchmark",
-        "Permanent benchmark",
-        "Temporary benchmark",
-        "G.T.S. benchmark"
-      ],
-      "correctOptionIndex": 1,
-      "explanation": "Permanent benchmarks are fixed, durable reference points established by government departments (PWD, Railways) between primary G.T.S. benchmarks.",
-      "rankerTip": "Established by State PWD = Permanent benchmark.",
-      "topic": "Benchmarks",
-      "type": "pyq",
-      "examName": "Paper 43/2023 (Q41) • Tracer / Surveyor Gr. II",
-      "year": 2023,
-      "createdAt": "2026-09-21T04:00:00Z"
-    },
-    {
       "id": "bq-pyq200-q077",
       "moduleId": "mod-5",
       "moduleNumber": 5,
@@ -56271,26 +55271,6 @@
       "topic": "Tilting level",
       "type": "pyq",
       "examName": "Paper 43/2023 (Q42) • Tracer / Surveyor Gr. II",
-      "year": 2023,
-      "createdAt": "2026-09-21T04:00:00Z"
-    },
-    {
-      "id": "bq-pyq200-q078",
-      "moduleId": "mod-5",
-      "moduleNumber": 5,
-      "question": "In which staff consist of three parts and one slides into another?",
-      "options": [
-        "Telescopic staff",
-        "Invar staff",
-        "Target staff",
-        "Folding staff"
-      ],
-      "correctOptionIndex": 0,
-      "explanation": "A Sopwith telescopic staff consists of three sliding telescopic lengths made of seasoned wood or aluminum, extending up to 4 or 5 meters.",
-      "rankerTip": "Three parts sliding into one another = Sopwith telescopic staff.",
-      "topic": "Levelling staff",
-      "type": "pyq",
-      "examName": "Paper 43/2023 (Q43) • Tracer / Surveyor Gr. II",
       "year": 2023,
       "createdAt": "2026-09-21T04:00:00Z"
     },
@@ -56351,26 +55331,6 @@
       "topic": "Interpolation",
       "type": "pyq",
       "examName": "Paper 43/2023 (Q46) • Tracer / Surveyor Gr. II",
-      "year": 2023,
-      "createdAt": "2026-09-21T04:00:00Z"
-    },
-    {
-      "id": "bq-pyq200-q082",
-      "moduleId": "mod-5",
-      "moduleNumber": 5,
-      "question": "Combined correction for curvature and refraction is",
-      "options": [
-        "0.6723 D²",
-        "0.0673 D²",
-        "0.0112 D²",
-        "0.112 D²"
-      ],
-      "correctOptionIndex": 1,
-      "explanation": "Combined correction for earth curvature and atmospheric refraction is C_comb = C_c - C_r = 0.0785 D² - 0.0112 D² = 0.0673 D² meters (where D is in km).",
-      "rankerTip": "C_comb = 0.0673 D² (subtractive).",
-      "topic": "Curvature and Refraction",
-      "type": "pyq",
-      "examName": "Paper 43/2023 (Q47) • Tracer / Surveyor Gr. II",
       "year": 2023,
       "createdAt": "2026-09-21T04:00:00Z"
     },
@@ -56475,26 +55435,6 @@
       "createdAt": "2026-09-21T04:00:00Z"
     },
     {
-      "id": "bq-pyq200-q088",
-      "moduleId": "mod-5",
-      "moduleNumber": 5,
-      "question": "Which instrument is used to establishing grade contour?",
-      "options": [
-        "Prismatic compass",
-        "Telescopic alidade",
-        "Abney level",
-        "Pentagraph"
-      ],
-      "correctOptionIndex": 2,
-      "explanation": "An Abney level is a hand-held clinometer/level used for measuring ground slope and setting out grade contours in road reconnaissance.",
-      "rankerTip": "Grade contours = Abney level.",
-      "topic": "Abney level",
-      "type": "pyq",
-      "examName": "Paper 43/2023 (Q53) • Tracer / Surveyor Gr. II",
-      "year": 2023,
-      "createdAt": "2026-09-21T04:00:00Z"
-    },
-    {
       "id": "bq-pyq200-q089",
       "moduleId": "mod-5",
       "moduleNumber": 5,
@@ -56531,26 +55471,6 @@
       "topic": "Catchment boundary",
       "type": "pyq",
       "examName": "Paper 106/2017 (Q23) • Surveyor Gr. II (KWA)",
-      "year": 2017,
-      "createdAt": "2026-09-21T04:00:00Z"
-    },
-    {
-      "id": "bq-pyq200-q091",
-      "moduleId": "mod-5",
-      "moduleNumber": 5,
-      "question": "Which of the following level's telescope can be rotated by surveyor in vertical plane in a smaller amount ?",
-      "options": [
-        "Dumpy level",
-        "Wye level",
-        "Auto level",
-        "Tilting level"
-      ],
-      "correctOptionIndex": 3,
-      "explanation": "A tilting level possesses a micrometer tilting screw that tilts the telescope slightly in the vertical plane to level the line of sight precisely.",
-      "rankerTip": "Tilting level telescope rotates slightly in vertical plane.",
-      "topic": "Tilting level",
-      "type": "pyq",
-      "examName": "Paper 106/2017 (Q25) • Surveyor Gr. II (KWA)",
       "year": 2017,
       "createdAt": "2026-09-21T04:00:00Z"
     },
@@ -56695,26 +55615,6 @@
       "createdAt": "2026-09-21T04:00:00Z"
     },
     {
-      "id": "bq-pyq200-q099",
-      "moduleId": "mod-5",
-      "moduleNumber": 5,
-      "question": "Imaginary line formed by joining points of equal elevations on earth's surface is called",
-      "options": [
-        "contour",
-        "section",
-        "bench mark",
-        "single plane"
-      ],
-      "correctOptionIndex": 0,
-      "explanation": "A contour line is an imaginary line on the ground connecting points having the same elevation above a datum surface.",
-      "rankerTip": "Line joining points of equal elevation = Contour.",
-      "topic": "Contour line",
-      "type": "pyq",
-      "examName": "Paper 106/2017 (Q69) • Surveyor Gr. II (KWA)",
-      "year": 2017,
-      "createdAt": "2026-09-21T04:00:00Z"
-    },
-    {
       "id": "bq-pyq200-q100",
       "moduleId": "mod-5",
       "moduleNumber": 5,
@@ -56835,26 +55735,6 @@
       "createdAt": "2026-09-21T04:00:00Z"
     },
     {
-      "id": "bq-pyq200-q106",
-      "moduleId": "mod-6",
-      "moduleNumber": 6,
-      "question": "What is the type of angle useful for alignment of highways, railways, canals etc?",
-      "options": [
-        "Deflection angle",
-        "Direct angle",
-        "Azimuth angle",
-        "Chain angle"
-      ],
-      "correctOptionIndex": 0,
-      "explanation": "Deflection angles (angle between prolongation of preceding line and forward line) are extensively used for route surveying of highways, railways, and canals.",
-      "rankerTip": "Highways, railways, route surveys = Deflection angles.",
-      "topic": "Deflection angle",
-      "type": "pyq",
-      "examName": "Paper 43/2023 (Q56) • Tracer / Surveyor Gr. II",
-      "year": 2023,
-      "createdAt": "2026-09-21T04:00:00Z"
-    },
-    {
       "id": "bq-pyq200-q107",
       "moduleId": "mod-6",
       "moduleNumber": 6,
@@ -56971,26 +55851,6 @@
       "topic": "Transition curve",
       "type": "pyq",
       "examName": "Paper 43/2023 (Q62) • Tracer / Surveyor Gr. II",
-      "year": 2023,
-      "createdAt": "2026-09-21T04:00:00Z"
-    },
-    {
-      "id": "bq-pyq200-q113",
-      "moduleId": "mod-6",
-      "moduleNumber": 6,
-      "question": "Which method is used for short traverse in theodolite survey?",
-      "options": [
-        "Fast needle method",
-        "Direct method",
-        "Loose needle method",
-        "Included angle method"
-      ],
-      "correctOptionIndex": 0,
-      "explanation": "The fast needle method is used for running short traverse lines using the theodolite's compass without individual vernier angle computations.",
-      "rankerTip": "Short traverse = Fast needle method.",
-      "topic": "Fast needle method",
-      "type": "pyq",
-      "examName": "Paper 43/2023 (Q63) • Tracer / Surveyor Gr. II",
       "year": 2023,
       "createdAt": "2026-09-21T04:00:00Z"
     },
@@ -57355,46 +56215,6 @@
       "createdAt": "2026-09-21T04:00:00Z"
     },
     {
-      "id": "bq-pyq200-q132",
-      "moduleId": "mod-6",
-      "moduleNumber": 6,
-      "question": "Which of the permanent adjustment test checks the perpendicularity between horizontal axis and vertical axis ?",
-      "options": [
-        "Plate level test",
-        "Collimation test",
-        "Spire test",
-        "Azimuth test"
-      ],
-      "correctOptionIndex": 2,
-      "explanation": "The Spire test checks and adjusts the horizontal trunnion axis to be perpendicular to the vertical axis of the theodolite.",
-      "rankerTip": "Spire test = Horizontal axis ⊥ Vertical axis.",
-      "topic": "Spire test",
-      "type": "pyq",
-      "examName": "Paper 106/2017 (Q92) • Surveyor Gr. II (KWA)",
-      "year": 2017,
-      "createdAt": "2026-09-21T04:00:00Z"
-    },
-    {
-      "id": "bq-pyq200-q133",
-      "moduleId": "mod-7",
-      "moduleNumber": 7,
-      "question": "The most widely used antenna in GPS is",
-      "options": [
-        "Horn antenna",
-        "Slotted antenna",
-        "Parabolic antenna",
-        "Micro strip antenna"
-      ],
-      "correctOptionIndex": 3,
-      "explanation": "Microstrip patch antennas are the most widely used compact GPS antennas due to their low profile, light weight, and circular polarization capability.",
-      "rankerTip": "Microstrip patch antenna is widely used in GPS receivers.",
-      "topic": "GPS Antenna",
-      "type": "pyq",
-      "examName": "Paper 43/2023 (Q85) • Tracer / Surveyor Gr. II",
-      "year": 2023,
-      "createdAt": "2026-09-21T04:00:00Z"
-    },
-    {
       "id": "bq-pyq200-q134",
       "moduleId": "mod-7",
       "moduleNumber": 7,
@@ -57412,66 +56232,6 @@
       "type": "pyq",
       "examName": "Paper 43/2023 (Q86) • Tracer / Surveyor Gr. II",
       "year": 2023,
-      "createdAt": "2026-09-21T04:00:00Z"
-    },
-    {
-      "id": "bq-pyq200-q135",
-      "moduleId": "mod-7",
-      "moduleNumber": 7,
-      "question": "Which type of wave is used to operate EDM?",
-      "options": [
-        "Ultrasonic wave",
-        "Electric wave",
-        "Electromagnetic wave",
-        "All of these"
-      ],
-      "correctOptionIndex": 2,
-      "explanation": "Electronic Distance Measurement (EDM) devices transmit modulated electromagnetic waves (infrared, visible laser, or microwave) to measure distances.",
-      "rankerTip": "EDM uses Electromagnetic waves.",
-      "topic": "EDM waves",
-      "type": "pyq",
-      "examName": "Paper 43/2023 (Q87) • Tracer / Surveyor Gr. II",
-      "year": 2023,
-      "createdAt": "2026-09-21T04:00:00Z"
-    },
-    {
-      "id": "bq-pyq200-q136",
-      "moduleId": "mod-7",
-      "moduleNumber": 7,
-      "question": "Data collector is used for total station?",
-      "options": [
-        "Controlling the total station",
-        "Keeping data records",
-        "Helping data processing",
-        "Knowing position of pointing"
-      ],
-      "correctOptionIndex": 1,
-      "explanation": "In Total Station surveying, the internal electronic data collector records slope distances, horizontal and vertical angles, and point coordinates in digital storage.",
-      "rankerTip": "Data collector keeps digital data records.",
-      "topic": "Data collector",
-      "type": "pyq",
-      "examName": "Paper 43/2023 (Q88) • Tracer / Surveyor Gr. II",
-      "year": 2023,
-      "createdAt": "2026-09-21T04:00:00Z"
-    },
-    {
-      "id": "bq-pyq200-q137",
-      "moduleId": "mod-7",
-      "moduleNumber": 7,
-      "question": "An EDM based instrument is",
-      "options": [
-        "Micrometer theodolite",
-        "Total station",
-        "Dumpy level",
-        "Chain"
-      ],
-      "correctOptionIndex": 1,
-      "explanation": "A Total Station is an integrated electronic instrument combining an electronic theodolite, an EDM, and a microprocessor data collector.",
-      "rankerTip": "Total Station incorporates EDM.",
-      "topic": "Total Station",
-      "type": "pyq",
-      "examName": "Paper 106/2017 (Q29) • Surveyor Gr. II (KWA)",
-      "year": 2017,
       "createdAt": "2026-09-21T04:00:00Z"
     },
     {
@@ -57511,26 +56271,6 @@
       "topic": "Microprocessor",
       "type": "pyq",
       "examName": "Paper 43/2023 (Q66) • Tracer / Surveyor Gr. II",
-      "year": 2023,
-      "createdAt": "2026-09-21T04:00:00Z"
-    },
-    {
-      "id": "bq-pyq200-q140",
-      "moduleId": "mod-8",
-      "moduleNumber": 8,
-      "question": "What is the full form of GUI?",
-      "options": [
-        "Golden closer installation",
-        "Graphical user installation",
-        "Graphical user interface",
-        "Geometrical user interface"
-      ],
-      "correctOptionIndex": 3,
-      "explanation": "GUI stands for Graphical User Interface, enabling users to interact with software through visual icons. (In official answer key, option D Geometrical user interface was marked).",
-      "rankerTip": "Option D marked as per official key.",
-      "topic": "GUI",
-      "type": "pyq",
-      "examName": "Paper 43/2023 (Q67) • Tracer / Surveyor Gr. II",
       "year": 2023,
       "createdAt": "2026-09-21T04:00:00Z"
     },
@@ -57715,26 +56455,6 @@
       "createdAt": "2026-09-21T04:00:00Z"
     },
     {
-      "id": "bq-pyq200-q150",
-      "moduleId": "mod-9",
-      "moduleNumber": 9,
-      "question": "π Radians = ___________ grades",
-      "options": [
-        "100",
-        "200",
-        "180",
-        "90"
-      ],
-      "correctOptionIndex": 1,
-      "explanation": "In the centesimal angle measurement system, 1 right angle = 100 grades (100g). Thus, π radians (180°) = 200 grades.",
-      "rankerTip": "π radians = 180° = 200 grades.",
-      "topic": "Angle conversions",
-      "type": "pyq",
-      "examName": "Paper 43/2023 (Q13) • Tracer / Surveyor Gr. II",
-      "year": 2023,
-      "createdAt": "2026-09-21T04:00:00Z"
-    },
-    {
       "id": "bq-pyq200-q151",
       "moduleId": "mod-9",
       "moduleNumber": 9,
@@ -57811,26 +56531,6 @@
       "topic": "Thermal insulators",
       "type": "pyq",
       "examName": "Paper 43/2023 (Q92) • Tracer / Surveyor Gr. II",
-      "year": 2023,
-      "createdAt": "2026-09-21T04:00:00Z"
-    },
-    {
-      "id": "bq-pyq200-q155",
-      "moduleId": "mod-9",
-      "moduleNumber": 9,
-      "question": "What is the term for the object seen higher than eye level?",
-      "options": [
-        "Angle of inclination",
-        "Angle of friction",
-        "Angle of elevation",
-        "Angle of depression"
-      ],
-      "correctOptionIndex": 2,
-      "explanation": "The angle subtended between the horizontal line of sight and the inclined line directed to an object above eye level is the angle of elevation.",
-      "rankerTip": "Above eye level = Angle of elevation. Below eye level = Angle of depression.",
-      "topic": "Angle of elevation",
-      "type": "pyq",
-      "examName": "Paper 43/2023 (Q93) • Tracer / Surveyor Gr. II",
       "year": 2023,
       "createdAt": "2026-09-21T04:00:00Z"
     },
@@ -58135,46 +56835,6 @@
       "createdAt": "2026-09-21T04:00:00Z"
     },
     {
-      "id": "bq-pyq200-q171",
-      "moduleId": "mod-10",
-      "moduleNumber": 10,
-      "question": "The central part of the tree is called",
-      "options": [
-        "Sap wood",
-        "Cambium layer",
-        "Heart wood",
-        "Pith"
-      ],
-      "correctOptionIndex": 3,
-      "explanation": "The innermost core/central portion of a tree stem is the pith (or medulla), which supplies nutrients to young saplings.",
-      "rankerTip": "Innermost core = Pith (Medulla).",
-      "topic": "Timber cross section",
-      "type": "pyq",
-      "examName": "Paper 43/2023 (Q77) • Tracer / Surveyor Gr. II",
-      "year": 2023,
-      "createdAt": "2026-09-21T04:00:00Z"
-    },
-    {
-      "id": "bq-pyq200-q172",
-      "moduleId": "mod-10",
-      "moduleNumber": 10,
-      "question": "Weight of 1 bag of cement",
-      "options": [
-        "74 kg",
-        "50 kg",
-        "40 kg",
-        "100 kg"
-      ],
-      "correctOptionIndex": 1,
-      "explanation": "As per Indian Standard IS 1489 / IS 269, a standard commercial bag of Portland cement weighs exactly 50 kg (volume ≈ 34.7 liters).",
-      "rankerTip": "1 bag = 50 kg = 0.0347 m³.",
-      "topic": "Cement bag weight",
-      "type": "pyq",
-      "examName": "Paper 43/2023 (Q78) • Tracer / Surveyor Gr. II",
-      "year": 2023,
-      "createdAt": "2026-09-21T04:00:00Z"
-    },
-    {
       "id": "bq-pyq200-q173",
       "moduleId": "mod-10",
       "moduleNumber": 10,
@@ -58191,26 +56851,6 @@
       "topic": "Rocks & Stones",
       "type": "pyq",
       "examName": "Paper 43/2023 (Q79) • Tracer / Surveyor Gr. II",
-      "year": 2023,
-      "createdAt": "2026-09-21T04:00:00Z"
-    },
-    {
-      "id": "bq-pyq200-q174",
-      "moduleId": "mod-10",
-      "moduleNumber": 10,
-      "question": "Vicat's apparatus is used to determine the",
-      "options": [
-        "initial setting time of cement",
-        "final setting time of cement",
-        "normal consistency of cement",
-        "all of these"
-      ],
-      "correctOptionIndex": 3,
-      "explanation": "Vicat's apparatus with standard plunger and needles is used to determine the standard consistency, initial setting time, and final setting time of cement paste.",
-      "rankerTip": "Consistency (10 mm plunger), Initial setting (1 mm needle), Final setting (collar needle).",
-      "topic": "Vicat's apparatus",
-      "type": "pyq",
-      "examName": "Paper 43/2023 (Q80) • Tracer / Surveyor Gr. II",
       "year": 2023,
       "createdAt": "2026-09-21T04:00:00Z"
     },
@@ -58935,26 +57575,6 @@
       "createdAt": "2026-09-21T00:00:00Z"
     },
     {
-      "id": "bq-autocad246-31",
-      "moduleId": "mod-8",
-      "moduleNumber": 8,
-      "question": "What is the full form of GUI?",
-      "options": [
-        "Golden User Installation",
-        "Graphical User Installation",
-        "Graphical User Interface",
-        "Geometrical User Interface"
-      ],
-      "correctOptionIndex": 2,
-      "explanation": "GUI stands for Graphical User Interface, enabling users to interact with software through graphical icons, windows, and visual menus rather than typed text commands.",
-      "rankerTip": "CLI = Command Line Interface; GUI = Graphical User Interface.",
-      "topic": "Computer Fundamentals - Interface",
-      "type": "pyq",
-      "examName": "Kerala PSC Surveyor / Draftsman Grade II — AutoCAD & CADD Bank",
-      "year": 2024,
-      "createdAt": "2026-09-21T00:00:00Z"
-    },
-    {
       "id": "bq-autocad246-32",
       "moduleId": "mod-8",
       "moduleNumber": 8,
@@ -59469,26 +58089,6 @@
       "explanation": "The BREAK command (alias BR) erases a part of an object between two user-specified points, or breaks an object at a single point.",
       "rankerTip": "BREAK splits an entity between 2 points without needing intersecting boundary lines.",
       "topic": "AutoCAD - Modify Commands",
-      "type": "pyq",
-      "examName": "Kerala PSC Surveyor / Draftsman Grade II — AutoCAD & CADD Bank",
-      "year": 2024,
-      "createdAt": "2026-09-21T00:00:00Z"
-    },
-    {
-      "id": "bq-autocad246-58",
-      "moduleId": "mod-8",
-      "moduleNumber": 8,
-      "question": "To switch Isoplane, you press",
-      "options": [
-        "F3",
-        "F5",
-        "F4",
-        "F6"
-      ],
-      "correctOptionIndex": 1,
-      "explanation": "Pressing function key F5 (or Ctrl + E) toggles through the three isometric planes: Isoplane Left, Isoplane Top, and Isoplane Right.",
-      "rankerTip": "F5 cycles between Top, Left, and Right isometric planes.",
-      "topic": "AutoCAD - Isometric Drafting",
       "type": "pyq",
       "examName": "Kerala PSC Surveyor / Draftsman Grade II — AutoCAD & CADD Bank",
       "year": 2024,
@@ -60295,26 +58895,6 @@
       "createdAt": "2026-09-21T00:00:00Z"
     },
     {
-      "id": "bq-autocad246-99",
-      "moduleId": "mod-8",
-      "moduleNumber": 8,
-      "question": "Which function key is used for on/off object snap, while drafting in AutoCAD ?",
-      "options": [
-        "F8",
-        "F5",
-        "F4",
-        "F3"
-      ],
-      "correctOptionIndex": 3,
-      "explanation": "Function key F3 toggles running Object Snap (OSNAP) mode on and off during drafting in AutoCAD.",
-      "rankerTip": "F3 = OSNAP on/off; F7 = GRID; F8 = ORTHO; F9 = SNAP.",
-      "topic": "AutoCAD - Function Keys",
-      "type": "pyq",
-      "examName": "Kerala PSC Surveyor / Draftsman Grade II — AutoCAD & CADD Bank",
-      "year": 2024,
-      "createdAt": "2026-09-21T00:00:00Z"
-    },
-    {
       "id": "bq-autocad246-100",
       "moduleId": "mod-8",
       "moduleNumber": 8,
@@ -60675,26 +59255,6 @@
       "createdAt": "2026-09-21T00:00:00Z"
     },
     {
-      "id": "bq-autocad246-118",
-      "moduleId": "mod-8",
-      "moduleNumber": 8,
-      "question": "Which line type is available when you start a new drawing in AutoCAD ?",
-      "options": [
-        "Solid line",
-        "Continuous line",
-        "Hidden line",
-        "Straight line"
-      ],
-      "correctOptionIndex": 1,
-      "explanation": "When starting a fresh new drawing in AutoCAD, the only linetype initially loaded by default is the Continuous solid line.",
-      "rankerTip": "Dashed, hidden, and center lines must be loaded into the drawing using the LINETYPE command.",
-      "topic": "AutoCAD - Layers & Properties",
-      "type": "pyq",
-      "examName": "Kerala PSC Surveyor / Draftsman Grade II — AutoCAD & CADD Bank",
-      "year": 2024,
-      "createdAt": "2026-09-21T00:00:00Z"
-    },
-    {
       "id": "bq-autocad246-119",
       "moduleId": "mod-8",
       "moduleNumber": 8,
@@ -60989,26 +59549,6 @@
       "explanation": "Function key F10 toggles Polar Tracking on and off, displaying alignment tracking paths at designated polar angle intervals.",
       "rankerTip": "F10 = Polar Tracking; F8 = Ortho mode; F9 = Snap; F7 = Grid.",
       "topic": "AutoCAD - Function Keys",
-      "type": "pyq",
-      "examName": "Kerala PSC Surveyor / Draftsman Grade II — AutoCAD & CADD Bank",
-      "year": 2024,
-      "createdAt": "2026-09-21T00:00:00Z"
-    },
-    {
-      "id": "bq-autocad246-134",
-      "moduleId": "mod-8",
-      "moduleNumber": 8,
-      "question": "Which year does first microprocessor was invented?",
-      "options": [
-        "1970",
-        "1971",
-        "1972",
-        "1973"
-      ],
-      "correctOptionIndex": 1,
-      "explanation": "The world's first single-chip commercial microprocessor, the 4-bit Intel 4004, was invented and released in 1971 by an Intel team led by Ted Hoff and Federico Faggin.",
-      "rankerTip": "First microprocessor: Intel 4004, released in 1971.",
-      "topic": "Computer Fundamentals - History",
       "type": "pyq",
       "examName": "Kerala PSC Surveyor / Draftsman Grade II — AutoCAD & CADD Bank",
       "year": 2024,
@@ -61815,26 +60355,6 @@
       "createdAt": "2026-09-21T00:00:00Z"
     },
     {
-      "id": "bq-autocad246-175",
-      "moduleId": "mod-8",
-      "moduleNumber": 8,
-      "question": "What is the use of the short cut key M text?",
-      "options": [
-        "Modifying text",
-        "Move text",
-        "Multi text",
-        "Menu Text"
-      ],
-      "correctOptionIndex": 2,
-      "explanation": "MTEXT (alias MT or T) stands for Multiline Text, providing a rich text formatting editor with paragraphs, tabs, bullets, and fractional stacking.",
-      "rankerTip": "MTEXT creates paragraph text blocks; DTEXT creates single-line text.",
-      "topic": "AutoCAD - Text & Annotation",
-      "type": "pyq",
-      "examName": "Kerala PSC Surveyor / Draftsman Grade II — AutoCAD & CADD Bank",
-      "year": 2024,
-      "createdAt": "2026-09-21T00:00:00Z"
-    },
-    {
       "id": "bq-autocad246-176",
       "moduleId": "mod-8",
       "moduleNumber": 8,
@@ -62515,26 +61035,6 @@
       "createdAt": "2026-09-21T00:00:00Z"
     },
     {
-      "id": "bq-autocad246-210",
-      "moduleId": "mod-8",
-      "moduleNumber": 8,
-      "question": "What is the use of function key F3?",
-      "options": [
-        "OSNAP",
-        "TABLET",
-        "ISOPLANE",
-        "SAVE AS"
-      ],
-      "correctOptionIndex": 0,
-      "explanation": "Function key F3 is the dedicated keyboard toggle for turning Object Snap (OSNAP) mode on and off.",
-      "rankerTip": "F3 = OSNAP on/off; F8 = ORTHO; F9 = SNAP; F7 = GRID.",
-      "topic": "AutoCAD - Function Keys",
-      "type": "pyq",
-      "examName": "Kerala PSC Surveyor / Draftsman Grade II — AutoCAD & CADD Bank",
-      "year": 2024,
-      "createdAt": "2026-09-21T00:00:00Z"
-    },
-    {
       "id": "bq-autocad246-211",
       "moduleId": "mod-8",
       "moduleNumber": 8,
@@ -63155,26 +61655,6 @@
       "createdAt": "2026-09-21T00:00:00Z"
     },
     {
-      "id": "bq-autocad246-242",
-      "moduleId": "mod-8",
-      "moduleNumber": 8,
-      "question": "Which of the following file extensions cannot open in autocad ?",
-      "options": [
-        "dwg",
-        "dxf",
-        "dot",
-        "dws"
-      ],
-      "correctOptionIndex": 2,
-      "explanation": ".dot is a Microsoft Word document template format and cannot be opened in AutoCAD. AutoCAD natively opens .dwg, .dxf, and .dws files.",
-      "rankerTip": ".dot belongs to MS Word; .dwg, .dxf, and .dws are CAD formats.",
-      "topic": "AutoCAD - File Formats",
-      "type": "pyq",
-      "examName": "Kerala PSC Surveyor / Draftsman Grade II — AutoCAD & CADD Bank",
-      "year": 2024,
-      "createdAt": "2026-09-21T00:00:00Z"
-    },
-    {
       "id": "bq-autocad246-243",
       "moduleId": "mod-8",
       "moduleNumber": 8,
@@ -63229,26 +61709,6 @@
       "explanation": "Toolbars contain organized graphical tool button icons that provide quick, customizable access to commands and settings without typing.",
       "rankerTip": "Toolbars and Ribbons provide graphical click-access to CAD commands.",
       "topic": "AutoCAD - Interface & Toolbars",
-      "type": "pyq",
-      "examName": "Kerala PSC Surveyor / Draftsman Grade II — AutoCAD & CADD Bank",
-      "year": 2024,
-      "createdAt": "2026-09-21T00:00:00Z"
-    },
-    {
-      "id": "bq-autocad246-246",
-      "moduleId": "mod-8",
-      "moduleNumber": 8,
-      "question": "What is the use of function key F3?",
-      "options": [
-        "OSNAP",
-        "TABLET",
-        "ISOPLANE",
-        "SAVE AS"
-      ],
-      "correctOptionIndex": 0,
-      "explanation": "Function key F3 is the primary keyboard shortcut used to toggle running Object Snap (OSNAP) mode on and off in AutoCAD.",
-      "rankerTip": "F3 toggles OSNAP (Object Snap) on/off.",
-      "topic": "AutoCAD - Function Keys",
       "type": "pyq",
       "examName": "Kerala PSC Surveyor / Draftsman Grade II — AutoCAD & CADD Bank",
       "year": 2024,
@@ -64135,26 +62595,6 @@
       "createdAt": "2026-09-21T00:00:00Z"
     },
     {
-      "id": "bq-wcs163-45",
-      "moduleId": "mod-9",
-      "moduleNumber": 9,
-      "question": "1 + tan² θ = ?",
-      "options": [
-        "Sec² θ",
-        "sin² θ",
-        "cos² θ",
-        "cot² θ"
-      ],
-      "correctOptionIndex": 0,
-      "explanation": "Dividing sin² θ + cos² θ = 1 by cos² θ yields the fundamental trigonometric identity: 1 + tan² θ = sec² θ.",
-      "rankerTip": "Core identities: sin²θ + cos²θ = 1; 1 + tan²θ = sec²θ; 1 + cot²θ = cosec²θ.",
-      "topic": "Trigonometry - Identities",
-      "type": "pyq",
-      "examName": "Kerala PSC Surveyor / Draftsman Grade II — WCS Units & Mensuration Bank",
-      "year": 2024,
-      "createdAt": "2026-09-21T00:00:00Z"
-    },
-    {
       "id": "bq-wcs163-46",
       "moduleId": "mod-9",
       "moduleNumber": 9,
@@ -64729,26 +63169,6 @@
       "explanation": "Volume of cylinder V = πr²h. If radius is doubled (r' = 2r), new volume V' = π(2r)²h = 4πr²h = 4V (four times).",
       "rankerTip": "Doubling radius quadruples cylinder volume; doubling height only doubles it.",
       "topic": "Mensuration - Cylinder",
-      "type": "pyq",
-      "examName": "Kerala PSC Surveyor / Draftsman Grade II — WCS Units & Mensuration Bank",
-      "year": 2024,
-      "createdAt": "2026-09-21T00:00:00Z"
-    },
-    {
-      "id": "bq-wcs163-75",
-      "moduleId": "mod-9",
-      "moduleNumber": 9,
-      "question": "Formula for finding area of a plane triangle whose base is b, height h, is",
-      "options": [
-        "bh",
-        "0.5bh",
-        "0.5[(b+h)/2]",
-        "2[(b+h)/2]"
-      ],
-      "correctOptionIndex": 1,
-      "explanation": "The area of a plane triangle given base b and vertical height h is Area = ½ × base × height = 0.5 bh.",
-      "rankerTip": "Area of triangle = 0.5 × b × h.",
-      "topic": "Mensuration - Triangle",
       "type": "pyq",
       "examName": "Kerala PSC Surveyor / Draftsman Grade II — WCS Units & Mensuration Bank",
       "year": 2024,
@@ -66555,26 +64975,6 @@
       "createdAt": "2026-09-21T15:00:00Z"
     },
     {
-      "id": "bq-ed472-003",
-      "moduleId": "mod-1",
-      "moduleNumber": 1,
-      "question": "Which is the standard code specifies the sizes and layout of drawing sheet?",
-      "options": [
-        "IS 696-1972",
-        "IS 9609-2001",
-        "IS 10711 : 2001",
-        "IS 10714-2001"
-      ],
-      "correctOptionIndex": 2,
-      "explanation": "IS 10711:2001 (ISO 5457:1999) is the Indian Standard code specifying the sizes and layout of drawing sheets.",
-      "rankerTip": "Remember: Option IS 10711 : 2001 is the standard answer verified by Kerala PSC official technical answer keys.",
-      "topic": "Drawing sheet",
-      "type": "pyq",
-      "examName": "Engineering Drawing Official Bank (Ch.1: Drawing Instruments)",
-      "year": 2024,
-      "createdAt": "2026-09-21T15:00:00Z"
-    },
-    {
       "id": "bq-ed472-004",
       "moduleId": "mod-1",
       "moduleNumber": 1,
@@ -66975,26 +65375,6 @@
       "createdAt": "2026-09-21T15:00:00Z"
     },
     {
-      "id": "bq-ed472-024",
-      "moduleId": "mod-1",
-      "moduleNumber": 1,
-      "question": "Standard size of drawing sheets recommended by the Bureau of Indian Standards is",
-      "options": [
-        "210 mm x 297 mm",
-        "297 mm x 420 mm",
-        "420 mm x 594 mm",
-        "All of these"
-      ],
-      "correctOptionIndex": 3,
-      "explanation": "Correct Answer: Option All of these. As per Bureau of Indian Standards (BIS) and standard engineering drawing conventions, this represents the standard specification and principle.",
-      "rankerTip": "Remember: Option All of these is the standard answer verified by Kerala PSC official technical answer keys.",
-      "topic": "Drawing sheet",
-      "type": "pyq",
-      "examName": "Engineering Drawing Official Bank (Ch.1: Drawing Instruments)",
-      "year": 2024,
-      "createdAt": "2026-09-21T15:00:00Z"
-    },
-    {
       "id": "bq-ed472-025",
       "moduleId": "mod-1",
       "moduleNumber": 1,
@@ -67315,26 +65695,6 @@
       "createdAt": "2026-09-21T15:00:00Z"
     },
     {
-      "id": "bq-ed472-041",
-      "moduleId": "mod-1",
-      "moduleNumber": 1,
-      "question": "The least count of vernier bevel protractor is",
-      "options": [
-        "1°",
-        "0.5°",
-        "5'",
-        "5\""
-      ],
-      "correctOptionIndex": 2,
-      "explanation": "The least count of a standard vernier bevel protractor is 5 minutes (5', or 1/12 of a degree).",
-      "rankerTip": "Remember: Option 5' is the standard answer verified by Kerala PSC official technical answer keys.",
-      "topic": "Drawing instruments",
-      "type": "pyq",
-      "examName": "Engineering Drawing Official Bank (Ch.1: Drawing Instruments)",
-      "year": 2024,
-      "createdAt": "2026-09-21T15:00:00Z"
-    },
-    {
       "id": "bq-ed472-042",
       "moduleId": "mod-1",
       "moduleNumber": 1,
@@ -67448,26 +65808,6 @@
       "correctOptionIndex": 2,
       "explanation": "Correct Answer: Option Blade length. As per Bureau of Indian Standards (BIS) and standard engineering drawing conventions, this represents the standard specification and principle.",
       "rankerTip": "T-square designations: T0 (1500 mm), T1 (1000 mm), T2 (700 mm), T3 (500 mm). Head and blade make an exact 90° angle.",
-      "topic": "Drawing instruments",
-      "type": "pyq",
-      "examName": "Engineering Drawing Official Bank (Ch.1: Drawing Instruments)",
-      "year": 2024,
-      "createdAt": "2026-09-21T15:00:00Z"
-    },
-    {
-      "id": "bq-ed472-048",
-      "moduleId": "mod-1",
-      "moduleNumber": 1,
-      "question": "As per BIS (IS 1444-1989) the standard size of B1 drawing board is _____",
-      "options": [
-        "1000 x 1500 mm",
-        "700 x 1000 mm",
-        "500 x 700 mm",
-        "350 x 500 mm"
-      ],
-      "correctOptionIndex": 1,
-      "explanation": "As per IS 1444:1989, drawing board B1 (or D1) has dimensions of 1000 mm × 700 mm × 25 mm.",
-      "rankerTip": "Drawing board sizes: B0/D0 (1500×1000), B1/D1 (1000×700), B2/D2 (700×500), B3/D3 (500×350). B0 & B1 thickness = 25 mm; B2 & B3 = 15 mm.",
       "topic": "Drawing instruments",
       "type": "pyq",
       "examName": "Engineering Drawing Official Bank (Ch.1: Drawing Instruments)",
@@ -68035,26 +66375,6 @@
       "createdAt": "2026-09-21T15:00:00Z"
     },
     {
-      "id": "bq-ed472-077",
-      "moduleId": "mod-1",
-      "moduleNumber": 1,
-      "question": "The areas of the two subsequent sizes of drawing papers are in the ratio",
-      "options": [
-        "1:√2",
-        "1:2",
-        "2:1",
-        "√2:1"
-      ],
-      "correctOptionIndex": 2,
-      "explanation": "Each subsequent standard drawing paper size (e.g. A0 to A1, A1 to A2) has half the area, so the ratio of their areas is 2 : 1 (or 1 : 2).",
-      "rankerTip": "Remember: Option 2:1 is the standard answer verified by Kerala PSC official technical answer keys.",
-      "topic": "Drawing instruments",
-      "type": "pyq",
-      "examName": "Engineering Drawing Official Bank (Ch.1: Drawing Instruments)",
-      "year": 2024,
-      "createdAt": "2026-09-21T15:00:00Z"
-    },
-    {
       "id": "bq-ed472-078",
       "moduleId": "mod-1",
       "moduleNumber": 1,
@@ -68289,26 +66609,6 @@
       "explanation": "As per BIS standards, the ratio of length to width of a closed filled arrowhead is 3 : 1, with a recommended minimum length of 3 mm.",
       "rankerTip": "Standard arrowhead ratio is length : width = 3 : 1, minimum length = 3 mm.",
       "topic": "Dimensioning",
-      "type": "pyq",
-      "examName": "Engineering Drawing Official Bank (Ch.2: Lines, Lettering & Dimensioning)",
-      "year": 2024,
-      "createdAt": "2026-09-21T15:00:00Z"
-    },
-    {
-      "id": "bq-ed472-090",
-      "moduleId": "mod-1",
-      "moduleNumber": 1,
-      "question": "Outline or principal lines are drawn as :",
-      "options": [
-        "Long and thin chain lines",
-        "Thick continuous line",
-        "Thin continuous line",
-        "Dashed lines of medium thickness"
-      ],
-      "correctOptionIndex": 1,
-      "explanation": "Type A continuous thick lines are used to represent visible outlines, visible edges, and surface boundaries of objects.",
-      "rankerTip": "Remember: Option Thick continuous line is the standard answer verified by Kerala PSC official technical answer keys.",
-      "topic": "Types of lines",
       "type": "pyq",
       "examName": "Engineering Drawing Official Bank (Ch.2: Lines, Lettering & Dimensioning)",
       "year": 2024,
@@ -68915,26 +67215,6 @@
       "createdAt": "2026-09-21T15:00:00Z"
     },
     {
-      "id": "bq-ed472-121",
-      "moduleId": "mod-1",
-      "moduleNumber": 1,
-      "question": "The continuous thin ruled lines with short zig-zags within them are drawn to show",
-      "options": [
-        "Short break lines",
-        "Hatch lines",
-        "Construction lines",
-        "long break lines"
-      ],
-      "correctOptionIndex": 3,
-      "explanation": "Continuous thin ruled lines with short zig-zags (Type D lines) are standard conventions for long break lines.",
-      "rankerTip": "Remember: Option long break lines is the standard answer verified by Kerala PSC official technical answer keys.",
-      "topic": "Types of lines",
-      "type": "pyq",
-      "examName": "Engineering Drawing Official Bank (Ch.2: Lines, Lettering & Dimensioning)",
-      "year": 2024,
-      "createdAt": "2026-09-21T15:00:00Z"
-    },
-    {
       "id": "bq-ed472-122",
       "moduleId": "mod-1",
       "moduleNumber": 1,
@@ -68989,26 +67269,6 @@
       "explanation": "Type H lines (chain thin, thick at ends and changes of plane) designate cutting planes in sectional views.",
       "rankerTip": "Remember: Option Cutting planes is the standard answer verified by Kerala PSC official technical answer keys.",
       "topic": "Types of lines",
-      "type": "pyq",
-      "examName": "Engineering Drawing Official Bank (Ch.2: Lines, Lettering & Dimensioning)",
-      "year": 2024,
-      "createdAt": "2026-09-21T15:00:00Z"
-    },
-    {
-      "id": "bq-ed472-125",
-      "moduleId": "mod-1",
-      "moduleNumber": 1,
-      "question": "In unidirectional system the dimensions are",
-      "options": [
-        "Placed above the dimension line",
-        "Placed below the dimension line",
-        "Placed by breaking the dimension line in the middle",
-        "None of these"
-      ],
-      "correctOptionIndex": 2,
-      "explanation": "In the unidirectional dimensioning system, all dimensions are oriented horizontally to be read only from the bottom of the drawing sheet.",
-      "rankerTip": "Remember: Option Placed by breaking the dimension line in the middle is the standard answer verified by Kerala PSC official technical answer keys.",
-      "topic": "Dimensioning",
       "type": "pyq",
       "examName": "Engineering Drawing Official Bank (Ch.2: Lines, Lettering & Dimensioning)",
       "year": 2024,
@@ -69269,26 +67529,6 @@
       "explanation": "IS 10714:2001 (ISO 128) specifies the general principles and types of lines for technical drawings.",
       "rankerTip": "Remember: Option Lines is the standard answer verified by Kerala PSC official technical answer keys.",
       "topic": "Lettering",
-      "type": "pyq",
-      "examName": "Engineering Drawing Official Bank (Ch.2: Lines, Lettering & Dimensioning)",
-      "year": 2024,
-      "createdAt": "2026-09-21T15:00:00Z"
-    },
-    {
-      "id": "bq-ed472-139",
-      "moduleId": "mod-1",
-      "moduleNumber": 1,
-      "question": "The first dimension line should be placed at least",
-      "options": [
-        "10 mm from the construction line",
-        "12 mm from the construction line",
-        "8 mm from the construction line",
-        "9 mm from the construction line"
-      ],
-      "correctOptionIndex": 1,
-      "explanation": "The first dimension line should be spaced at least 8 to 10 mm away from the object outline, and subsequent parallel dimensions spaced at least 6 to 8 mm apart.",
-      "rankerTip": "Remember: Option 12 mm from the construction line is the standard answer verified by Kerala PSC official technical answer keys.",
-      "topic": "Dimensioning",
       "type": "pyq",
       "examName": "Engineering Drawing Official Bank (Ch.2: Lines, Lettering & Dimensioning)",
       "year": 2024,
@@ -69655,26 +67895,6 @@
       "createdAt": "2026-09-21T15:00:00Z"
     },
     {
-      "id": "bq-ed472-158",
-      "moduleId": "mod-1",
-      "moduleNumber": 1,
-      "question": "The continuous thin line connecting a dimensional value or some information relating to a feature in an engineering drawing is :",
-      "options": [
-        "Extension line",
-        "Dimension line",
-        "Break line",
-        "Leader line"
-      ],
-      "correctOptionIndex": 3,
-      "explanation": "Correct Answer: Option Leader line. As per Bureau of Indian Standards (BIS) and standard engineering drawing conventions, this represents the standard specification and principle.",
-      "rankerTip": "Remember: Option Leader line is the standard answer verified by Kerala PSC official technical answer keys.",
-      "topic": "Dimensioning",
-      "type": "pyq",
-      "examName": "Engineering Drawing Official Bank (Ch.2: Lines, Lettering & Dimensioning)",
-      "year": 2024,
-      "createdAt": "2026-09-21T15:00:00Z"
-    },
-    {
       "id": "bq-ed472-159",
       "moduleId": "mod-1",
       "moduleNumber": 1,
@@ -70015,26 +68235,6 @@
       "createdAt": "2026-09-21T15:00:00Z"
     },
     {
-      "id": "bq-ed472-176",
-      "moduleId": "mod-1",
-      "moduleNumber": 1,
-      "question": "RF = 200:1 Represents a :",
-      "options": [
-        "Enlarged scale",
-        "Reduced scale",
-        "Full size scale",
-        "Comparative scale"
-      ],
-      "correctOptionIndex": 0,
-      "explanation": "Correct Answer: Option Enlarged scale. As per Bureau of Indian Standards (BIS) and standard engineering drawing conventions, this represents the standard specification and principle.",
-      "rankerTip": "RF = Drawing size / Actual size. Enlarged: RF > 1; Reduced: RF < 1; Full: RF = 1:1.",
-      "topic": "Scales",
-      "type": "pyq",
-      "examName": "Engineering Drawing Official Bank (Ch.3: Scales)",
-      "year": 2024,
-      "createdAt": "2026-09-21T15:00:00Z"
-    },
-    {
       "id": "bq-ed472-177",
       "moduleId": "mod-1",
       "moduleNumber": 1,
@@ -70167,26 +68367,6 @@
       ],
       "correctOptionIndex": 1,
       "explanation": "Correct Answer: Option Reduced. As per Bureau of Indian Standards (BIS) and standard engineering drawing conventions, this represents the standard specification and principle.",
-      "rankerTip": "RF = Drawing size / Actual size. Enlarged: RF > 1; Reduced: RF < 1; Full: RF = 1:1.",
-      "topic": "Scales",
-      "type": "pyq",
-      "examName": "Engineering Drawing Official Bank (Ch.3: Scales)",
-      "year": 2024,
-      "createdAt": "2026-09-21T15:00:00Z"
-    },
-    {
-      "id": "bq-ed472-184",
-      "moduleId": "mod-1",
-      "moduleNumber": 1,
-      "question": "Scale 1:200 is classified as",
-      "options": [
-        "full scale",
-        "scale of chords",
-        "enlarged scale",
-        "reduction scale"
-      ],
-      "correctOptionIndex": 3,
-      "explanation": "Correct Answer: Option reduction scale. As per Bureau of Indian Standards (BIS) and standard engineering drawing conventions, this represents the standard specification and principle.",
       "rankerTip": "RF = Drawing size / Actual size. Enlarged: RF > 1; Reduced: RF < 1; Full: RF = 1:1.",
       "topic": "Scales",
       "type": "pyq",
@@ -70955,26 +69135,6 @@
       "createdAt": "2026-09-21T15:00:00Z"
     },
     {
-      "id": "bq-ed472-223",
-      "moduleId": "mod-1",
-      "moduleNumber": 1,
-      "question": "An ellipse has _______ vertices and _______ foci",
-      "options": [
-        "Two, two",
-        "one, two",
-        "one, one",
-        "two, one"
-      ],
-      "correctOptionIndex": 0,
-      "explanation": "Correct Answer: Option Two, two. As per Bureau of Indian Standards (BIS) and standard engineering drawing conventions, this represents the standard specification and principle.",
-      "rankerTip": "Eccentricity (e): Circle = 0; Ellipse < 1; Parabola = 1; Hyperbola > 1.",
-      "topic": "Conic sections",
-      "type": "pyq",
-      "examName": "Engineering Drawing Official Bank (Ch.4: Conic Sections)",
-      "year": 2024,
-      "createdAt": "2026-09-21T15:00:00Z"
-    },
-    {
       "id": "bq-ed472-224",
       "moduleId": "mod-1",
       "moduleNumber": 1,
@@ -71007,26 +69167,6 @@
       ],
       "correctOptionIndex": 3,
       "explanation": "The vertex of a conic is the point where the curve intersects its principal axis of symmetry.",
-      "rankerTip": "Eccentricity (e): Circle = 0; Ellipse < 1; Parabola = 1; Hyperbola > 1.",
-      "topic": "Conic sections",
-      "type": "pyq",
-      "examName": "Engineering Drawing Official Bank (Ch.4: Conic Sections)",
-      "year": 2024,
-      "createdAt": "2026-09-21T15:00:00Z"
-    },
-    {
-      "id": "bq-ed472-226",
-      "moduleId": "mod-1",
-      "moduleNumber": 1,
-      "question": "Which one is not a conic section",
-      "options": [
-        "Ellipse",
-        "Parabola",
-        "Hyperbola",
-        "Rectangle"
-      ],
-      "correctOptionIndex": 3,
-      "explanation": "Correct Answer: Option Rectangle. As per Bureau of Indian Standards (BIS) and standard engineering drawing conventions, this represents the standard specification and principle.",
       "rankerTip": "Eccentricity (e): Circle = 0; Ellipse < 1; Parabola = 1; Hyperbola > 1.",
       "topic": "Conic sections",
       "type": "pyq",
@@ -71147,26 +69287,6 @@
       ],
       "correctOptionIndex": 2,
       "explanation": "The latus rectum is the chord (double ordinate) passing through the focus perpendicular to the principal axis of the conic.",
-      "rankerTip": "Eccentricity (e): Circle = 0; Ellipse < 1; Parabola = 1; Hyperbola > 1.",
-      "topic": "Conic sections",
-      "type": "pyq",
-      "examName": "Engineering Drawing Official Bank (Ch.4: Conic Sections)",
-      "year": 2024,
-      "createdAt": "2026-09-21T15:00:00Z"
-    },
-    {
-      "id": "bq-ed472-233",
-      "moduleId": "mod-1",
-      "moduleNumber": 1,
-      "question": "The eccentricity of an ellipse is :",
-      "options": [
-        "Equal to 1",
-        "Greater than 1",
-        "Less than 1",
-        "Zero"
-      ],
-      "correctOptionIndex": 2,
-      "explanation": "In conic section geometry, an ellipse has an eccentricity strictly less than unity (e < 1).",
       "rankerTip": "Eccentricity (e): Circle = 0; Ellipse < 1; Parabola = 1; Hyperbola > 1.",
       "topic": "Conic sections",
       "type": "pyq",
@@ -72915,26 +71035,6 @@
       "createdAt": "2026-09-21T15:00:00Z"
     },
     {
-      "id": "bq-ed472-321",
-      "moduleId": "mod-1",
-      "moduleNumber": 1,
-      "question": "Orthographic projection is also known as",
-      "options": [
-        "Parallel projection",
-        "Oblique projection",
-        "Perspective projection",
-        "Cabinet projection"
-      ],
-      "correctOptionIndex": 0,
-      "explanation": "Correct Answer: Option Parallel projection. As per Bureau of Indian Standards (BIS) and standard engineering drawing conventions, this represents the standard specification and principle.",
-      "rankerTip": "Remember: Option Parallel projection is the standard answer verified by Kerala PSC official technical answer keys.",
-      "topic": "Projection",
-      "type": "pyq",
-      "examName": "Engineering Drawing Official Bank (Ch.5: Projections)",
-      "year": 2024,
-      "createdAt": "2026-09-21T15:00:00Z"
-    },
-    {
       "id": "bq-ed472-322",
       "moduleId": "mod-1",
       "moduleNumber": 1,
@@ -73167,26 +71267,6 @@
       ],
       "correctOptionIndex": 1,
       "explanation": "Correct Answer: Option Planes may not be transparent. As per Bureau of Indian Standards (BIS) and standard engineering drawing conventions, this represents the standard specification and principle.",
-      "rankerTip": "1st Angle: Plan below elevation, left view on right. 3rd Angle: Plan above elevation, left view on left.",
-      "topic": "Projection",
-      "type": "pyq",
-      "examName": "Engineering Drawing Official Bank (Ch.5: Projections)",
-      "year": 2024,
-      "createdAt": "2026-09-21T15:00:00Z"
-    },
-    {
-      "id": "bq-ed472-334",
-      "moduleId": "mod-1",
-      "moduleNumber": 1,
-      "question": "Where the plan is placed in third angle projection ?",
-      "options": [
-        "Below elevation",
-        "Above elevation",
-        "Left of elevation",
-        "Right of elevation"
-      ],
-      "correctOptionIndex": 1,
-      "explanation": "In 3rd angle projection, the plan (top view) is drawn above the XY reference line, above the front elevation.",
       "rankerTip": "1st Angle: Plan below elevation, left view on right. 3rd Angle: Plan above elevation, left view on left.",
       "topic": "Projection",
       "type": "pyq",
@@ -74635,26 +72715,6 @@
       "createdAt": "2026-09-21T15:00:00Z"
     },
     {
-      "id": "bq-ed472-407",
-      "moduleId": "mod-1",
-      "moduleNumber": 1,
-      "question": "How many pairs of parallel lines are there in regular hexagon",
-      "options": [
-        "2",
-        "3",
-        "6",
-        "1"
-      ],
-      "correctOptionIndex": 1,
-      "explanation": "Correct Answer: Option 3. As per Bureau of Indian Standards (BIS) and standard engineering drawing conventions, this represents the standard specification and principle.",
-      "rankerTip": "Remember: Option 3 is the standard answer verified by Kerala PSC official technical answer keys.",
-      "topic": "Types of lines",
-      "type": "pyq",
-      "examName": "Engineering Drawing Official Bank (Ch.6: Miscellaneous Questions)",
-      "year": 2024,
-      "createdAt": "2026-09-21T15:00:00Z"
-    },
-    {
       "id": "bq-ed472-408",
       "moduleId": "mod-1",
       "moduleNumber": 1,
@@ -75489,26 +73549,6 @@
       "explanation": "The number of diagonals in an n-sided polygon is given by n(n - 3) / 2. For a hexagon (n = 6): 6 × 3 / 2 = 9 diagonals.",
       "rankerTip": "Remember: Option 9 is the standard answer verified by Kerala PSC official technical answer keys.",
       "topic": "Geometrical constructions",
-      "type": "pyq",
-      "examName": "Engineering Drawing Official Bank (Ch.6: Miscellaneous Questions)",
-      "year": 2024,
-      "createdAt": "2026-09-21T15:00:00Z"
-    },
-    {
-      "id": "bq-ed472-450",
-      "moduleId": "mod-1",
-      "moduleNumber": 1,
-      "question": "The type of Vernier in which the Vernier divisions are marked in the opposite direction of the main scale is",
-      "options": [
-        "Vernier Scale",
-        "Forward Vernier",
-        "Backward Vernier",
-        "None of these"
-      ],
-      "correctOptionIndex": 2,
-      "explanation": "Correct Answer: Option Backward Vernier. As per Bureau of Indian Standards (BIS) and standard engineering drawing conventions, this represents the standard specification and principle.",
-      "rankerTip": "RF = Drawing size / Actual size. Enlarged: RF > 1; Reduced: RF < 1; Full: RF = 1:1.",
-      "topic": "Scales",
       "type": "pyq",
       "examName": "Engineering Drawing Official Bank (Ch.6: Miscellaneous Questions)",
       "year": 2024,
