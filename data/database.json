@@ -4363,7 +4363,7 @@
       "examCode": "Cat. No: 284/2022",
       "year": 2024,
       "department": "Survey and Land Records Department",
-      "totalQuestions": 100,
+      "totalQuestions": 5,
       "pdfUrl": "https://example.com/pyq/surveyor_gr2_2024_official_paper.pdf",
       "answerKeyUrl": "https://example.com/pyq/surveyor_gr2_2024_final_key.pdf",
       "isSolved": true,
@@ -4452,7 +4452,7 @@
       "examCode": "Cat. No: 120/2022",
       "year": 2023,
       "department": "Kerala Water Authority",
-      "totalQuestions": 100,
+      "totalQuestions": 4,
       "pdfUrl": "https://example.com/pyq/kwa_tracer_overseer_2023_paper.pdf",
       "answerKeyUrl": "https://example.com/pyq/kwa_tracer_2023_key.pdf",
       "isSolved": true,
@@ -4526,7 +4526,7 @@
       "examCode": "Cat. No: 334/2021",
       "year": 2022,
       "department": "Town and Country Planning / LSGD",
-      "totalQuestions": 100,
+      "totalQuestions": 2,
       "pdfUrl": "https://example.com/pyq/draftsman_town_planning_2022.pdf",
       "answerKeyUrl": "https://example.com/pyq/draftsman_town_planning_2022_key.pdf",
       "isSolved": true,
@@ -25409,7 +25409,7 @@
       "mockScore": 0
     }
   ],
-  "lastUpdated": "2026-10-29T03:08:47.075Z",
+  "lastUpdated": "2026-10-29T04:46:05.253Z",
   "bankQuestions": [
     {
       "id": "bq-bed50-1",

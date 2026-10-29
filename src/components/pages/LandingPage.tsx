@@ -77,7 +77,7 @@ export const LandingPage: React.FC = () => {
                 <Crown className="w-3.5 h-3.5 text-amber-400" /> Free Preview
               </span>
               <span className="text-xs sm:text-sm text-slate-950 font-black">
-                Unlock all 10 Syllabus Modules, 10,000+ MCQs & 21 Mock Tests with Statewide Rank Predictor!
+                Unlock all 10 Syllabus Modules, 10,000+ MCQs & 23 Mock Tests with Statewide Rank Predictor!
               </span>
             </div>
             <button
@@ -607,7 +607,7 @@ export const LandingPage: React.FC = () => {
                   </span>
                   <h3 className="text-xl font-bold text-slate-900 mt-2">6 Months Complete Access</h3>
                   <p className="text-xs text-slate-500 pt-1">
-                    Full access to all 10 syllabus modules, handwritten notes, 10,000+ MCQs & 21 mock tests for 6 months.
+                    Full access to all 10 syllabus modules, handwritten notes, 10,000+ MCQs & 23 mock tests for 6 months.
                   </p>
                 </div>
 

@@ -340,7 +340,7 @@ export async function fetchTestAttempts(): Promise<MockTestAttempt[] | null> {
   }
 }
 
-export async function saveTestAttempt(attempt: MockTestAttempt, userId?: string): Promise<boolean> {
+export async function saveTestAttempt(attempt: MockTestAttempt, userId?: string, testObj?: MockTest): Promise<boolean> {
   try {
     const { data: authData } = await supabase.auth.getUser();
     const sessionUser = authData?.user;
@@ -351,7 +351,7 @@ export async function saveTestAttempt(attempt: MockTestAttempt, userId?: string)
 
     // Ensure mock_test record exists with accurate metadata to satisfy foreign key constraint
     try {
-      const match = INITIAL_MOCK_TESTS.find((m) => m.id === attempt.testId);
+      const match = testObj || INITIAL_MOCK_TESTS.find((m) => m.id === attempt.testId);
       if (match) {
         await supabase.from('mock_tests').upsert({
           id: match.id,

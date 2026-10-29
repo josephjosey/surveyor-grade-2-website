@@ -267,10 +267,12 @@ export const PYQPage: React.FC = () => {
   const activePaper = pyqPapers.find((p) => p.id === selectedPaperId) || pyqPapers[0];
 
   const handleDownloadPDF = (type: 'paper' | 'key') => {
-    if (type === 'paper') {
-      showToast(`Downloading: ${activePaper.title} Original Question Paper PDF`, 'success');
+    const url = type === 'paper' ? activePaper.pdfUrl : (activePaper.answerKeyUrl || activePaper.pdfUrl);
+    if (url && !url.includes('example.com')) {
+      window.open(url, '_blank');
+      showToast(`Opening: ${activePaper.title}`, 'success');
     } else {
-      showToast(`Downloading: ${activePaper.title} Final Answer Key PDF`, 'success');
+      showToast(`Full paper questions and verified solutions for ${activePaper.title} are available below!`, 'info');
     }
   };
 
@@ -743,7 +745,7 @@ export const PYQPage: React.FC = () => {
                   {activePaper.title}
                 </h2>
                 <p className="text-xs text-blue-200">
-                  Department: {activePaper.department} • Total Questions: {activePaper.totalQuestions}
+                  Department: {activePaper.department} • Total Questions: {activePaper.questions?.length || activePaper.totalQuestions}
                 </p>
               </div>
 

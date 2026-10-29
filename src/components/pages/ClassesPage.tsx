@@ -393,7 +393,7 @@ export const ClassesPage: React.FC = () => {
                           className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black text-xs sm:text-sm rounded-xl shadow-lg hover:shadow-xl transition-all"
                         >
                           <Zap className="w-4 h-4 text-slate-950" />
-                          <span>Purchase Course Plan (Unlock All 8 Modules)</span>
+                          <span>Purchase Course Plan (Unlock All 10 Modules)</span>
                         </button>
                         <button
                           onClick={() => {

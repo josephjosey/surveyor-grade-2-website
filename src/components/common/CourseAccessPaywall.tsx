@@ -49,7 +49,7 @@ export const CourseAccessPaywall: React.FC = () => {
 
               {/* Sub-copy */}
               <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
-                Free preview mode only provides access to the platform overview on the Home page. Purchase the complete course or mock series to immediately unlock all 10 syllabus modules, 10,000+ MCQs & PYQs, and 21 Kerala PSC pattern mock tests.
+                Free preview mode only provides access to the platform overview on the Home page. Purchase the complete course or mock series to immediately unlock all 10 syllabus modules, 10,000+ MCQs & PYQs, and 23 Kerala PSC pattern mock tests.
               </p>
 
               {/* Malayalam Note */}
@@ -93,7 +93,7 @@ export const CourseAccessPaywall: React.FC = () => {
                   <CheckSquare className="w-5 h-5" />
                 </div>
                 <div className="space-y-1">
-                  <h4 className="text-sm font-bold text-slate-900">21 Mock Tests (-0.33 Marking)</h4>
+                  <h4 className="text-sm font-bold text-slate-900">23 Mock Tests (-0.33 Marking)</h4>
                   <p className="text-xs text-slate-600 leading-snug">
                     Full-length exam simulation, instant rank prediction, percentile & negative mark control.
                   </p>
@@ -126,7 +126,7 @@ export const CourseAccessPaywall: React.FC = () => {
                   Course Plans: 6 Months (₹600) • 1 Year (₹1,000)
                 </h3>
                 <p className="text-xs text-slate-600">
-                  Full unrestricted access to all 10 modules, handwritten notes, 10,000+ MCQs & 21 PSC mock tests.
+                  Full unrestricted access to all 10 modules, handwritten notes, 10,000+ MCQs & 23 PSC mock tests.
                 </p>
               </div>
 

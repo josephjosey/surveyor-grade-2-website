@@ -176,7 +176,7 @@ export const safeSetItem = (key: string, val: any) => {
 // DATASET VERSIONING & CACHE MIGRATION
 // Guarantees 100% data parity across Web, Android APK, and all browsers
 // ============================================================================
-const DATA_VERSION = 'v2026.10.29-original-questions-restored';
+const DATA_VERSION = 'v2026.10.29-prelaunch-audit-verified';
 
 try {
   const currentVersion = localStorage.getItem('survey_academy_data_version');
@@ -353,7 +353,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       try {
         const parsed = JSON.parse(saved) as BankQuestion[];
         const filtered = parsed.filter((q) => !deletedIds.has(q.id));
-        if (filtered.length >= 5000) {
+        if (filtered.length > 0) {
           return filtered;
         }
       } catch (e) {}
@@ -1763,7 +1763,8 @@ Expires in 5 minutes. Do not share this OTP with anyone.`
     );
 
     // 5. Save to Supabase cloud table
-    SupabaseDb.saveTestAttempt(newAttempt, currentUser.id).then(() => {
+    const matchedTest = mockTests.find((t) => t.id === attemptData.testId);
+    SupabaseDb.saveTestAttempt(newAttempt, currentUser.id, matchedTest).then(() => {
       refreshTestAttempts();
     });
 
